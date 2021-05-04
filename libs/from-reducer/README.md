@@ -1,0 +1,382 @@
+# fromReducer
+
+More than a library fromReducer is helper function built around rxjs scan operator and subjects, its purpose was to have a zero configuration helper to manage either local or global state in different environments with rxjs.
+
+## NOTE: THIS LIBRARY DOESN'T REPLACE REDUX OR NGRX.
+
+Where this package can be helpful on small projects or places where you are just able to use rxjs, redux and ngrx has been highly proven against the environment and are an amazing solution that i personally use in my projects.
+So why?
+You can think it as an alternative to useReducer with middleware.
+
+## Example
+
+```
+npm i from-reducer
+```
+
+```
+npm install rxjs
+```
+
+### Redux pattern:
+
+more info on this pattern: https://redux.js.org
+
+### Middleware based on redux observable
+
+more info: https://redux-observable.js.org/
+
+#### With a switch reducer
+
+```ts
+import { Observable, of, Subscription } from 'rxjs';
+import { ajax } from 'rxjs/ajax';
+import {
+  filter,
+  switchMap,
+  map,
+  catchError,
+  tap,
+  ignoreElements,
+} from 'rxjs/operators';
+
+// Model we want to work with
+interface User {
+  id: string;
+  name: string;
+}
+
+// Available actions
+enum UserActionType {
+  GetUser = '[Users] Get Users',
+  GetUserSuccess = '[Users] Get Users Success',
+  GetUserFail = '[Users] Get Users Fail',
+}
+
+class GetUsers {
+  readonly type = UserActionType.GetUser;
+}
+
+class GetUsersSuccess {
+  readonly type = UserActionType.GetUserSuccess;
+  constructor(readonly payload: User[]) {}
+}
+
+class GetUsersFail {
+  readonly type = UserActionType.GetUserFail;
+  constructor(readonly payload: string) {}
+}
+
+type UserActions = GetUsers | GetUsersSuccess | GetUsersFail;
+
+// Reducer slice state
+interface UsersState {
+  loading: boolean;
+  data: User[];
+  error: string;
+}
+
+const usersInitialState: UsersState = {
+  loading: false,
+  data: [],
+  error: '',
+};
+
+// Reducer
+function usersReducer(
+  state: UsersState,
+  action: UserActions | Action
+): UsersState {
+  switch (action.type) {
+    case UserActionType.GetUser: {
+      return { ...state, loading: true, data: [], error: '' };
+    }
+
+    case UserActionType.GetUserSuccess: {
+      return {
+        ...state,
+        loading: false,
+        data: [...action.payload],
+        error: '',
+      };
+    }
+
+    case UserActionType.GetUserFail: {
+      return { ...state, loading: false, error: action.payload };
+    }
+  }
+
+  return state;
+}
+
+// Side Effects
+const getUsersEpic = (actions$: Observable<Action>) =>
+  actions$.pipe(
+    filter(({ type }) => type === UserActionType.GetUser),
+    switchMap(() =>
+      ajax<User[]>(`https://api.github.com/users?per_page=5`).pipe(
+        map(({ response }) => new GetUsersSuccess(response)),
+        catchError((err) => of(new GetUsersFail(err)))
+      )
+    )
+  );
+
+const getUserFailEpic = (actions$: Observable<Action>) =>
+  actions$.pipe(
+    filter(({ type }) => type === UserActionType.GetUserFail),
+    tap(({ payload }) => console.error(payload)),
+    ignoreElements()
+  );
+
+const userEpics = [getUsersEpic, getUserFailEpic];
+
+const subscription = new Subscription();
+const [state$, dispatch, combineEpics] = fromReducer(
+  usersReducer,
+  usersInitialState
+);
+
+const effects$ = combineEpics(...userEpics);
+
+subscription.add(state$.subscribe(console.log));
+// { loading: true, data: [], error: '' }
+// { loading: true, data: [...], error: '' } || { loading: false, data: [], error: '...' }
+subscription.add(effects$.subscribe());
+
+dispatch(new GetUsers());
+```
+
+#### With redux toolkit
+
+https://redux-toolkit.js.org/api/createAction
+https://redux-toolkit.js.org/api/createReducer
+
+```
+npm install @reduxjs/toolkit
+```
+
+```ts
+import { Action, createAction, createReducer } from '@reduxjs/toolkit';
+// Available actions
+const getUsers = createAction('[Users] Get Users');
+const getUserSuccess = createAction<User[]>('[Users] Get Users Success');
+const getUsersFail = createAction<string>('[Users] Get Users Fail');
+
+// Reducer slice state definition
+interface UsersState {
+  loading: boolean;
+  data: User[];
+  error: string;
+}
+
+// Reducer initial state
+const usersInitialState: UsersState = {
+  loading: false,
+  data: [],
+  error: '',
+};
+
+// Reducer
+const usersReducer = createReducer(usersInitialState, (builder) =>
+  builder
+    .addCase(getUsers, (state) => ({
+      ...state,
+      loading: true,
+      data: [],
+      error: '',
+    }))
+    .addCase(getUserSuccess, (state, { payload }) => ({
+      ...state,
+      loading: false,
+      data: [...payload],
+      error: '',
+    }))
+    .addCase(getUsersFail, (state, { payload }) => ({
+      ...state,
+      loading: false,
+      error: payload,
+    }))
+);
+
+// Side Effects
+const getUsersEpic = (actions$: Observable<Action>) =>
+  actions$.pipe(
+    filter(getUsers.match),
+    switchMap(() =>
+      ajax<User[]>(`https://api.github.com/users?per_page=5`).pipe(
+        map(({ response }) => getUserSuccess(response)),
+        catchError((err) => of(getUsersFail(err)))
+      )
+    )
+  );
+
+const getUserFailEpic = (actions$: Observable<Action>) =>
+  actions$.pipe(
+    filter(getUsersFail.match),
+    tap(({ payload }) => console.error(payload)),
+    ignoreElements()
+  );
+
+const userEpics = [getUsersEpic, getUserFailEpic];
+
+const subscription = new Subscription();
+const [state$, dispatch, combineEpics] = fromReducer(
+  usersReducer,
+  usersInitialState
+);
+
+const effects$ = combineEpics(...userEpics);
+
+subscription.add(state$.subscribe(console.log));
+// { loading: true, data: [], error: '' }
+// { loading: true, data: [...], error: '' } || { loading: false, data: [], error: '...' }
+subscription.add(effects$.subscribe());
+
+dispatch(getUsers());
+```
+
+#### With NgRx Store
+
+```
+npm install @ngrx/store --save
+```
+
+https://ngrx.io/guide/store/actions
+https://ngrx.io/guide/store/reducers
+
+```ts
+import { Action, createAction, createReducer, on, props } from '@ngrx/store';
+
+// Available actions
+const getUsers = createAction('[Users] Get Users');
+const getUserSuccess = createAction(
+  '[Users] Get Users Success',
+  props<{ payload: User[] }>()
+);
+const getUsersFail = createAction(
+  '[Users] Get Users Fail',
+  props<{ payload: string }>()
+);
+
+// Reducer slice state definition
+interface UsersState {
+  loading: boolean;
+  data: User[];
+  error: string;
+}
+
+// Reducer initial state
+const usersInitialState: UsersState = {
+  loading: false,
+  data: [],
+  error: '',
+};
+
+// Reducer
+const usersReducer = createReducer(
+  usersInitialState,
+
+  on(getUsers, (state) => ({
+    ...state,
+    loading: true,
+    data: [],
+    error: '',
+  })),
+  on(getUserSuccess, (state, { payload }) => ({
+    ...state,
+    loading: false,
+    data: [...payload],
+    error: '',
+  })),
+  on(getUsersFail, (state, { payload }) => ({
+    ...state,
+    loading: false,
+    error: payload,
+  }))
+);
+
+// Side Effects
+const getUsersEpic = (actions$: Observable<Action>) =>
+  actions$.pipe(
+    filter(({ type }) => type === getUsers.type),
+    switchMap(() =>
+      ajax<User[]>(`https://api.github.com/users?per_page=5`).pipe(
+        map(({ response }) => getUserSuccess({ payload: response })),
+        catchError((err) => of(getUsersFail({ payload: err })))
+      )
+    )
+  );
+
+const getUserFailEpic = (actions$: Observable<Action>) =>
+  actions$.pipe(
+    filter(({ type }) => type === getUsersFail.type),
+    tap(({ payload }: any) => console.error(payload)),
+    ignoreElements()
+  );
+
+const userEpics = [getUsersEpic, getUserFailEpic];
+
+const subscription = new Subscription();
+const [state$, dispatch, combineEpics] = fromReducer(
+  usersReducer,
+  usersInitialState
+);
+
+const effects$ = combineEpics(...userEpics);
+
+subscription.add(state$.subscribe(console.log));
+// { loading: true, data: [], error: '' }
+// { loading: true, data: [...], error: '' } || { loading: false, data: [], error: '...' }
+subscription.add(effects$.subscribe());
+
+dispatch(getUsers());
+```
+
+### Change of state imperatively:
+
+more info on this pattern: https://reactjs.org/docs/hooks-state.html
+
+```ts
+ interface UsersComponentState {
+   loading: boolean;
+   users: User[];
+   error: string;
+ }
+
+ function usersComponentReducer(
+   state: UsersComponentState,
+   slice: Partial<UsersComponentState>
+ ): UsersComponentState {
+   return { ...state, ...slice };
+ }
+
+ const componentInitialState: UsersComponentState = {
+   loading: false,
+   users: [],
+   error: "",
+ };
+
+const subscription = new Subscription();
+
+ const [state$, setState] = fromReducer(
+   usersComponentReducer,
+   componentInitialState
+ );
+
+ subscription.add(state$.subscribe(console.log));
+ // { loading: true, data: [], error: '' }
+ // { loading: true, data: [...], error: '' } || { loading: false, data: [], error: '...' }
+
+ setState({ loading: true });
+
+ ajax<User[]>(`https://api.github.com/users?per_page=5`).pipe(
+   map(({ response }) => ({ loading: false, users: response, error: "" })),
+   catchError((err) => of({ loading: false, error: err })),
+   tap(setState)
+
+```
+
+```ts
+// Later unsubscribe to state changes and effects
+subscription.unsubscribe();
+```

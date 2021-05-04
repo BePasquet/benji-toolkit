@@ -1,10 +1,36 @@
 {
-  
-  
   "version": 2,
-  
-  "projects": {},
-  "cli": {
-    "defaultCollection": "@nrwl/workspace"
-  }
+  "projects": {
+    "from-reducer": {
+      "root": "libs/from-reducer",
+      "sourceRoot": "libs/from-reducer/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": { "lintFilePatterns": ["libs/from-reducer/**/*.ts"] }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/from-reducer"],
+          "options": {
+            "jestConfig": "libs/from-reducer/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "executor": "@nrwl/node:package",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/libs/from-reducer",
+            "tsConfig": "libs/from-reducer/tsconfig.lib.json",
+            "packageJson": "libs/from-reducer/package.json",
+            "main": "libs/from-reducer/src/index.ts",
+            "assets": ["libs/from-reducer/*.md"]
+          }
+        }
+      }
+    }
+  },
+  "cli": { "defaultCollection": "@nrwl/workspace" }
 }
