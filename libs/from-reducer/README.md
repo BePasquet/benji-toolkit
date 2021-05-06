@@ -1,12 +1,24 @@
 # fromReducer
 
-More than a library fromReducer is helper function built around rxjs scan operator and subjects, its purpose was to have a zero configuration helper to manage either local or global state in different environments with rxjs.
+Helper function built around rxjs scan operator and subjects, its purpose was to have a zero configuration helper to manage either local or global state in different environments with rxjs.
+
+Given a reducer function and an initial state creates a tuple which values will be:
+
+1.  A observable with the form of `Observable<S>` that will emit a value every time is notified that a
+    new event happened with the result of the reduction between the current state and the value of an event,
+    this result will become the current state.
+
+2.  A function with the form of `(event: T) => void` to notify the previous observable that an event has occur.
+
+3.  A function that given an array of functions with the form of `(events$: Observable<T>, state$?: Observable<S>) => Observable<T>`
+    will merge the result of applying them to the event stream and the observable of state.
+    This will come helpful when we want to intercept events to perform a side effect.
 
 ## NOTE: THIS LIBRARY DOESN'T REPLACE REDUX OR NGRX.
 
 Where this package can be helpful on small projects or places where you are just able to use rxjs, redux and ngrx has been highly proven against the environment and are an amazing solution that i personally use in my projects.
 So why?
-You can think it as an alternative to useReducer with middleware.
+You can think it as a rxjs version of react useReducer with middleware
 
 ## Example
 
@@ -46,7 +58,7 @@ interface User {
   name: string;
 }
 
-// Available actions
+// Actions
 enum UserActionType {
   GetUser = '[Users] Get Users',
   GetUserSuccess = '[Users] Get Users Success',
@@ -148,8 +160,9 @@ dispatch(new GetUsers());
 
 #### With redux toolkit
 
-https://redux-toolkit.js.org/api/createAction
-https://redux-toolkit.js.org/api/createReducer
+##### https://redux-toolkit.js.org/api/createAction
+
+##### https://redux-toolkit.js.org/api/createReducer
 
 ```
 npm install @reduxjs/toolkit
@@ -157,7 +170,24 @@ npm install @reduxjs/toolkit
 
 ```ts
 import { Action, createAction, createReducer } from '@reduxjs/toolkit';
-// Available actions
+import { Observable, of, Subscription } from 'rxjs';
+import { ajax } from 'rxjs/ajax';
+import {
+  filter,
+  switchMap,
+  map,
+  catchError,
+  tap,
+  ignoreElements,
+} from 'rxjs/operators';
+
+// Model we want to work with
+interface User {
+  id: string;
+  name: string;
+}
+
+// Actions
 const getUsers = createAction('[Users] Get Users');
 const getUserSuccess = createAction<User[]>('[Users] Get Users Success');
 const getUsersFail = createAction<string>('[Users] Get Users Fail');
@@ -241,13 +271,30 @@ dispatch(getUsers());
 npm install @ngrx/store --save
 ```
 
-https://ngrx.io/guide/store/actions
-https://ngrx.io/guide/store/reducers
+##### https://ngrx.io/guide/store/actions
+
+##### https://ngrx.io/guide/store/reducers
 
 ```ts
 import { Action, createAction, createReducer, on, props } from '@ngrx/store';
+import { Observable, of, Subscription } from 'rxjs';
+import { ajax } from 'rxjs/ajax';
+import {
+  filter,
+  switchMap,
+  map,
+  catchError,
+  tap,
+  ignoreElements,
+} from 'rxjs/operators';
 
-// Available actions
+// Model we want to work with
+interface User {
+  id: string;
+  name: string;
+}
+
+// Actions
 const getUsers = createAction('[Users] Get Users');
 const getUserSuccess = createAction(
   '[Users] Get Users Success',
