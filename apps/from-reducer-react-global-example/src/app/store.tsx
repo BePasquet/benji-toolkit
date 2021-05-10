@@ -1,10 +1,4 @@
 import {
-  Action,
-  combineReducers,
-  fromReducer,
-  Reducer,
-} from '@benji-toolkit/from-reducer';
-import {
   repositoriesEpics,
   repositoriesInitialState,
   RepositoriesPartialState,
@@ -18,6 +12,7 @@ import {
   usersReducer,
   USER_STATE_KEY,
 } from '@benji-toolkit/users';
+import { Action, combineReducers, fromReducer, Reducer } from 'from-reducer';
 import React from 'react';
 
 export type GlobalState = UsersPartialState & RepositoriesPartialState;

@@ -4,13 +4,13 @@ import {
   Component,
   OnDestroy,
 } from '@angular/core';
-import { fromReducer } from '@benji-toolkit/from-reducer';
 import {
   getUsers,
   userEpics,
   usersInitialState,
   usersReducer,
 } from '@benji-toolkit/users';
+import { fromReducer } from 'from-reducer';
 import { Subscription } from 'rxjs';
 
 const [state$, dispatch, combineEpics] = fromReducer(

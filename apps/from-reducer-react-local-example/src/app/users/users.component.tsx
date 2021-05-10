@@ -1,4 +1,3 @@
-import { fromReducer } from '@benji-toolkit/from-reducer';
 import {
   getUsers,
   userEpics,
@@ -6,6 +5,7 @@ import {
   usersReducer,
   UsersState,
 } from '@benji-toolkit/users';
+import { fromReducer } from 'from-reducer';
 import React, { useEffect, useState } from 'react';
 import { Subscription } from 'rxjs';
 
