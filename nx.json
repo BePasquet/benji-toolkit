@@ -1,27 +1,18 @@
 {
   "implicitDependencies": {
-    "package.json": {
-      "dependencies": "*",
-      "devDependencies": "*"
-    },
+    "package.json": { "dependencies": "*", "devDependencies": "*" },
     ".eslintrc.json": "*"
   },
-  "affected": {
-    "defaultBase": "master"
-  },
+  "affected": { "defaultBase": "master" },
   "npmScope": "benji-toolkit",
   "tasksRunnerOptions": {
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
-      "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
-      }
+      "options": { "cacheableOperations": ["build", "lint", "test", "e2e"] }
     }
   },
   "projects": {
-    "from-reducer": {
-      "tags": []
-    },
+    "from-reducer": { "tags": [] },
     "from-reducer-react-example-e2e": {
       "tags": [],
       "implicitDependencies": ["from-reducer-react-global-example"]
@@ -30,9 +21,7 @@
       "tags": [],
       "implicitDependencies": ["from-reducer-angular-global-example"]
     },
-    "users": {
-      "tags": []
-    },
+    "users": { "tags": [] },
     "from-reducer-react-local-e2e": {
       "tags": [],
       "implicitDependencies": ["from-reducer-react-local-example"]
@@ -41,20 +30,14 @@
       "tags": [],
       "implicitDependencies": ["from-reducer-angular-local-example"]
     },
-    "from-reducer-react-global-example": {
-      "tags": []
-    },
-    "from-reducer-angular-global-example": {
-      "tags": []
-    },
-    "repositories": {
-      "tags": []
-    },
-    "from-reducer-react-local-example": {
-      "tags": []
-    },
-    "from-reducer-angular-local-example": {
-      "tags": []
+    "from-reducer-react-global-example": { "tags": [] },
+    "from-reducer-angular-global-example": { "tags": [] },
+    "repositories": { "tags": [] },
+    "from-reducer-react-local-example": { "tags": [] },
+    "from-reducer-angular-local-example": { "tags": [] },
+    "from-reducer-angular-local-example-e2e": {
+      "tags": [],
+      "implicitDependencies": ["from-reducer-angular-local-example"]
     }
   }
 }

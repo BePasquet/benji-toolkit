@@ -352,6 +352,96 @@
           }
         }
       }
+    },
+    "from-reducer-angular-local-example": {
+      "projectType": "application",
+      "root": "apps/from-reducer-angular-local-example",
+      "sourceRoot": "apps/from-reducer-angular-local-example/src",
+      "prefix": "benji-toolkit",
+      "targets": {
+        "build": {
+          "executor": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/from-reducer-angular-local-example",
+            "index": "apps/from-reducer-angular-local-example/src/index.html",
+            "main": "apps/from-reducer-angular-local-example/src/main.ts",
+            "polyfills": "apps/from-reducer-angular-local-example/src/polyfills.ts",
+            "tsConfig": "apps/from-reducer-angular-local-example/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/from-reducer-angular-local-example/src/favicon.ico",
+              "apps/from-reducer-angular-local-example/src/assets"
+            ],
+            "styles": [
+              "apps/from-reducer-angular-local-example/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/from-reducer-angular-local-example/src/environments/environment.ts",
+                  "with": "apps/from-reducer-angular-local-example/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "from-reducer-angular-local-example:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "from-reducer-angular-local-example:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "executor": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "from-reducer-angular-local-example:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/from-reducer-angular-local-example/src/**/*.ts",
+              "apps/from-reducer-angular-local-example/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/from-reducer-angular-local-example"],
+          "options": {
+            "jestConfig": "apps/from-reducer-angular-local-example/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   }
 }
