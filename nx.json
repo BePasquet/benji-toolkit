@@ -39,7 +39,7 @@
     },
     "from-reducer-angular-local-e2e": {
       "tags": [],
-      "implicitDependencies": ["from-reducer-react-angular-example"]
+      "implicitDependencies": ["from-reducer-angular-local-example"]
     },
     "from-reducer-react-global-example": {
       "tags": []
@@ -53,7 +53,7 @@
     "from-reducer-react-local-example": {
       "tags": []
     },
-    "from-reducer-react-angular-example": {
+    "from-reducer-angular-local-example": {
       "tags": []
     }
   }

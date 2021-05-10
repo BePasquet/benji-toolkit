@@ -5,7 +5,7 @@ module.exports = {
     '<rootDir>/apps/from-reducer-angular-global-example',
     '<rootDir>/libs/users',
     '<rootDir>/apps/from-reducer-react-local-example',
-    '<rootDir>/apps/from-reducer-react-angular-example',
+    '<rootDir>/apps/from-reducer-angular-local-example',
     '<rootDir>/libs/repositories',
   ],
 };
