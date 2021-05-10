@@ -1,5 +1,5 @@
 import { BehaviorSubject, merge, Subject } from 'rxjs';
-import { distinctUntilChanged, retry, scan, share, tap } from 'rxjs/operators';
+import { retry, scan, share, tap } from 'rxjs/operators';
 import { Epic, FromReducerReturnType, Reducer } from '../types';
 
 /**
@@ -25,7 +25,6 @@ export function fromReducer<S, T>(
 
   const state$ = events$.pipe(
     scan(reducer, initialState),
-    distinctUntilChanged(),
     share({ connector: () => new BehaviorSubject(initialState) })
   );
 
