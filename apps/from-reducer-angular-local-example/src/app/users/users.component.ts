@@ -29,6 +29,7 @@ const [state$, dispatch, combineEpics] = fromReducer(
 })
 export class UsersComponent implements AfterViewInit, OnDestroy {
   readonly state$ = state$;
+
   private readonly subscription = new Subscription();
 
   ngAfterViewInit(): void {
