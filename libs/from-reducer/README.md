@@ -16,9 +16,15 @@ Given a reducer function and an initial state creates a tuple which values will 
 
 ## IMPORTANT: USES RXJS VERSION 7
 
+## Installation
+
+```
+npm i from-reducer
+```
+
 ## NOTE: THIS LIBRARY DOESN'T REPLACE REDUX OR NGRX.
 
-Where this package can be helpful on small projects or places where you are just able to use rxjs, redux and ngrx has been highly proven against the environment and are an amazing solution that i personally use in my projects.
+This package can be helpful on small projects or places where you are just able to use rxjs, redux and ngrx has been highly proven against the environment and are an amazing solution that i personally use in my projects.
 So why?
 You can think it as a rxjs version of react useReducer with middleware
 
@@ -57,7 +63,7 @@ const reducer = (state, action) => {
 };
 
 // Epic
-const incrementEverySecondEpic = (actions$: Observable<Action>) =>
+const incrementEveryEpic = (actions$: Observable<Action>) =>
   actions$.pipe(
     filter(({ type }) => type === CounterActions.IncrementEvery),
     switchMap(({ payload }) => interval(payload).pipe(map(() => increment())))
@@ -68,7 +74,7 @@ const [state$, dispatch, combineEpics] = fromReducer(
   counterInitialState
 );
 
-const effects$ = combineEpics(incrementEverySecondEpic);
+const effects$ = combineEpics(incrementEveryEpic);
 
 const subscription = new Subscription();
 
@@ -164,6 +170,28 @@ dispatch(getProducts());
 
 ## Examples
 
+### React and Angular in same monorepo with shared library with state
+
+https://github.com/BePasquet/benji-toolkit/tree/master/apps
+
+### React Local State Management
+
+https://github.com/BePasquet/benji-toolkit/tree/master/apps/from-reducer-react-local-example
+
+### React Global State Management
+
+https://github.com/BePasquet/benji-toolkit/tree/master/apps/from-reducer-react-global-example
+
+### Angular Local State Management
+
+https://github.com/BePasquet/benji-toolkit/tree/master/apps/from-reducer-angular-local-example
+
+### Angular Global State Management
+
+https://github.com/BePasquet/benji-toolkit/tree/master/apps/from-reducer-react-global-example
+
+### Redux pattern:
+
 ```
 npm i from-reducer
 ```
@@ -171,8 +199,6 @@ npm i from-reducer
 ```
 npm install rxjs
 ```
-
-### Redux pattern:
 
 more info on this pattern: https://redux.js.org
 
@@ -195,9 +221,25 @@ import {
 } from 'rxjs/operators';
 
 // Model we want to work with
-interface User {
-  id: string;
-  name: string;
+export interface GitHubUser {
+  login: string;
+  id: number;
+  node_id: string;
+  avatar_url: string;
+  gravatar_id: string;
+  url: string;
+  html_url: string;
+  followers_url: string;
+  following_url: string;
+  gists_url: string;
+  starred_url: string;
+  subscriptions_url: string;
+  organizations_url: string;
+  repos_url: string;
+  events_url: string;
+  received_events_url: string;
+  type: string;
+  site_admin: boolean;
 }
 
 // Actions
@@ -207,28 +249,24 @@ enum UserActionType {
   GetUserFail = '[Users] Get Users Fail',
 }
 
-class GetUsers {
-  readonly type = UserActionType.GetUser;
-}
+const getUsers = () => ({
+  type: UserActionType.GetUser,
+  payload: null,
+});
 
-class GetUsersSuccess {
-  readonly type = UserActionType.GetUserSuccess;
-  constructor(readonly payload: User[]) {}
-}
+const getUsersSuccess = (payload: GitHubUser[]) => ({
+  type: UserActionType.GetUserSuccess,
+  payload,
+});
 
-class GetUsersFail {
-  readonly type = UserActionType.GetUserFail;
-  constructor(readonly payload: string) {}
-}
+const getUsersFail = (payload: string) => ({
+  type: UserActionType.GetUserFail,
+  payload,
+});
 
-type UserActions = GetUsers | GetUsersSuccess | GetUsersFail;
-
-// Reducer slice state
-interface UsersState {
-  loading: boolean;
-  data: User[];
-  error: string;
-}
+type UserActions = ReturnType<
+  typeof getUsers | typeof getUsersSuccess | typeof getUsersFail
+>;
 
 const usersInitialState: UsersState = {
   loading: false,
@@ -237,10 +275,7 @@ const usersInitialState: UsersState = {
 };
 
 // Reducer
-function usersReducer(
-  state: UsersState,
-  action: UserActions | Action
-): UsersState {
+function usersReducer(state: UsersState, action: UserActions): UsersState {
   switch (action.type) {
     case UserActionType.GetUser: {
       return { ...state, loading: true, data: [], error: '' };
@@ -263,14 +298,14 @@ function usersReducer(
   return state;
 }
 
-// Side Effects
+// Epics
 const getUsersEpic = (actions$: Observable<Action>) =>
   actions$.pipe(
     filter(({ type }) => type === UserActionType.GetUser),
     switchMap(() =>
-      ajax<User[]>(`https://api.github.com/users?per_page=5`).pipe(
-        map(({ response }) => new GetUsersSuccess(response)),
-        catchError((err) => of(new GetUsersFail(err)))
+      ajax<GitHubUser[]>(`https://api.github.com/users?per_page=5`).pipe(
+        map(({ response }) => getUsersSuccess(response)),
+        catchError((err) => of(getUsersFail(err)))
       )
     )
   );

@@ -1,10 +1,10 @@
 {
   "name": "from-reducer",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Utility function to create an observable from a reducer",
   "author": "Pedro Benjamin Lescano Pasquet",
-  "repository": "https://github.com/BePasquet/from-reducer",
-  "homepage": "https://bepasquet.github.io/from-reducer",
+  "repository": "https://github.com/BePasquet/benji-toolkit/tree/master/libs/from-reducer",
+  "homepage": "https://github.com/BePasquet/benji-toolkit/tree/master/libs/from-reducer",
   "license": "apache",
   "keywords": [
     "observable",
