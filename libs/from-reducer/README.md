@@ -14,13 +14,155 @@ Given a reducer function and an initial state creates a tuple which values will 
     will merge the result of applying them to the event stream and the observable of state.
     This will come helpful when we want to intercept events to perform a side effect.
 
+## IMPORTANT: USES RXJS VERSION 7
+
 ## NOTE: THIS LIBRARY DOESN'T REPLACE REDUX OR NGRX.
 
 Where this package can be helpful on small projects or places where you are just able to use rxjs, redux and ngrx has been highly proven against the environment and are an amazing solution that i personally use in my projects.
 So why?
 You can think it as a rxjs version of react useReducer with middleware
 
-## Example
+### TLDR
+
+##### Single reducer
+
+```ts
+import { fromReducer, Action } from 'from-reducer';
+import { interval, Observable, Subscription } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs/operators';
+
+// Actions
+enum CounterActions {
+  Increment = 'INCREMENT',
+  IncrementEvery = 'INCREMENT_EVERY',
+}
+
+const increment = () => ({ type: CounterActions.Increment });
+const incrementEvery = (time: number) => ({
+  type: CounterActions.IncrementEvery,
+  payload: time,
+});
+
+// Reducer
+const counterInitialState = {
+  counter: 0,
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case CounterActions.Increment: {
+      return { ...state, counter: state.counter + 1 };
+    }
+  }
+};
+
+// Epic
+const incrementEverySecondEpic = (actions$: Observable<Action>) =>
+  actions$.pipe(
+    filter(({ type }) => type === CounterActions.IncrementEvery),
+    switchMap(({ payload }) => interval(payload).pipe(map(() => increment())))
+  );
+
+const [state$, dispatch, combineEpics] = fromReducer(
+  reducer,
+  counterInitialState
+);
+
+const effects$ = combineEpics(incrementEverySecondEpic);
+
+const subscription = new Subscription();
+
+subscription.add(state$.subscribe(console.log));
+// { counter: 0 }
+// { counter: 1 }
+// ...
+subscription.add(effects$.subscribe());
+
+dispatch(increment());
+dispatch(incrementEvery(1000));
+```
+
+##### Multiple reducers
+
+```ts
+import { Action, fromReducer } from 'from-reducer';
+import { Observable } from 'rxjs';
+import { ignoreElements, tap } from 'rxjs/operators';
+import { combineReducers } from './util';
+
+// User
+interface UserState {
+  data: { name: string } | null;
+}
+
+enum UserAction {
+  GetUser = 'GET_USER',
+}
+
+const getUser = () => ({ type: UserAction.GetUser });
+const userStateKey = 'user';
+const userInitialState: UserState = { data: null };
+
+const userReducer = (state: UserState, action: ReturnType<typeof getUser>) => {
+  switch (action.type) {
+    case UserAction.GetUser: {
+      return { ...state, data: { name: 'Benji' } };
+    }
+  }
+};
+
+// Products
+interface ProductsState {
+  data: { id: string; name: string }[];
+}
+
+enum ProductAction {
+  GetProducts = 'GET_PRODUCTS',
+}
+
+const getProducts = () => ({ type: ProductAction.GetProducts });
+const productStateKey = 'products';
+const productInitialState: ProductsState = { data: [] };
+
+const productReducer = (
+  state: ProductsState,
+  action: ReturnType<typeof getProducts>
+) => {
+  switch (action.type) {
+    case ProductAction.GetProducts: {
+      return { ...state, data: [{ id: '1', name: 'Pre workout' }] };
+    }
+  }
+};
+
+// Action logger
+const actionLoggerEpic = (actions$: Observable<Action>) =>
+  actions$.pipe(tap(console.log), ignoreElements());
+
+const reducers = {
+  [userStateKey]: userReducer,
+  [productStateKey]: productReducer,
+};
+
+const initialState = {
+  [userStateKey]: userInitialState,
+  [productStateKey]: productInitialState,
+};
+
+const reducer = combineReducers(reducers);
+const [state$, dispatch, combineEpics] = fromReducer(reducer, initialState);
+const effects$ = combineEpics(actionLoggerEpic);
+
+const subscription = new Subscription();
+
+subscription.add(state$.subscribe());
+subscription.add(effects$.subscribe());
+
+dispatch(getUser());
+dispatch(getProducts());
+```
+
+## Examples
 
 ```
 npm i from-reducer
@@ -384,43 +526,47 @@ dispatch(getUsers());
 more info on this pattern: https://reactjs.org/docs/hooks-state.html
 
 ```ts
- interface UsersComponentState {
-   loading: boolean;
-   users: User[];
-   error: string;
- }
+interface UsersComponentState {
+  loading: boolean;
+  users: User[];
+  error: string;
+}
 
- function usersComponentReducer(
-   state: UsersComponentState,
-   slice: Partial<UsersComponentState>
- ): UsersComponentState {
-   return { ...state, ...slice };
- }
+function usersComponentReducer(
+  state: UsersComponentState,
+  slice: Partial<UsersComponentState>
+): UsersComponentState {
+  return { ...state, ...slice };
+}
 
- const componentInitialState: UsersComponentState = {
-   loading: false,
-   users: [],
-   error: "",
- };
+const componentInitialState: UsersComponentState = {
+  loading: false,
+  users: [],
+  error: '',
+};
 
 const subscription = new Subscription();
 
- const [state$, setState] = fromReducer(
-   usersComponentReducer,
-   componentInitialState
- );
+const [state$, setState] = fromReducer(
+  usersComponentReducer,
+  componentInitialState
+);
 
- subscription.add(state$.subscribe(console.log));
- // { loading: true, data: [], error: '' }
- // { loading: true, data: [...], error: '' } || { loading: false, data: [], error: '...' }
+subscription.add(state$.subscribe(console.log));
+// { loading: true, data: [], error: '' }
+// { loading: true, data: [...], error: '' } || { loading: false, data: [], error: '...' }
 
- setState({ loading: true });
+setState({ loading: true });
 
- ajax<User[]>(`https://api.github.com/users?per_page=5`).pipe(
-   map(({ response }) => ({ loading: false, users: response, error: "" })),
-   catchError((err) => of({ loading: false, error: err })),
-   tap(setState)
+const requestUsers$ = ajax<User[]>(
+  `https://api.github.com/users?per_page=5`
+).pipe(
+  map(({ response }) => ({ loading: false, users: response, error: '' })),
+  catchError((err) => of({ loading: false, error: err })),
+  tap(setState)
+);
 
+subscription.add(requestUsers$.subscribe());
 ```
 
 ```ts
