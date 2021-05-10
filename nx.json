@@ -13,31 +13,11 @@
   },
   "projects": {
     "from-reducer": { "tags": [] },
-    "from-reducer-react-example-e2e": {
-      "tags": [],
-      "implicitDependencies": ["from-reducer-react-global-example"]
-    },
-    "from-reducer-angular-example-e2e": {
-      "tags": [],
-      "implicitDependencies": ["from-reducer-angular-global-example"]
-    },
     "users": { "tags": [] },
-    "from-reducer-react-local-e2e": {
-      "tags": [],
-      "implicitDependencies": ["from-reducer-react-local-example"]
-    },
-    "from-reducer-angular-local-e2e": {
-      "tags": [],
-      "implicitDependencies": ["from-reducer-angular-local-example"]
-    },
     "from-reducer-react-global-example": { "tags": [] },
     "from-reducer-angular-global-example": { "tags": [] },
     "repositories": { "tags": [] },
     "from-reducer-react-local-example": { "tags": [] },
-    "from-reducer-angular-local-example": { "tags": [] },
-    "from-reducer-angular-local-example-e2e": {
-      "tags": [],
-      "implicitDependencies": ["from-reducer-angular-local-example"]
-    }
+    "from-reducer-angular-local-example": { "tags": [] }
   }
 }

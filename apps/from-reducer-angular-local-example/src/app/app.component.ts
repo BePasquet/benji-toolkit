@@ -1,10 +1,14 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'benji-toolkit-root',
-  templateUrl: './app.component.html',
+  template: `
+    <div>
+      <h1>From Reducer Angular Local Example</h1>
+      <app-users></app-users>
+    </div>
+  `,
   styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
-  title = 'from-reducer-angular-local-example';
-}
+export class AppComponent {}
