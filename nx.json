@@ -33,19 +33,13 @@
     "users": {
       "tags": []
     },
-    "from-reducer-react-local": {
-      "tags": []
-    },
     "from-reducer-react-local-e2e": {
       "tags": [],
-      "implicitDependencies": ["from-reducer-react-local"]
-    },
-    "from-reducer-angular-local": {
-      "tags": []
+      "implicitDependencies": ["from-reducer-react-local-example"]
     },
     "from-reducer-angular-local-e2e": {
       "tags": [],
-      "implicitDependencies": ["from-reducer-angular-local"]
+      "implicitDependencies": ["from-reducer-react-angular-example"]
     },
     "from-reducer-react-global-example": {
       "tags": []
@@ -54,6 +48,12 @@
       "tags": []
     },
     "repositories": {
+      "tags": []
+    },
+    "from-reducer-react-local-example": {
+      "tags": []
+    },
+    "from-reducer-react-angular-example": {
       "tags": []
     }
   }

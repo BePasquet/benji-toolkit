@@ -144,82 +144,6 @@
         }
       }
     },
-    "from-reducer-react-local": {
-      "root": "apps/from-reducer-react-local",
-      "sourceRoot": "apps/from-reducer-react-local/src",
-      "projectType": "application",
-      "targets": {
-        "build": {
-          "executor": "@nrwl/web:build",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/apps/from-reducer-react-local",
-            "index": "apps/from-reducer-react-local/src/index.html",
-            "main": "apps/from-reducer-react-local/src/main.tsx",
-            "polyfills": "apps/from-reducer-react-local/src/polyfills.ts",
-            "tsConfig": "apps/from-reducer-react-local/tsconfig.app.json",
-            "assets": [
-              "apps/from-reducer-react-local/src/favicon.ico",
-              "apps/from-reducer-react-local/src/assets"
-            ],
-            "styles": ["apps/from-reducer-react-local/src/styles.scss"],
-            "scripts": [],
-            "webpackConfig": "@nrwl/react/plugins/webpack"
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/from-reducer-react-local/src/environments/environment.ts",
-                  "with": "apps/from-reducer-react-local/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "executor": "@nrwl/web:dev-server",
-          "options": {
-            "buildTarget": "from-reducer-react-local:build"
-          },
-          "configurations": {
-            "production": {
-              "buildTarget": "from-reducer-react-local:build:production"
-            }
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "apps/from-reducer-react-local/**/*.{ts,tsx,js,jsx}"
-            ]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/from-reducer-react-local"],
-          "options": {
-            "jestConfig": "apps/from-reducer-react-local/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
     "from-reducer-react-local-e2e": {
       "root": "apps/from-reducer-react-local-e2e",
       "sourceRoot": "apps/from-reducer-react-local-e2e/src",
@@ -230,11 +154,11 @@
           "options": {
             "cypressConfig": "apps/from-reducer-react-local-e2e/cypress.json",
             "tsConfig": "apps/from-reducer-react-local-e2e/tsconfig.e2e.json",
-            "devServerTarget": "from-reducer-react-local:serve"
+            "devServerTarget": "from-reducer-react-local-example:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "from-reducer-react-local:serve:production"
+              "devServerTarget": "from-reducer-react-local-example:serve:production"
             }
           }
         },
@@ -244,82 +168,6 @@
             "lintFilePatterns": [
               "apps/from-reducer-react-local-e2e/**/*.{js,ts}"
             ]
-          }
-        }
-      }
-    },
-    "from-reducer-angular-local": {
-      "root": "apps/from-reducer-angular-local",
-      "sourceRoot": "apps/from-reducer-angular-local/src",
-      "projectType": "application",
-      "targets": {
-        "build": {
-          "executor": "@nrwl/web:build",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/apps/from-reducer-angular-local",
-            "index": "apps/from-reducer-angular-local/src/index.html",
-            "main": "apps/from-reducer-angular-local/src/main.tsx",
-            "polyfills": "apps/from-reducer-angular-local/src/polyfills.ts",
-            "tsConfig": "apps/from-reducer-angular-local/tsconfig.app.json",
-            "assets": [
-              "apps/from-reducer-angular-local/src/favicon.ico",
-              "apps/from-reducer-angular-local/src/assets"
-            ],
-            "styles": ["apps/from-reducer-angular-local/src/styles.scss"],
-            "scripts": [],
-            "webpackConfig": "@nrwl/react/plugins/webpack"
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/from-reducer-angular-local/src/environments/environment.ts",
-                  "with": "apps/from-reducer-angular-local/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "executor": "@nrwl/web:dev-server",
-          "options": {
-            "buildTarget": "from-reducer-angular-local:build"
-          },
-          "configurations": {
-            "production": {
-              "buildTarget": "from-reducer-angular-local:build:production"
-            }
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "apps/from-reducer-angular-local/**/*.{ts,tsx,js,jsx}"
-            ]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/from-reducer-angular-local"],
-          "options": {
-            "jestConfig": "apps/from-reducer-angular-local/jest.config.js",
-            "passWithNoTests": true
           }
         }
       }
@@ -334,11 +182,11 @@
           "options": {
             "cypressConfig": "apps/from-reducer-angular-local-e2e/cypress.json",
             "tsConfig": "apps/from-reducer-angular-local-e2e/tsconfig.e2e.json",
-            "devServerTarget": "from-reducer-angular-local:serve"
+            "devServerTarget": "from-reducer-react-angular-example:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "from-reducer-angular-local:serve:production"
+              "devServerTarget": "from-reducer-react-angular-example:serve:production"
             }
           }
         },
@@ -536,6 +384,160 @@
           "outputs": ["coverage/libs/repositories"],
           "options": {
             "jestConfig": "libs/repositories/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "from-reducer-react-local-example": {
+      "root": "apps/from-reducer-react-local-example",
+      "sourceRoot": "apps/from-reducer-react-local-example/src",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/web:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/from-reducer-react-local-example",
+            "index": "apps/from-reducer-react-local-example/src/index.html",
+            "main": "apps/from-reducer-react-local-example/src/main.tsx",
+            "polyfills": "apps/from-reducer-react-local-example/src/polyfills.ts",
+            "tsConfig": "apps/from-reducer-react-local-example/tsconfig.app.json",
+            "assets": [
+              "apps/from-reducer-react-local-example/src/favicon.ico",
+              "apps/from-reducer-react-local-example/src/assets"
+            ],
+            "styles": ["apps/from-reducer-react-local-example/src/styles.scss"],
+            "scripts": [],
+            "webpackConfig": "@nrwl/react/plugins/webpack"
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/from-reducer-react-local-example/src/environments/environment.ts",
+                  "with": "apps/from-reducer-react-local-example/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/web:dev-server",
+          "options": {
+            "buildTarget": "from-reducer-react-local-example:build"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "from-reducer-react-local-example:build:production"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/from-reducer-react-local-example/**/*.{ts,tsx,js,jsx}"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/from-reducer-react-local-example"],
+          "options": {
+            "jestConfig": "apps/from-reducer-react-local-example/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "from-reducer-react-angular-example": {
+      "root": "apps/from-reducer-react-angular-example",
+      "sourceRoot": "apps/from-reducer-react-angular-example/src",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/web:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/from-reducer-react-angular-example",
+            "index": "apps/from-reducer-react-angular-example/src/index.html",
+            "main": "apps/from-reducer-react-angular-example/src/main.tsx",
+            "polyfills": "apps/from-reducer-react-angular-example/src/polyfills.ts",
+            "tsConfig": "apps/from-reducer-react-angular-example/tsconfig.app.json",
+            "assets": [
+              "apps/from-reducer-react-angular-example/src/favicon.ico",
+              "apps/from-reducer-react-angular-example/src/assets"
+            ],
+            "styles": [
+              "apps/from-reducer-react-angular-example/src/styles.scss"
+            ],
+            "scripts": [],
+            "webpackConfig": "@nrwl/react/plugins/webpack"
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/from-reducer-react-angular-example/src/environments/environment.ts",
+                  "with": "apps/from-reducer-react-angular-example/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/web:dev-server",
+          "options": {
+            "buildTarget": "from-reducer-react-angular-example:build"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "from-reducer-react-angular-example:build:production"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/from-reducer-react-angular-example/**/*.{ts,tsx,js,jsx}"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/from-reducer-react-angular-example"],
+          "options": {
+            "jestConfig": "apps/from-reducer-react-angular-example/jest.config.js",
             "passWithNoTests": true
           }
         }
