@@ -9,25 +9,25 @@ import { fromReducer } from 'from-reducer';
 import React, { useEffect, useState } from 'react';
 import { Subscription } from 'rxjs';
 
-const [state$, dispatch, combineEpics] = fromReducer(
-  usersReducer,
-  usersInitialState
-);
-
 export const Users = () => {
   const [state, setState] = useState<UsersState | null>(null);
 
   useEffect(() => {
-    const subscription = new Subscription();
+    const [state$, dispatch, combineEpics] = fromReducer(
+      usersReducer,
+      usersInitialState
+    );
+
+    const subscriptions = new Subscription();
     const effects$ = combineEpics(...userEpics);
 
-    subscription.add(state$.subscribe(setState));
-    subscription.add(effects$.subscribe());
+    subscriptions.add(state$.subscribe(setState));
+    subscriptions.add(effects$.subscribe());
 
     dispatch(getUsers());
 
-    return () => subscription.unsubscribe();
-  }, [state$, dispatch]);
+    return () => subscriptions.unsubscribe();
+  }, []);
 
   return (
     !!state && (
