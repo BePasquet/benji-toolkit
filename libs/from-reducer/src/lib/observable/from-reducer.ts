@@ -1,4 +1,5 @@
-import { BehaviorSubject, merge, retry, scan, share, Subject, tap } from 'rxjs';
+import { BehaviorSubject, merge, Subject } from 'rxjs';
+import { retry, scan, share, tap } from 'rxjs/operators';
 import { Epic, FromReducerReturnType, Reducer } from '../types';
 
 /**

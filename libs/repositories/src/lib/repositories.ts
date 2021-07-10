@@ -1,15 +1,14 @@
 import { Action } from 'from-reducer';
+import { Observable, of } from 'rxjs';
+import { ajax } from 'rxjs/ajax';
 import {
   catchError,
   filter,
   ignoreElements,
   map,
-  Observable,
-  of,
   switchMap,
   tap,
-} from 'rxjs';
-import { ajax } from 'rxjs/ajax';
+} from 'rxjs/operators';
 import { Repository } from './repository.interface';
 
 export const REPOSITORIES_STATE_KEY = 'repositories';
