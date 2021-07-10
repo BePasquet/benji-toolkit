@@ -1,14 +1,15 @@
 import { Action } from 'from-reducer';
-import { Observable, of } from 'rxjs';
-import { ajax } from 'rxjs/ajax';
 import {
   catchError,
   filter,
   ignoreElements,
   map,
+  Observable,
+  of,
   switchMap,
   tap,
-} from 'rxjs/operators';
+} from 'rxjs';
+import { ajax } from 'rxjs/ajax';
 import { GitHubUser } from './github-user.interface';
 
 export const USER_STATE_KEY = 'users';

@@ -4,17 +4,18 @@ Helper function built around rxjs scan operator and subjects, its purpose was to
 
 Given a reducer function and an initial state creates a tuple which values will be:
 
-1.  A observable with the form of `Observable<S>` that will emit a value every time is notified that a
-    new event happened with the result of the reduction between the current state and the value of an event,
-    this result will become the current state.
+Given a reducer function and an initial state creates a tuple which values will be:
+
+1.  An observable with the form of `Observable<S>` that will emit a value resulting from the applying the reducer function to
+    the current state and the event
 
 2.  A function with the form of `(event: T) => void` to notify the previous observable that an event has occur.
 
-3.  A function that given an array of functions with the form of `(events$: Observable<T>, state$?: Observable<S>) => Observable<T>`
-    will merge the result of applying them to the event stream and the observable of state.
+3.  A function that accepts arguments with the form of `(events$: Observable<T>, state$?: Observable<S>) => Observable<T>`
+    that once applied will produce an observable that merges all functions to the events stream
     This will come helpful when we want to intercept events to perform a side effect.
 
-## IMPORTANT: USES RXJS VERSION 7
+## IMPORTANT: USES RXJS VERSION 7.2
 
 ## Installation
 
@@ -33,192 +34,9 @@ You can think it as a rxjs version of react useReducer with middleware
 ##### Single reducer
 
 ```ts
-import { fromReducer, Action } from 'from-reducer';
-import { interval, Observable, Subscription } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
-
-// Actions
-enum CounterActions {
-  Increment = 'INCREMENT',
-  IncrementEvery = 'INCREMENT_EVERY',
-}
-
-const increment = () => ({ type: CounterActions.Increment });
-const incrementEvery = (time: number) => ({
-  type: CounterActions.IncrementEvery,
-  payload: time,
-});
-
-// Reducer
-const counterInitialState = {
-  counter: 0,
-};
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case CounterActions.Increment: {
-      return { ...state, counter: state.counter + 1 };
-    }
-  }
-};
-
-// Epic
-const incrementEveryEpic = (actions$: Observable<Action>) =>
-  actions$.pipe(
-    filter(({ type }) => type === CounterActions.IncrementEvery),
-    switchMap(({ payload }) => interval(payload).pipe(map(() => increment())))
-  );
-
-const [state$, dispatch, combineEpics] = fromReducer(
-  reducer,
-  counterInitialState
-);
-
-const effects$ = combineEpics(incrementEveryEpic);
-
-const subscription = new Subscription();
-
-subscription.add(state$.subscribe(console.log));
-// { counter: 0 }
-// { counter: 1 }
-// ...
-subscription.add(effects$.subscribe());
-
-dispatch(increment());
-dispatch(incrementEvery(1000));
-```
-
-##### Multiple reducers
-
-```ts
-import { Action, fromReducer } from 'from-reducer';
-import { Observable } from 'rxjs';
-import { ignoreElements, tap } from 'rxjs/operators';
-import { combineReducers } from './util';
-
-// User
-interface UserState {
-  data: { name: string } | null;
-}
-
-enum UserAction {
-  GetUser = 'GET_USER',
-}
-
-const getUser = () => ({ type: UserAction.GetUser });
-const userStateKey = 'user';
-const userInitialState: UserState = { data: null };
-
-const userReducer = (state: UserState, action: ReturnType<typeof getUser>) => {
-  switch (action.type) {
-    case UserAction.GetUser: {
-      return { ...state, data: { name: 'Benji' } };
-    }
-  }
-};
-
-// Products
-interface ProductsState {
-  data: { id: string; name: string }[];
-}
-
-enum ProductAction {
-  GetProducts = 'GET_PRODUCTS',
-}
-
-const getProducts = () => ({ type: ProductAction.GetProducts });
-const productStateKey = 'products';
-const productInitialState: ProductsState = { data: [] };
-
-const productReducer = (
-  state: ProductsState,
-  action: ReturnType<typeof getProducts>
-) => {
-  switch (action.type) {
-    case ProductAction.GetProducts: {
-      return { ...state, data: [{ id: '1', name: 'Pre workout' }] };
-    }
-  }
-};
-
-// Action logger
-const actionLoggerEpic = (actions$: Observable<Action>) =>
-  actions$.pipe(tap(console.log), ignoreElements());
-
-const reducers = {
-  [userStateKey]: userReducer,
-  [productStateKey]: productReducer,
-};
-
-const initialState = {
-  [userStateKey]: userInitialState,
-  [productStateKey]: productInitialState,
-};
-
-const reducer = combineReducers(reducers);
-const [state$, dispatch, combineEpics] = fromReducer(reducer, initialState);
-const effects$ = combineEpics(actionLoggerEpic);
-
-const subscription = new Subscription();
-
-subscription.add(state$.subscribe());
-subscription.add(effects$.subscribe());
-
-dispatch(getUser());
-dispatch(getProducts());
-```
-
-## Examples
-
-### React and Angular in same monorepo with shared library with state
-
-https://github.com/BePasquet/benji-toolkit/tree/master/apps
-
-### React Local State Management
-
-https://github.com/BePasquet/benji-toolkit/tree/master/apps/from-reducer-react-local-example
-
-### React Global State Management
-
-https://github.com/BePasquet/benji-toolkit/tree/master/apps/from-reducer-react-global-example
-
-### Angular Local State Management
-
-https://github.com/BePasquet/benji-toolkit/tree/master/apps/from-reducer-angular-local-example
-
-### Angular Global State Management
-
-https://github.com/BePasquet/benji-toolkit/tree/master/apps/from-reducer-react-global-example
-
-### Redux pattern:
-
-```
-npm i from-reducer
-```
-
-```
-npm install rxjs
-```
-
-more info on this pattern: https://redux.js.org
-
-### Middleware based on redux observable
-
-more info: https://redux-observable.js.org/
-
-#### With a switch reducer
-
-```ts
 import { Observable, of, Subscription } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
-import {
-  filter,
-  switchMap,
-  map,
-  catchError,
-  tap,
-  ignoreElements,
-} from 'rxjs/operators';
+import { filter, switchMap, map, catchError, tap, ignoreElements } from 'rxjs';
 
 // Model we want to work with
 export interface GitHubUser {
@@ -320,11 +138,13 @@ const getUserFailEpic = (actions$: Observable<Action>) =>
 const userEpics = [getUsersEpic, getUserFailEpic];
 
 const subscription = new Subscription();
+
 const [state$, dispatch, combineEpics] = fromReducer(
   usersReducer,
   usersInitialState
 );
 
+// observable of side effects
 const effects$ = combineEpics(...userEpics);
 
 subscription.add(state$.subscribe(console.log));
@@ -334,6 +154,247 @@ subscription.add(effects$.subscribe());
 
 dispatch(new GetUsers());
 ```
+
+##### Multiple reducers
+
+```ts
+import { Observable, of, Subscription } from 'rxjs';
+import { ajax } from 'rxjs/ajax';
+import { filter, switchMap, map, catchError, tap, ignoreElements } from 'rxjs';
+import { Action, combineReducers, fromReducer } from 'from-reducer';
+
+// User
+export interface GitHubUser {
+  login: string;
+  id: number;
+  node_id: string;
+  avatar_url: string;
+  gravatar_id: string;
+  url: string;
+  html_url: string;
+  followers_url: string;
+  following_url: string;
+  gists_url: string;
+  starred_url: string;
+  subscriptions_url: string;
+  organizations_url: string;
+  repos_url: string;
+  events_url: string;
+  received_events_url: string;
+  type: string;
+  site_admin: boolean;
+}
+
+// Actions
+enum UserActionType {
+  GetUser = '[Users] Get Users',
+  GetUserSuccess = '[Users] Get Users Success',
+  GetUserFail = '[Users] Get Users Fail',
+}
+
+const getUsers = () => ({
+  type: UserActionType.GetUser,
+  payload: null,
+});
+
+const getUsersSuccess = (payload: GitHubUser[]) => ({
+  type: UserActionType.GetUserSuccess,
+  payload,
+});
+
+const getUsersFail = (payload: string) => ({
+  type: UserActionType.GetUserFail,
+  payload,
+});
+
+type UserActions = ReturnType<
+  typeof getUsers | typeof getUsersSuccess | typeof getUsersFail
+>;
+
+const USERS_STATE_KEY = 'users';
+
+interface UsersState {
+  data: GitHubUser[];
+  loading: boolean;
+  error: string;
+}
+
+const usersInitialState: UsersState = {
+  data: [],
+  loading: false,
+  error: '',
+};
+
+// Reducer
+function usersReducer(state: UsersState, action: UserActions): UsersState {
+  switch (action.type) {
+    case UserActionType.GetUser: {
+      return { ...state, loading: true, data: [], error: '' };
+    }
+
+    case UserActionType.GetUserSuccess: {
+      return {
+        ...state,
+        loading: false,
+        data: [...action.payload],
+        error: '',
+      };
+    }
+
+    case UserActionType.GetUserFail: {
+      return { ...state, loading: false, error: action.payload };
+    }
+
+    default: {
+      return state;
+    }
+  }
+}
+
+// Epics
+const getUsersEpic = (actions$: Observable<Action>) =>
+  actions$.pipe(
+    filter(({ type }) => type === UserActionType.GetUser),
+    switchMap(() =>
+      ajax<GitHubUser[]>(`https://api.github.com/users?per_page=5`).pipe(
+        map(({ response }) => getUsersSuccess(response)),
+        catchError((err) => of(getUsersFail(err)))
+      )
+    )
+  );
+
+const getUserFailEpic = (actions$: Observable<Action>) =>
+  actions$.pipe(
+    filter(({ type }) => type === UserActionType.GetUserFail),
+    tap(({ payload }) => console.error(payload)),
+    ignoreElements()
+  );
+
+const userEpics = [getUsersEpic, getUserFailEpic];
+
+// Products
+
+interface Product {
+  id: string;
+  name: string;
+}
+
+interface ProductsState {
+  data: Product[];
+  loading: boolean;
+  error: string;
+}
+
+enum ProductAction {
+  GetProducts = 'GET_PRODUCTS',
+  GetProductsSuccess = 'GET_PRODUCTS_SUCCESS',
+  GetProductsFail = 'GET_PRODUCTS_FAIL',
+}
+
+const getProducts = () => ({ type: ProductAction.GetProducts, payload: null });
+
+const getProductsSuccess = (payload: Product[]) => ({
+  type: ProductAction.GetProductsSuccess,
+  payload,
+});
+
+const getProductsFail = (payload: string) => ({
+  type: ProductAction.GetProductsFail,
+  payload,
+});
+
+const PRODUCTS_STATE_KEY = 'products';
+
+const productInitialState: ProductsState = {
+  data: [],
+  loading: false,
+  error: '',
+};
+
+type ProductActions = ReturnType<
+  typeof getProducts | typeof getProductsSuccess | typeof getProductsFail
+>;
+
+const productReducer = (state: ProductsState, action: ProductActions) => {
+  switch (action.type) {
+    case ProductAction.GetProducts: {
+      return { ...state, data: [], loading: true, error: '' };
+    }
+
+    case ProductAction.GetProductsSuccess: {
+      return { ...state, data: [...action.payload], loading: false, error: '' };
+    }
+
+    case ProductAction.GetProductsFail: {
+      return { ...state, loading: false, error: action.payload };
+    }
+  }
+};
+
+const getProductsEpic = (actions$: Observable<Action>) =>
+  actions$.pipe(
+    filter(({ type }) => type === ProductAction.GetProducts),
+    switchMap(() =>
+      ajax<Product[]>(`https://api.github.com/products`).pipe(
+        map(({ response }) => getProductsSuccess(response)),
+        catchError((err) => of(getProductsFail(err)))
+      )
+    )
+  );
+
+const getProductsFailEpic = (actions$: Observable<Action>) =>
+  actions$.pipe(
+    filter(({ type }) => type === ProductAction.GetProductsFail),
+    tap(({ payload }) => console.error(payload)),
+    ignoreElements()
+  );
+
+const productsEpics = [getProductsEpic, getProductsFailEpic];
+
+// Action logger
+const actionLoggerEpic = (actions$: Observable<Action>) =>
+  actions$.pipe(tap(console.log), ignoreElements());
+
+const reducers = {
+  [USERS_STATE_KEY]: usersReducer,
+  [PRODUCTS_STATE_KEY]: productReducer,
+};
+
+const initialState = {
+  [USERS_STATE_KEY]: usersInitialState,
+  [PRODUCTS_STATE_KEY]: productInitialState,
+};
+
+const reducer = combineReducers(reducers);
+const [state$, dispatch, combineEpics] = fromReducer(reducer, initialState);
+
+const epics = [...userEpics, ...productsEpics, actionLoggerEpic];
+const effects$ = combineEpics(...epics);
+
+const subscription = new Subscription();
+
+subscription.add(state$.subscribe());
+subscription.add(effects$.subscribe());
+
+dispatch(getUsers());
+dispatch(getProducts());
+```
+
+### Redux pattern:
+
+```
+npm i from-reducer
+```
+
+```
+npm install rxjs
+```
+
+more info on this pattern: https://redux.js.org
+
+### Middleware based on redux observable
+
+more info: https://redux-observable.js.org/
 
 #### With redux toolkit
 
@@ -349,30 +410,39 @@ npm install @reduxjs/toolkit
 import { Action, createAction, createReducer } from '@reduxjs/toolkit';
 import { Observable, of, Subscription } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
-import {
-  filter,
-  switchMap,
-  map,
-  catchError,
-  tap,
-  ignoreElements,
-} from 'rxjs/operators';
+import { filter, switchMap, map, catchError, tap, ignoreElements } from 'rxjs';
 
 // Model we want to work with
-interface User {
-  id: string;
-  name: string;
+export interface GitHubUser {
+  login: string;
+  id: number;
+  node_id: string;
+  avatar_url: string;
+  gravatar_id: string;
+  url: string;
+  html_url: string;
+  followers_url: string;
+  following_url: string;
+  gists_url: string;
+  starred_url: string;
+  subscriptions_url: string;
+  organizations_url: string;
+  repos_url: string;
+  events_url: string;
+  received_events_url: string;
+  type: string;
+  site_admin: boolean;
 }
 
 // Actions
 const getUsers = createAction('[Users] Get Users');
-const getUserSuccess = createAction<User[]>('[Users] Get Users Success');
+const getUserSuccess = createAction<GitHubUser[]>('[Users] Get Users Success');
 const getUsersFail = createAction<string>('[Users] Get Users Fail');
 
 // Reducer slice state definition
 interface UsersState {
   loading: boolean;
-  data: User[];
+  data: GitHubUser[];
   error: string;
 }
 
@@ -410,7 +480,7 @@ const getUsersEpic = (actions$: Observable<Action>) =>
   actions$.pipe(
     filter(getUsers.match),
     switchMap(() =>
-      ajax<User[]>(`https://api.github.com/users?per_page=5`).pipe(
+      ajax<GitHubUser[]>(`https://api.github.com/users?per_page=5`).pipe(
         map(({ response }) => getUserSuccess(response)),
         catchError((err) => of(getUsersFail(err)))
       )
@@ -454,28 +524,38 @@ npm install @ngrx/store --save
 
 ```ts
 import { Action, createAction, createReducer, on, props } from '@ngrx/store';
+import { ofType } from '@ngrx/effects'
 import { Observable, of, Subscription } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
-import {
-  filter,
-  switchMap,
-  map,
-  catchError,
-  tap,
-  ignoreElements,
-} from 'rxjs/operators';
+import { filter, switchMap, map, catchError, tap, ignoreElements } from 'rxjs';
 
 // Model we want to work with
-interface User {
-  id: string;
-  name: string;
+export interface GitHubUser {
+  login: string;
+  id: number;
+  node_id: string;
+  avatar_url: string;
+  gravatar_id: string;
+  url: string;
+  html_url: string;
+  followers_url: string;
+  following_url: string;
+  gists_url: string;
+  starred_url: string;
+  subscriptions_url: string;
+  organizations_url: string;
+  repos_url: string;
+  events_url: string;
+  received_events_url: string;
+  type: string;
+  site_admin: boolean;
 }
 
 // Actions
 const getUsers = createAction('[Users] Get Users');
 const getUserSuccess = createAction(
   '[Users] Get Users Success',
-  props<{ payload: User[] }>()
+  props<{ payload: GitHubUser[] }>()
 );
 const getUsersFail = createAction(
   '[Users] Get Users Fail',
@@ -499,7 +579,6 @@ const usersInitialState: UsersState = {
 // Reducer
 const usersReducer = createReducer(
   usersInitialState,
-
   on(getUsers, (state) => ({
     ...state,
     loading: true,
@@ -522,9 +601,9 @@ const usersReducer = createReducer(
 // Side Effects
 const getUsersEpic = (actions$: Observable<Action>) =>
   actions$.pipe(
-    filter(({ type }) => type === getUsers.type),
+    ofType(getUsers),
     switchMap(() =>
-      ajax<User[]>(`https://api.github.com/users?per_page=5`).pipe(
+      ajax<GitHubUser[]>(`https://api.github.com/users?per_page=5`).pipe(
         map(({ response }) => getUserSuccess({ payload: response })),
         catchError((err) => of(getUsersFail({ payload: err })))
       )
@@ -533,8 +612,8 @@ const getUsersEpic = (actions$: Observable<Action>) =>
 
 const getUserFailEpic = (actions$: Observable<Action>) =>
   actions$.pipe(
-    filter(({ type }) => type === getUsersFail.type),
-    tap(({ payload }: any) => console.error(payload)),
+    ofType(getUsersFail)
+    tap(({ payload }) => console.error(payload)),
     ignoreElements()
   );
 
@@ -608,3 +687,25 @@ subscription.add(requestUsers$.subscribe());
 // Later unsubscribe to state changes and effects
 subscription.unsubscribe();
 ```
+
+## Examples
+
+### React and Angular in same monorepo with shared library with state
+
+https://github.com/BePasquet/benji-toolkit/tree/master/apps
+
+### React Local State Management
+
+https://github.com/BePasquet/benji-toolkit/tree/master/apps/from-reducer-react-local-example
+
+### React Global State Management
+
+https://github.com/BePasquet/benji-toolkit/tree/master/apps/from-reducer-react-global-example
+
+### Angular Local State Management
+
+https://github.com/BePasquet/benji-toolkit/tree/master/apps/from-reducer-angular-local-example
+
+### Angular Global State Management
+
+https://github.com/BePasquet/benji-toolkit/tree/master/apps/from-reducer-react-global-example
