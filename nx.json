@@ -18,6 +18,11 @@
     "from-reducer-angular-global-example": { "tags": [] },
     "repositories": { "tags": [] },
     "from-reducer-react-local-example": { "tags": [] },
-    "from-reducer-angular-local-example": { "tags": [] }
+    "from-reducer-angular-local-example": { "tags": [] },
+    "from-reducer-angular-no-change-detection-zone": { "tags": [] },
+    "from-reducer-angular-no-change-detection-zone-e2e": {
+      "tags": [],
+      "implicitDependencies": ["from-reducer-angular-no-change-detection-zone"]
+    }
   }
 }

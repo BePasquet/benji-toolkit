@@ -45,7 +45,7 @@ export const getUsersFail = (payload: string) => ({
   payload,
 });
 
-type UserActions = ReturnType<
+export type UserActions = ReturnType<
   typeof getUsers | typeof getUsersSuccess | typeof getUsersFail
 >;
 
