@@ -696,16 +696,24 @@ https://github.com/BePasquet/benji-toolkit/tree/master/apps
 
 ### React Local State Management
 
-https://github.com/BePasquet/benji-toolkit/tree/master/apps/from-reducer-react-local-example
+https://github.com/BePasquet/benji-toolkit/blob/master/apps/from-reducer-react-local-example/src/app/users/users.component.tsx
 
 ### React Global State Management
 
-https://github.com/BePasquet/benji-toolkit/tree/master/apps/from-reducer-react-global-example
+https://github.com/BePasquet/benji-toolkit/blob/master/apps/from-reducer-react-global-example/src/app/store.tsx
+
+https://github.com/BePasquet/benji-toolkit/blob/master/apps/from-reducer-react-global-example/src/app/users/users.component.tsx
 
 ### Angular Local State Management
 
-https://github.com/BePasquet/benji-toolkit/tree/master/apps/from-reducer-angular-local-example
+https://github.com/BePasquet/benji-toolkit/blob/master/apps/from-reducer-angular-local-example/src/app/users/users.component.ts
 
 ### Angular Global State Management
 
-https://github.com/BePasquet/benji-toolkit/tree/master/apps/from-reducer-react-global-example
+https://github.com/BePasquet/benji-toolkit/blob/master/apps/from-reducer-angular-global-example/src/app/store.ts
+
+https://github.com/BePasquet/benji-toolkit/blob/master/apps/from-reducer-angular-global-example/src/app/users/users.component.ts
+
+### Angular Local State Management No Change Detection Zone js
+
+https://github.com/BePasquet/benji-toolkit/blob/master/apps/from-reducer-angular-no-change-detection-zone/src/app/users/users.component.ts
