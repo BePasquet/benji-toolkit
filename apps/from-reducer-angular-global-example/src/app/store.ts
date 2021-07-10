@@ -34,6 +34,3 @@ export const [state$, dispatch, combineEpics] = fromReducer(
 const epics = [...userEpics, ...repositoriesEpics];
 
 export const effects$ = combineEpics(...epics);
-
-state$.subscribe();
-effects$.subscribe();

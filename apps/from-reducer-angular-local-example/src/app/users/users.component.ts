@@ -12,8 +12,8 @@ import { Observable, Subscription } from 'rxjs';
 @Component({
   selector: 'app-users',
   template: `
-    <div *ngIf="state$ | async as state">
-      <pre>{{ state | json }}</pre>
+    <div>
+      <pre>{{ state$ | async | json }}</pre>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

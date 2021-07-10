@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { effects$, state$ } from './store';
 
 @Component({
   selector: 'benji-toolkit-root',
@@ -11,4 +12,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {}
+export class AppComponent {
+  constructor() {
+    // subscribes when application starts
+    // state$ is a multicaster
+    state$.subscribe();
+    effects$.subscribe();
+  }
+}
