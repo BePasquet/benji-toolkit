@@ -33,7 +33,7 @@ You can think it as a rxjs version of react useReducer with middleware
 
 ### TLDR
 
-##### Single reducer
+#### Single reducer
 
 ```ts
 import { Observable, of, Subscription } from 'rxjs';
@@ -154,10 +154,11 @@ subscription.add(state$.subscribe(console.log));
 // { loading: true, data: [...], error: '' } || { loading: false, data: [], error: '...' }
 subscription.add(effects$.subscribe());
 
-dispatch(new GetUsers());
+dispatch(getUsers());
 ```
 
-##### Multiple reducers
+<br />
+#### Multiple reducers
 
 ```ts
 import { Observable, of, Subscription } from 'rxjs';
@@ -382,6 +383,7 @@ dispatch(getUsers());
 dispatch(getProducts());
 ```
 
+<br />
 ### Redux pattern:
 
 ```
