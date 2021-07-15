@@ -1,5 +1,7 @@
 # fromReducer
 
+[![npm version](https://badge.fury.io/js/from-reducer.svg)](https://badge.fury.io/js/from-reducer)
+
 Helper function built around rxjs scan operator and subjects, its purpose was to have a zero configuration helper to manage either local or global state in different environments with rxjs.
 
 Given a reducer function and an initial state creates a tuple which values will be:
