@@ -27,7 +27,7 @@ export function fromReducer<S, T>(
     share({ connector: () => new BehaviorSubject(initialState) })
   );
 
-  const dispatch = (value: T) => events$.next(value);
+  const dispatch = (event: T) => events$.next(event);
 
   const combineEpics = (...epics: Epic<T, S>[]) => {
     const epicObs = epics.map((fn) => fn(events$, state$));
