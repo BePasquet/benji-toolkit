@@ -6,16 +6,14 @@ Helper function built around rxjs scan operator and subjects, its purpose was to
 
 Given a reducer function and an initial state creates a tuple which values will be:
 
-Given a reducer function and an initial state creates a tuple which values will be:
-
-1.  An observable with the form of `Observable<S>` that will emit a value resulting from the applying the reducer function to
-    the current state and the event
+1.  An observable with the form of `Observable<S>` (where S denotes the shape of the state)
+    that will emit a value every time is notified of an event, with the result of the reduction of the current state and the event.
+    <br />
 
 2.  A function with the form of `(event: T) => void` to notify the previous observable that an event has occur.
+    <br />
 
-3.  A function that accepts arguments with the form of `(events$: Observable<T>, state$?: Observable<S>) => Observable<T>`
-    that once applied will produce an observable that merges all functions to the events stream
-    This will come helpful when we want to intercept events to perform a side effect.
+3.  A function that accepts arguments with the form of `(events$: Observable<T>, state$?: Observable<S>) => Observable<T>` that once applied will produce an observable resulting from merging the application of each function to the event and state streams,, this may be helpful at the moment of intercepting actions.
 
 ## IMPORTANT: USES RXJS VERSION 7.2
 
@@ -33,7 +31,7 @@ You can think it as a rxjs version of react useReducer with middleware
 
 ### TLDR
 
-#### Single reducer
+### Single reducer
 
 ```ts
 import { Observable, of, Subscription } from 'rxjs';
@@ -157,8 +155,7 @@ subscription.add(effects$.subscribe());
 dispatch(getUsers());
 ```
 
-<br />
-#### Multiple reducers
+### Multiple reducers
 
 ```ts
 import { Observable, of, Subscription } from 'rxjs';
@@ -383,7 +380,6 @@ dispatch(getUsers());
 dispatch(getProducts());
 ```
 
-<br />
 ### Redux pattern:
 
 ```

@@ -4,14 +4,15 @@ import { Epic, FromReducerReturnType, Reducer } from '../types';
 
 /**
  * Given a reducer function and an initial state creates a tuple which values will be:
- * 1. An observable with the form of ```Observable<S>``` that will emit a value resulting from the applying the reducer function to
- * the current state and the event
  *
- * 2. A function with the form of ```(event: T) => void``` to notify the previous observable that an event has occur.
+ * 1. An observable with the form of `Observable<S>` (where S denotes the shape of the state)
+ * that will emit a value every time is notified of an event, with the result of the reduction of the current state and the event.
+ *
+ * 2. A function with the form of `(event: T) => void` to notify the previous observable that an event has occur.
  *
  * 3. A function that accepts arguments with the form of `(events$: Observable<T>, state$?: Observable<S>) => Observable<T>`
- * that once applied will produce an observable that merges all functions to the events stream
- * This will come helpful when we want to intercept events to perform a side effect.
+ * that once applied will produce an observable resulting from merging the application of each function to the event and state streams,
+ * this may be helpful at the moment of intercepting actions.
  *
  * @param reducer a reducer function that will be call every time an event happen
  * @param initialState an initial state for the reducer
