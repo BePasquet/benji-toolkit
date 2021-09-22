@@ -8,7 +8,7 @@ import { Reducer } from '../types';
  * @returns single reducer function, this may be useful when we want to pass an event as argument to multiple reducers
  *
  * @example
- *import { Action } from 'from-reducer';
+ * import { Action } from 'from-reducer';
  *
  * interface UsersState {
  *   auth: boolean;
