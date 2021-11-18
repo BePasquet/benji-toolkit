@@ -1,5 +1,5 @@
 export type ActionCreator<T> = {
-  (payload: T): {
+  (payload?: T): {
     type: string;
     payload: T;
   };
