@@ -34,11 +34,19 @@ You can think it as a rxjs version of react useReducer with middleware
 ### Single reducer
 
 ```ts
-import { Observable, of, Subscription } from 'rxjs';
+import { Action, createAction, createReducer } from 'from-reducer';
+import { Observable, of, pipe } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
-import { filter, switchMap, map, catchError, tap, ignoreElements } from 'rxjs';
+import {
+  catchError,
+  filter,
+  ignoreElements,
+  map,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 
-// Model we want to work with
+// Model
 export interface GitHubUser {
   login: string;
   id: number;
@@ -60,66 +68,57 @@ export interface GitHubUser {
   site_admin: boolean;
 }
 
-// Actions
-enum UserActionType {
-  GetUser = '[Users] Get Users',
-  GetUserSuccess = '[Users] Get Users Success',
-  GetUserFail = '[Users] Get Users Fail',
+export interface UsersState {
+  data: GitHubUser[];
+  loading: boolean;
+  error: string;
 }
 
-const getUsers = () => ({
-  type: UserActionType.GetUser,
-  payload: null,
-});
+// Actions
+export const getUsers = createAction('[Users] Get Users');
 
-const getUsersSuccess = (payload: GitHubUser[]) => ({
-  type: UserActionType.GetUserSuccess,
-  payload,
-});
+export const getUsersSuccess = createAction<GitHubUser[]>(
+  '[Users] Get Users Success'
+);
 
-const getUsersFail = (payload: string) => ({
-  type: UserActionType.GetUserFail,
-  payload,
-});
+export const getUsersFail = createAction<string>('[Users] Get Users Fail');
 
-type UserActions = ReturnType<
+export type UserActions = ReturnType<
   typeof getUsers | typeof getUsersSuccess | typeof getUsersFail
 >;
 
-const usersInitialState: UsersState = {
+export const usersInitialState: UsersState = {
   loading: false,
   data: [],
   error: '',
 };
 
 // Reducer
-function usersReducer(state: UsersState, action: UserActions): UsersState {
-  switch (action.type) {
-    case UserActionType.GetUser: {
-      return { ...state, loading: true, data: [], error: '' };
-    }
-
-    case UserActionType.GetUserSuccess: {
-      return {
-        ...state,
-        loading: false,
-        data: [...action.payload],
-        error: '',
-      };
-    }
-
-    case UserActionType.GetUserFail: {
-      return { ...state, loading: false, error: action.payload };
-    }
-  }
-
-  return state;
-}
+export const usersReducer = createReducer(usersInitialState, (builder) =>
+  builder
+    .addCase(getUsers, (state) => ({
+      ...state,
+      loading: true,
+      data: [],
+      error: '',
+    }))
+    .addCase(getUsersSuccess, (state, { payload }) => ({
+      ...state,
+      loading: false,
+      data: [...payload],
+      error: '',
+    }))
+    .addCase(getUsersFail, (state, { payload }) => ({
+      ...state,
+      loading: false,
+      error: payload,
+    }))
+);
 
 // Epics
 const getUsersEpic = (actions$: Observable<Action>) =>
   actions$.pipe(
-    filter(({ type }) => type === UserActionType.GetUser),
+    filter(({ type }) => type === getUsers.type),
     switchMap(() =>
       ajax<GitHubUser[]>(`https://api.github.com/users?per_page=5`).pipe(
         map(({ response }) => getUsersSuccess(response)),
@@ -130,12 +129,12 @@ const getUsersEpic = (actions$: Observable<Action>) =>
 
 const getUserFailEpic = (actions$: Observable<Action>) =>
   actions$.pipe(
-    filter(({ type }) => type === UserActionType.GetUserFail),
+    filter(({ type }) => type === getUsersFail.type),
     tap(({ payload }) => console.error(payload)),
     ignoreElements()
   );
 
-const userEpics = [getUsersEpic, getUserFailEpic];
+export const userEpics = [getUsersEpic, getUserFailEpic];
 
 const subscription = new Subscription();
 
@@ -158,12 +157,28 @@ dispatch(getUsers());
 ### Multiple reducers
 
 ```ts
-import { Observable, of, Subscription } from 'rxjs';
+import {
+  Action,
+  combineReducers,
+  createAction,
+  createReducer,
+  fromReducer,
+} from 'from-reducer';
+import {
+  catchError,
+  filter,
+  ignoreElements,
+  map,
+  Observable,
+  of,
+  pipe,
+  Subscription,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { ajax } from 'rxjs/ajax';
-import { filter, switchMap, map, catchError, tap, ignoreElements } from 'rxjs';
-import { Action, combineReducers, fromReducer } from 'from-reducer';
 
-// User
+// Model
 export interface GitHubUser {
   login: string;
   id: number;
@@ -185,76 +200,59 @@ export interface GitHubUser {
   site_admin: boolean;
 }
 
-// Actions
-enum UserActionType {
-  GetUser = '[Users] Get Users',
-  GetUserSuccess = '[Users] Get Users Success',
-  GetUserFail = '[Users] Get Users Fail',
-}
-
-const getUsers = () => ({
-  type: UserActionType.GetUser,
-  payload: null,
-});
-
-const getUsersSuccess = (payload: GitHubUser[]) => ({
-  type: UserActionType.GetUserSuccess,
-  payload,
-});
-
-const getUsersFail = (payload: string) => ({
-  type: UserActionType.GetUserFail,
-  payload,
-});
-
-type UserActions = ReturnType<
-  typeof getUsers | typeof getUsersSuccess | typeof getUsersFail
->;
-
 const USERS_STATE_KEY = 'users';
 
-interface UsersState {
+export interface UsersState {
   data: GitHubUser[];
   loading: boolean;
   error: string;
 }
 
-const usersInitialState: UsersState = {
-  data: [],
+export interface UsersPartialState {
+  [USERS_STATE_KEY]: UsersState;
+}
+
+// Actions
+export const getUsers = createAction('[Users] Get Users');
+
+export const getUsersSuccess = createAction<GitHubUser[]>(
+  '[Users] Get Users Success'
+);
+
+export const getUsersFail = createAction<string>('[Users] Get Users Fail');
+
+export const usersInitialState: UsersState = {
   loading: false,
+  data: [],
   error: '',
 };
 
 // Reducer
-function usersReducer(state: UsersState, action: UserActions): UsersState {
-  switch (action.type) {
-    case UserActionType.GetUser: {
-      return { ...state, loading: true, data: [], error: '' };
-    }
-
-    case UserActionType.GetUserSuccess: {
-      return {
-        ...state,
-        loading: false,
-        data: [...action.payload],
-        error: '',
-      };
-    }
-
-    case UserActionType.GetUserFail: {
-      return { ...state, loading: false, error: action.payload };
-    }
-
-    default: {
-      return state;
-    }
-  }
-}
+export const usersReducer = createReducer(usersInitialState, (builder) =>
+  builder
+    .addCase(getUsers, (state) => ({
+      ...state,
+      loading: true,
+      data: [],
+      error: '',
+    }))
+    .addCase(getUsersSuccess, (state, { payload }) => ({
+      ...state,
+      loading: false,
+      data: [...payload],
+      error: '',
+    }))
+    .addCase(getUsersFail, (state, { payload }) => ({
+      ...state,
+      loading: false,
+      error: payload,
+    }))
+);
 
 // Epics
 const getUsersEpic = (actions$: Observable<Action>) =>
   actions$.pipe(
-    filter(({ type }) => type === UserActionType.GetUser),
+    filter(({ type }) => type === getUsers.type),
     switchMap(() =>
       ajax<GitHubUser[]>(`https://api.github.com/users?per_page=5`).pipe(
         map(({ response }) => getUsersSuccess(response)),
@@ -265,19 +263,28 @@ const getUsersEpic = (actions$: Observable<Action>) =>
 
 const getUserFailEpic = (actions$: Observable<Action>) =>
   actions$.pipe(
-    filter(({ type }) => type === UserActionType.GetUserFail),
+    filter(({ type }) => type === getUsersFail.type),
     tap(({ payload }) => console.error(payload)),
     ignoreElements()
   );
 
-const userEpics = [getUsersEpic, getUserFailEpic];
+export const userEpics = [getUsersEpic, getUserFailEpic];
+
+// Selectors
+export const selectUsersState = (state: UsersPartialState) =>
+  state[USERS_STATE_KEY];
+
+export const selectUsers = pipe(selectUsersState, ({ data }) => data);
 
 // Products
 
-interface Product {
+// Model
+export interface Product {
   id: string;
   name: string;
 }
+
+const PRODUCTS_STATE_KEY = 'products';
 
 interface ProductsState {
   data: Product[];
@@ -285,55 +292,48 @@ interface ProductsState {
   error: string;
 }
 
-enum ProductAction {
-  GetProducts = 'GET_PRODUCTS',
-  GetProductsSuccess = 'GET_PRODUCTS_SUCCESS',
-  GetProductsFail = 'GET_PRODUCTS_FAIL',
+export interface ProductsPartialState {
+  [PRODUCTS_STATE_KEY]: ProductsState;
 }
 
-const getProducts = () => ({ type: ProductAction.GetProducts, payload: null });
+const getProducts = createAction('[Products] Get Products');
 
-const getProductsSuccess = (payload: Product[]) => ({
-  type: ProductAction.GetProductsSuccess,
-  payload,
-});
+const getProductsSuccess = createAction<Product[]>(
+  '[Products] Get Products Success'
+);
 
-const getProductsFail = (payload: string) => ({
-  type: ProductAction.GetProductsFail,
-  payload,
-});
+const getProductsFail = createAction<string>('[Products] Get Products Fail');
 
-const PRODUCTS_STATE_KEY = 'products';
-
-const productInitialState: ProductsState = {
+const productsInitialState: ProductsState = {
   data: [],
   loading: false,
   error: '',
 };
 
-type ProductActions = ReturnType<
-  typeof getProducts | typeof getProductsSuccess | typeof getProductsFail
->;
-
-const productReducer = (state: ProductsState, action: ProductActions) => {
-  switch (action.type) {
-    case ProductAction.GetProducts: {
-      return { ...state, data: [], loading: true, error: '' };
-    }
-
-    case ProductAction.GetProductsSuccess: {
-      return { ...state, data: [...action.payload], loading: false, error: '' };
-    }
-
-    case ProductAction.GetProductsFail: {
-      return { ...state, loading: false, error: action.payload };
-    }
-  }
-};
+const productReducer = createReducer(productsInitialState, (builder) =>
+  builder
+    .addCase(getProducts, (state) => ({
+      ...state,
+      data: [],
+      loading: true,
+      error: '',
+    }))
+    .addCase(getProductsSuccess, (state, { payload }) => ({
+      ...state,
+      data: [...payload],
+      loading: false,
+      error: '',
+    }))
+    .addCase(getProductsFail, (state, { payload }) => ({
+      ...state,
+      loading: false,
+      error: payload,
+    }))
+);
 
 const getProductsEpic = (actions$: Observable<Action>) =>
   actions$.pipe(
-    filter(({ type }) => type === ProductAction.GetProducts),
+    filter(({ type }) => type === getProducts.type),
     switchMap(() =>
       ajax<Product[]>(`https://api.github.com/products`).pipe(
         map(({ response }) => getProductsSuccess(response)),
@@ -344,12 +344,18 @@ const getProductsEpic = (actions$: Observable<Action>) =>
 
 const getProductsFailEpic = (actions$: Observable<Action>) =>
   actions$.pipe(
-    filter(({ type }) => type === ProductAction.GetProductsFail),
+    filter(({ type }) => type === getProductsFail.type),
     tap(({ payload }) => console.error(payload)),
     ignoreElements()
   );
 
 const productsEpics = [getProductsEpic, getProductsFailEpic];
+
+// Selectors
+export const selectProductsState = (state: ProductsPartialState) =>
+  state[PRODUCTS_STATE_KEY];
+
+export const selectProducts = pipe(selectProductsState, ({ data }) => data);
 
 // Action logger
 const actionLoggerEpic = (actions$: Observable<Action>) =>
@@ -360,9 +366,11 @@ const reducers = {
   [PRODUCTS_STATE_KEY]: productReducer,
 };
 
-const initialState = {
+export type AppState = UsersPartialState & ProductsPartialState;
+
+const initialState: AppState = {
   [USERS_STATE_KEY]: usersInitialState,
-  [PRODUCTS_STATE_KEY]: productInitialState,
+  [PRODUCTS_STATE_KEY]: productsInitialState,
 };
 
 const reducer = combineReducers(reducers);
@@ -380,137 +388,35 @@ dispatch(getUsers());
 dispatch(getProducts());
 ```
 
-### Redux pattern:
+## Examples
 
-```
-npm i from-reducer
-```
+### React and Angular in same monorepo with shared library with state
 
-```
-npm install rxjs
-```
+https://github.com/BePasquet/benji-toolkit/tree/master/apps
 
-more info on this pattern: https://redux.js.org
+### React Local State Management
 
-### Middleware based on redux observable
+https://github.com/BePasquet/benji-toolkit/blob/master/apps/from-reducer-react-local-example/src/app/users/users.component.tsx
 
-more info: https://redux-observable.js.org/
+### React Global State Management
 
-#### With redux toolkit
+https://github.com/BePasquet/benji-toolkit/blob/master/apps/from-reducer-react-global-example/src/app/store.tsx
 
-##### https://redux-toolkit.js.org/api/createAction
+https://github.com/BePasquet/benji-toolkit/blob/master/apps/from-reducer-react-global-example/src/app/users/users.component.tsx
 
-##### https://redux-toolkit.js.org/api/createReducer
+### Angular Local State Management
 
-```
-npm install @reduxjs/toolkit
-```
+https://github.com/BePasquet/benji-toolkit/blob/master/apps/from-reducer-angular-local-example/src/app/users/users.component.ts
 
-```ts
-import { Action, createAction, createReducer } from '@reduxjs/toolkit';
-import { Observable, of, Subscription } from 'rxjs';
-import { ajax } from 'rxjs/ajax';
-import { filter, switchMap, map, catchError, tap, ignoreElements } from 'rxjs';
+### Angular Global State Management
 
-// Model we want to work with
-export interface GitHubUser {
-  login: string;
-  id: number;
-  node_id: string;
-  avatar_url: string;
-  gravatar_id: string;
-  url: string;
-  html_url: string;
-  followers_url: string;
-  following_url: string;
-  gists_url: string;
-  starred_url: string;
-  subscriptions_url: string;
-  organizations_url: string;
-  repos_url: string;
-  events_url: string;
-  received_events_url: string;
-  type: string;
-  site_admin: boolean;
-}
+https://github.com/BePasquet/benji-toolkit/blob/master/apps/from-reducer-angular-global-example/src/app/store.ts
 
-// Actions
-const getUsers = createAction('[Users] Get Users');
-const getUserSuccess = createAction<GitHubUser[]>('[Users] Get Users Success');
-const getUsersFail = createAction<string>('[Users] Get Users Fail');
+https://github.com/BePasquet/benji-toolkit/blob/master/apps/from-reducer-angular-global-example/src/app/users/users.component.ts
 
-// Reducer slice state definition
-interface UsersState {
-  loading: boolean;
-  data: GitHubUser[];
-  error: string;
-}
+### Angular Local State Management No Change Detection Zone js
 
-// Reducer initial state
-const usersInitialState: UsersState = {
-  loading: false,
-  data: [],
-  error: '',
-};
-
-// Reducer
-const usersReducer = createReducer(usersInitialState, (builder) =>
-  builder
-    .addCase(getUsers, (state) => ({
-      ...state,
-      loading: true,
-      data: [],
-      error: '',
-    }))
-    .addCase(getUserSuccess, (state, { payload }) => ({
-      ...state,
-      loading: false,
-      data: [...payload],
-      error: '',
-    }))
-    .addCase(getUsersFail, (state, { payload }) => ({
-      ...state,
-      loading: false,
-      error: payload,
-    }))
-);
-
-// Side Effects
-const getUsersEpic = (actions$: Observable<Action>) =>
-  actions$.pipe(
-    filter(getUsers.match),
-    switchMap(() =>
-      ajax<GitHubUser[]>(`https://api.github.com/users?per_page=5`).pipe(
-        map(({ response }) => getUserSuccess(response)),
-        catchError((err) => of(getUsersFail(err)))
-      )
-    )
-  );
-
-const getUserFailEpic = (actions$: Observable<Action>) =>
-  actions$.pipe(
-    filter(getUsersFail.match),
-    tap(({ payload }) => console.error(payload)),
-    ignoreElements()
-  );
-
-const userEpics = [getUsersEpic, getUserFailEpic];
-
-const subscription = new Subscription();
-const [state$, dispatch, combineEpics] = fromReducer(
-  usersReducer,
-  usersInitialState
-);
-
-const effects$ = combineEpics(...userEpics);
-
-subscription.add(state$.subscribe(console.log));
-// { loading: true, data: [], error: '' }
-// { loading: true, data: [...], error: '' } || { loading: false, data: [], error: '...' }
-subscription.add(effects$.subscribe());
-
-dispatch(getUsers());
-```
+https://github.com/BePasquet/benji-toolkit/blob/master/apps/from-reducer-angular-no-change-detection-zone/src/app/users/users.component.ts
 
 #### With NgRx Store
 
@@ -687,33 +593,3 @@ subscription.add(requestUsers$.subscribe());
 // Later unsubscribe to state changes and effects
 subscription.unsubscribe();
 ```
-
-## Examples
-
-### React and Angular in same monorepo with shared library with state
-
-https://github.com/BePasquet/benji-toolkit/tree/master/apps
-
-### React Local State Management
-
-https://github.com/BePasquet/benji-toolkit/blob/master/apps/from-reducer-react-local-example/src/app/users/users.component.tsx
-
-### React Global State Management
-
-https://github.com/BePasquet/benji-toolkit/blob/master/apps/from-reducer-react-global-example/src/app/store.tsx
-
-https://github.com/BePasquet/benji-toolkit/blob/master/apps/from-reducer-react-global-example/src/app/users/users.component.tsx
-
-### Angular Local State Management
-
-https://github.com/BePasquet/benji-toolkit/blob/master/apps/from-reducer-angular-local-example/src/app/users/users.component.ts
-
-### Angular Global State Management
-
-https://github.com/BePasquet/benji-toolkit/blob/master/apps/from-reducer-angular-global-example/src/app/store.ts
-
-https://github.com/BePasquet/benji-toolkit/blob/master/apps/from-reducer-angular-global-example/src/app/users/users.component.ts
-
-### Angular Local State Management No Change Detection Zone js
-
-https://github.com/BePasquet/benji-toolkit/blob/master/apps/from-reducer-angular-no-change-detection-zone/src/app/users/users.component.ts

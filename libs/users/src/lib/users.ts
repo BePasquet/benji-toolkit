@@ -1,5 +1,5 @@
-import { Action } from 'from-reducer';
-import { Observable, of } from 'rxjs';
+import { Action, createAction, createReducer } from 'from-reducer';
+import { Observable, of, pipe } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import {
   catchError,
@@ -24,26 +24,13 @@ export interface UsersPartialState {
 }
 
 // Actions
-enum UserActionType {
-  GetUser = '[Users] Get Users',
-  GetUserSuccess = '[Users] Get Users Success',
-  GetUserFail = '[Users] Get Users Fail',
-}
+export const getUsers = createAction('[Users] Get Users');
 
-export const getUsers = () => ({
-  type: UserActionType.GetUser,
-  payload: null,
-});
+export const getUsersSuccess = createAction<GitHubUser[]>(
+  '[Users] Get Users Success'
+);
 
-export const getUsersSuccess = (payload: GitHubUser[]) => ({
-  type: UserActionType.GetUserSuccess,
-  payload,
-});
-
-export const getUsersFail = (payload: string) => ({
-  type: UserActionType.GetUserFail,
-  payload,
-});
+export const getUsersFail = createAction<string>('[Users] Get Users Fail');
 
 export type UserActions = ReturnType<
   typeof getUsers | typeof getUsersSuccess | typeof getUsersFail
@@ -56,36 +43,31 @@ export const usersInitialState: UsersState = {
 };
 
 // Reducer
-export function usersReducer(
-  state: UsersState,
-  action: UserActions
-): UsersState {
-  switch (action.type) {
-    case UserActionType.GetUser: {
-      return { ...state, loading: true, data: [], error: '' };
-    }
-
-    case UserActionType.GetUserSuccess: {
-      return {
-        ...state,
-        loading: false,
-        data: [...action.payload],
-        error: '',
-      };
-    }
-
-    case UserActionType.GetUserFail: {
-      return { ...state, loading: false, error: action.payload };
-    }
-  }
-
-  return state;
-}
+export const usersReducer = createReducer(usersInitialState, (builder) =>
+  builder
+    .addCase(getUsers, (state) => ({
+      ...state,
+      loading: true,
+      data: [],
+      error: '',
+    }))
+    .addCase(getUsersSuccess, (state, { payload }) => ({
+      ...state,
+      loading: false,
+      data: [...payload],
+      error: '',
+    }))
+    .addCase(getUsersFail, (state, { payload }) => ({
+      ...state,
+      loading: false,
+      error: payload,
+    }))
+);
 
 // Epics
 const getUsersEpic = (actions$: Observable<Action>) =>
   actions$.pipe(
-    filter(({ type }) => type === UserActionType.GetUser),
+    filter(({ type }) => type === getUsers.type),
     switchMap(() =>
       ajax<GitHubUser[]>(`https://api.github.com/users?per_page=5`).pipe(
         map(({ response }) => getUsersSuccess(response)),
@@ -96,16 +78,22 @@ const getUsersEpic = (actions$: Observable<Action>) =>
 
 const getUserFailEpic = (actions$: Observable<Action>) =>
   actions$.pipe(
-    filter(({ type }) => type === UserActionType.GetUserFail),
+    filter(({ type }) => type === getUsersFail.type),
     tap(({ payload }) => console.error(payload)),
     ignoreElements()
   );
 
 export const userEpics = [getUsersEpic, getUserFailEpic];
 
+export const selectUsersState = (state: UsersPartialState) =>
+  state[USER_STATE_KEY];
+
 // Selectors
-export const selectUsers = ({ data }: UsersState) => data;
+export const selectUsers = pipe(selectUsersState, ({ data }) => data);
 
-export const selectUsersLoading = ({ loading }: UsersState) => loading;
+export const selectUsersLoading = pipe(
+  selectUsersState,
+  ({ loading }) => loading
+);
 
-export const selectUsersError = ({ error }: UsersState) => error;
+export const selectUsersError = pipe(selectUsersState, ({ error }) => error);
