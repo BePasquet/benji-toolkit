@@ -8,5 +8,6 @@ module.exports = {
     '<rootDir>/apps/from-reducer-angular-local-example',
     '<rootDir>/libs/repositories',
     '<rootDir>/apps/from-reducer-angular-no-change-detection-zone',
+    '<rootDir>/libs/from-reducer-react-bindings',
   ],
 };

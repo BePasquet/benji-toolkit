@@ -13,7 +13,6 @@ import {
   USER_STATE_KEY,
 } from '@benji-toolkit/users';
 import { Action, combineReducers, fromReducer, Reducer } from 'from-reducer';
-import React from 'react';
 
 export type GlobalState = UsersPartialState & RepositoriesPartialState;
 
@@ -33,9 +32,4 @@ const epics = [...userEpics, ...repositoriesEpics];
 
 const effects$ = combineEpics(...epics);
 
-state$.subscribe();
-effects$.subscribe();
-
-export const gsCtx = { state$, dispatch, combineEpics };
-
-export const GlobalStateContext = React.createContext(gsCtx);
+export const store = { state$, effects$, dispatch };

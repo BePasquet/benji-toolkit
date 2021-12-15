@@ -17,7 +17,10 @@
     "paths": {
       "from-reducer": ["libs/from-reducer/src/index.ts"],
       "@benji-toolkit/users": ["libs/users/src/index.ts"],
-      "@benji-toolkit/repositories": ["libs/repositories/src/index.ts"]
+      "@benji-toolkit/repositories": ["libs/repositories/src/index.ts"],
+      "@benji-toolkit/from-reducer-react-bindings": [
+        "libs/from-reducer-react-bindings/src/index.ts"
+      ]
     }
   },
   "angularCompilerOptions": {

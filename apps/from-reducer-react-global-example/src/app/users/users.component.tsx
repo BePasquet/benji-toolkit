@@ -1,19 +1,19 @@
+import {
+  useDispatch,
+  useSelector,
+} from '@benji-toolkit/from-reducer-react-bindings';
 import { getRepositories } from '@benji-toolkit/repositories';
 import { getUsers } from '@benji-toolkit/users';
-import React, { useContext, useEffect, useState } from 'react';
-import { GlobalState, GlobalStateContext } from '../store';
+import React, { useEffect } from 'react';
 
 export const Users = () => {
-  const [state, setState] = useState<GlobalState | null>(null);
-  const { state$, dispatch } = useContext(GlobalStateContext);
+  const dispatch = useDispatch();
+  const state = useSelector((x) => x);
 
   useEffect(() => {
-    const subscription = state$.subscribe(setState);
     dispatch(getUsers());
     dispatch(getRepositories());
-
-    return () => subscription.unsubscribe();
-  }, [state$, dispatch]);
+  }, [dispatch]);
 
   return (
     !!state && (

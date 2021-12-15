@@ -1,11 +1,12 @@
+import { FromReducerProvider } from '@benji-toolkit/from-reducer-react-bindings';
 import React from 'react';
-import { GlobalStateContext, gsCtx } from './store';
+import { store } from './store';
 import { Users } from './users/users.component';
 
 export const App = () => (
-  <GlobalStateContext.Provider value={gsCtx}>
+  <FromReducerProvider store={store}>
     <Users />
-  </GlobalStateContext.Provider>
+  </FromReducerProvider>
 );
 
 export default App;

@@ -1,4 +1,5 @@
-import { distinctUntilChanged, map, Observable, OperatorFunction } from 'rxjs';
+import { Observable, OperatorFunction } from 'rxjs';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 
 /**
  * A mapping operator that only emits when the next value changes

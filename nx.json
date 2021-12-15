@@ -23,6 +23,7 @@
     "from-reducer-angular-no-change-detection-zone-e2e": {
       "tags": [],
       "implicitDependencies": ["from-reducer-angular-no-change-detection-zone"]
-    }
+    },
+    "from-reducer-react-bindings": { "tags": [] }
   }
 }

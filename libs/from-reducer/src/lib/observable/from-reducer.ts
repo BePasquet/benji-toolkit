@@ -1,5 +1,5 @@
 import { BehaviorSubject, merge, Subject } from 'rxjs';
-import { retry, scan, share, tap } from 'rxjs/operators';
+import { retry, scan, share, startWith, tap } from 'rxjs/operators';
 import { Epic, FromReducerReturnType, Reducer } from '../types';
 
 /**
@@ -24,6 +24,7 @@ export function fromReducer<S, T>(
   const events$ = new Subject<T>();
 
   const state$ = events$.pipe(
+    startWith({ type: '__INIT__' }),
     scan(reducer, initialState),
     share({ connector: () => new BehaviorSubject(initialState) })
   );
