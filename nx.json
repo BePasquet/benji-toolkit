@@ -24,6 +24,8 @@
       "tags": [],
       "implicitDependencies": ["from-reducer-angular-no-change-detection-zone"]
     },
-    "from-reducer-react-bindings": { "tags": [] }
+    "from-reducer-react-bindings": { "tags": [] },
+    "rx-actor": { "tags": [] },
+    "rx-http": { "tags": [] }
   }
 }

@@ -9,5 +9,7 @@ module.exports = {
     '<rootDir>/libs/repositories',
     '<rootDir>/apps/from-reducer-angular-no-change-detection-zone',
     '<rootDir>/libs/from-reducer-react-bindings',
+    '<rootDir>/libs/rx-actor',
+    '<rootDir>/libs/rx-http',
   ],
 };

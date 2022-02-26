@@ -566,6 +566,44 @@
           }
         }
       }
+    },
+    "rx-actor": {
+      "root": "libs/rx-actor",
+      "sourceRoot": "libs/rx-actor/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": { "lintFilePatterns": ["libs/rx-actor/**/*.ts"] }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/rx-actor"],
+          "options": {
+            "jestConfig": "libs/rx-actor/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "rx-http": {
+      "root": "libs/rx-http",
+      "sourceRoot": "libs/rx-http/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": { "lintFilePatterns": ["libs/rx-http/**/*.ts"] }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/rx-http"],
+          "options": {
+            "jestConfig": "libs/rx-http/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   }
 }
