@@ -5,11 +5,9 @@ export function jsonSelector<TData = any>(
 ): Observable<TData> {
   const json$ = defer(() => response.json());
 
-  if (response.ok) {
-    return json$ as Observable<TData>;
-  }
-
-  return json$.pipe(
+  const error$ = json$.pipe(
     switchMap((json) => throwError(() => json ?? { status: response.status }))
   );
+
+  return response.ok ? json$ : error$;
 }

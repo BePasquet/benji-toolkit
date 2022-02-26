@@ -3,10 +3,11 @@ import {
   catchError,
   combineLatest,
   concat,
-  EMPTY,
-  interval,
+  debounceTime,
+  groupBy,
   map,
   merge,
+  mergeMap,
   Observable,
   of,
   scan,
@@ -27,37 +28,39 @@ export type RxHttpErrorHandler<TError = any, TSource = any, TCache = any> = (
   cache$: Observable<TCache>
 ) => Observable<TSource>;
 
-export interface RxHttpCacheOptions {
-  cache: boolean;
-  cacheTime: number;
-}
-
-export type RxHttpOptions = RxHttpCacheOptions;
-
 export class RxHttp<TCache extends Record<string, unknown>> {
   private readonly upsertCache$ = new Subject<Partial<TCache>>();
 
-  private readonly cache$: Observable<TCache>;
+  private readonly deleteCache$ = new Subject<keyof TCache>();
 
   private readonly subscriptions = new Subscription();
 
   private readonly interceptors = new Set<Observable<RequestInit>>();
 
+  private readonly delayDeleteCache$ = this.deleteCache$.pipe(
+    groupBy((key) => key),
+    mergeMap((key$) =>
+      key$.pipe(
+        debounceTime(this.cacheTime),
+        map((key) => ({ [key]: null }))
+      )
+    )
+  );
+
+  private readonly cache$ = merge(
+    this.delayDeleteCache$,
+    this.upsertCache$
+  ).pipe(
+    scan((state, slice) => ({ ...state, ...slice }), {}),
+    share({ connector: () => new BehaviorSubject({} as TCache) })
+  );
+
   constructor(
-    { cache, cacheTime }: RxHttpOptions,
-    private readonly initialCache: TCache,
+    cache: boolean,
+    private readonly cacheTime: number = 0,
     private readonly errorHandler?: RxHttpErrorHandler
   ) {
     if (cache) {
-      const cleanCache$ = cacheTime
-        ? interval(cacheTime).pipe(map(() => this.initialCache))
-        : EMPTY;
-
-      this.cache$ = merge(this.upsertCache$, cleanCache$).pipe(
-        scan((state, slice) => ({ ...state, ...slice }), this.initialCache),
-        share({ connector: () => new BehaviorSubject(this.initialCache) })
-      );
-
       this.subscriptions.add(this.cache$.subscribe());
     }
   }
@@ -103,20 +106,30 @@ export class RxHttp<TCache extends Record<string, unknown>> {
        Apply interceptors in order they were added and request specific init after
        to be able to overwrite
     */
-    return concat(...Array.from(this.interceptors)).pipe(
+    const init$ = concat(...Array.from(this.interceptors)).pipe(
       scan((state, init) => ({ ...state, ...init }), requestInit)
     );
+
+    return init$;
   }
 
   private request<T>(url: string, init: RequestInit): Observable<T> {
-    return fromFetch<T>(url, { ...init, selector: jsonSelector }).pipe(
-      tap((data) => this.upsertCache$.next({ [url]: data } as Partial<TCache>)),
+    const request$ = fromFetch<T>(url, {
+      ...init,
+      selector: jsonSelector,
+    }).pipe(
+      tap((data) => {
+        this.upsertCache$.next({ [url]: data } as Partial<TCache>);
+        this.deleteCache$.next(url);
+      }),
       catchError((err, caught$) =>
         this.errorHandler
           ? this.errorHandler(err, caught$, this.cache$)
           : throwError(() => err)
       )
     );
+
+    return request$;
   }
 
   private processRequest<T>(url: string, init: RequestInit): Observable<T> {
@@ -127,10 +140,12 @@ export class RxHttp<TCache extends Record<string, unknown>> {
       map((cache) => (cache[url] ?? null) as T | null)
     );
 
-    return combineLatest([cacheValue$, init$]).pipe(
+    const response$ = combineLatest([cacheValue$, init$]).pipe(
       switchMap(([cache, init]) =>
         cache ? of(cache) : this.request<T>(url, init)
       )
     );
+
+    return response$;
   }
 }
