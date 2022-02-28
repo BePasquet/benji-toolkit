@@ -23,10 +23,19 @@ import {
 import { fromFetch } from 'rxjs/fetch';
 import { jsonSelector } from './json-selector';
 
+export interface RxHttpErrorHandlerParams<
+  TError = any,
+  TSource = any,
+  TCache = any
+> {
+  err: TError;
+  caught$: Observable<TSource>;
+  cache$: Observable<TCache>;
+  url: string;
+}
+
 export type RxHttpErrorHandler<TError = any, TSource = any, TCache = any> = (
-  err: TError,
-  caught$: Observable<TSource>,
-  cache$: Observable<TCache>
+  params: RxHttpErrorHandlerParams<TError, TSource, TCache>
 ) => Observable<TSource>;
 
 export class RxHttp<TCache extends Record<string, unknown>> {
@@ -120,7 +129,9 @@ export class RxHttp<TCache extends Record<string, unknown>> {
       selector: jsonSelector,
     }).pipe(
       tap((data) => this.upsertCache$.next({ [url]: data } as Partial<TCache>)),
-      catchError((err, caught$) => this.errorHandler(err, caught$, this.cache$))
+      catchError((err, caught$) =>
+        this.errorHandler({ err, caught$, cache$: this.cache$, url })
+      )
     );
 
     return request$;
