@@ -58,7 +58,8 @@ export class RxHttp<TCache extends Record<string, unknown>> {
   constructor(
     cache: boolean,
     private readonly cacheTime: number = 0,
-    private readonly errorHandler?: RxHttpErrorHandler
+    private readonly errorHandler: RxHttpErrorHandler = (err) =>
+      throwError(() => err)
   ) {
     if (cache) {
       this.subscriptions.add(this.cache$.subscribe());
@@ -119,11 +120,7 @@ export class RxHttp<TCache extends Record<string, unknown>> {
       selector: jsonSelector,
     }).pipe(
       tap((data) => this.upsertCache$.next({ [url]: data } as Partial<TCache>)),
-      catchError((err, caught$) =>
-        this.errorHandler
-          ? this.errorHandler(err, caught$, this.cache$)
-          : throwError(() => err)
-      )
+      catchError((err, caught$) => this.errorHandler(err, caught$, this.cache$))
     );
 
     return request$;
