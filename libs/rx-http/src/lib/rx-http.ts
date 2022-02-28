@@ -3,7 +3,8 @@ import {
   catchError,
   combineLatest,
   concat,
-  debounceTime,
+  concatMap,
+  delay,
   groupBy,
   map,
   merge,
@@ -31,17 +32,16 @@ export type RxHttpErrorHandler<TError = any, TSource = any, TCache = any> = (
 export class RxHttp<TCache extends Record<string, unknown>> {
   private readonly upsertCache$ = new Subject<Partial<TCache>>();
 
-  private readonly deleteCache$ = new Subject<keyof TCache>();
-
   private readonly subscriptions = new Subscription();
 
   private readonly interceptors = new Set<Observable<RequestInit>>();
 
-  private readonly delayDeleteCache$ = this.deleteCache$.pipe(
+  private readonly delayDeleteCache$ = this.upsertCache$.pipe(
+    concatMap((slice) => Object.keys(slice)),
     groupBy((key) => key),
     mergeMap((key$) =>
       key$.pipe(
-        debounceTime(this.cacheTime),
+        delay(this.cacheTime),
         map((key) => ({ [key]: null }))
       )
     )
@@ -118,10 +118,7 @@ export class RxHttp<TCache extends Record<string, unknown>> {
       ...init,
       selector: jsonSelector,
     }).pipe(
-      tap((data) => {
-        this.upsertCache$.next({ [url]: data } as Partial<TCache>);
-        this.deleteCache$.next(url);
-      }),
+      tap((data) => this.upsertCache$.next({ [url]: data } as Partial<TCache>)),
       catchError((err, caught$) =>
         this.errorHandler
           ? this.errorHandler(err, caught$, this.cache$)
