@@ -15,7 +15,7 @@ import { ActionCreator } from 'from-reducer';
  *
  */
 export function createAction<T>(type: string): ActionCreator<T> {
-  const actionCreator = (payload: T = null) => ({ type: type, payload });
+  const actionCreator = (payload: T = null) => ({ type, payload });
   // type added to function as property to allow read it as static property
   actionCreator.type = type;
   return actionCreator;

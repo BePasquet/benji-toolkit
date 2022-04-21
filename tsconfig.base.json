@@ -15,14 +15,14 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "from-reducer": ["libs/from-reducer/src/index.ts"],
-      "@benji-toolkit/users": ["libs/users/src/index.ts"],
-      "@benji-toolkit/repositories": ["libs/repositories/src/index.ts"],
       "@benji-toolkit/from-reducer-react-bindings": [
         "libs/from-reducer-react-bindings/src/index.ts"
       ],
+      "@benji-toolkit/repositories": ["libs/repositories/src/index.ts"],
       "@benji-toolkit/rx-actor": ["libs/rx-actor/src/index.ts"],
-      "@benji-toolkit/rx-http": ["libs/rx-http/src/index.ts"]
+      "@benji-toolkit/rx-http": ["libs/rx-http/src/index.ts"],
+      "@benji-toolkit/users": ["libs/users/src/index.ts"],
+      "from-reducer": ["libs/from-reducer/src/index.ts"]
     }
   },
   "angularCompilerOptions": {
