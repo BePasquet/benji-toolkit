@@ -20,7 +20,7 @@ export class RxActor<TState, TMessage extends Message> {
   protected readonly subscriptions = new Subscription();
 
   readonly onStateChange$: Observable<TState> = this.receive$.pipe(
-    startWith({ type: '__INIT__' }),
+    startWith({ type: '__INIT__' } as TMessage),
     scan(this.reducer, this.initialState),
     share({ connector: () => new BehaviorSubject(this.initialState) })
   );
