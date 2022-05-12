@@ -5,22 +5,20 @@ import React, {
   useCallback,
   useContext,
   useLayoutEffect,
+  useRef,
   useState,
 } from 'react';
 import { merge, Observable } from 'rxjs';
 import { take, tap } from 'rxjs/operators';
 
 export function snapshot<T>(obs$: Observable<T>): T {
-  let value: T;
+  let data: T;
 
-  obs$
-    .pipe(
-      take(1),
-      tap((snap) => (value = snap))
-    )
-    .subscribe();
+  obs$.pipe(take(1)).subscribe((snap) => {
+    data = snap;
+  });
 
-  return value;
+  return data;
 }
 
 export interface FromReducerStore<TState = any, TEvent = any> {
@@ -58,16 +56,17 @@ export function FromReducerProvider<TState, TEvent>({
 export function useSelector<TState, TResult>(
   selector: (state: TState) => TResult
 ) {
+  const selectorRef = useRef(selector).current;
   const { state$ } = useContext(FromReducerContext);
-  const [state, setState] = useState(selector(snapshot(state$)));
+  const [state, setState] = useState(selectorRef(snapshot(state$)));
 
   useLayoutEffect(() => {
     const subscription = state$
-      .pipe(select(selector), tap(setState))
+      .pipe(select(selectorRef), tap(setState))
       .subscribe();
 
     return () => subscription.unsubscribe();
-  }, [state$, selector]);
+  }, [state$, selectorRef]);
 
   return state;
 }
