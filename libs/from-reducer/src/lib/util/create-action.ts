@@ -1,4 +1,4 @@
-import { ActionCreator } from 'from-reducer';
+import { ActionCreator } from '../types/action-creator.type';
 /**
  * Utility function to generate action creators with specific type
  * @param type action identifier
