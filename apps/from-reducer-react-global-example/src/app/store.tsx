@@ -1,4 +1,10 @@
 import {
+  Action,
+  combineReducers,
+  ReactiveStore,
+  Reducer,
+} from '@benji-toolkit/reactive-store';
+import {
   repositoriesEpics,
   repositoriesInitialState,
   RepositoriesPartialState,
@@ -12,8 +18,7 @@ import {
   usersReducer,
   USER_STATE_KEY,
 } from '@benji-toolkit/users';
-import { Action, combineReducers, fromReducer, Reducer } from 'from-reducer';
-import { ignoreElements, Observable, tap, withLatestFrom } from 'rxjs';
+import { filter, ignoreElements, Observable, tap, withLatestFrom } from 'rxjs';
 
 export type GlobalState = UsersPartialState & RepositoriesPartialState;
 
@@ -28,7 +33,7 @@ const initialState: GlobalState = {
 };
 
 const devTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__?.connect();
-devTools.init(initialState);
+devTools?.init(initialState);
 
 const notifyDevTools = (
   actions$: Observable<Action>,
@@ -36,14 +41,12 @@ const notifyDevTools = (
 ) =>
   actions$.pipe(
     withLatestFrom(state$),
+    filter(() => (window as any).__REDUX_DEVTOOLS_EXTENSION__),
     tap(([event, state]) => devTools.send(event, state)),
     ignoreElements()
   );
 
-const [state$, dispatch, combineEpics] = fromReducer(reducer, initialState);
-
 const epics = [notifyDevTools, ...userEpics, ...repositoriesEpics];
 
-const effects$ = combineEpics(...epics);
-
-export const store = { state$, effects$, dispatch };
+export const store = new ReactiveStore(reducer, initialState, epics);
+store.start();

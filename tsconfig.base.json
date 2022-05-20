@@ -18,6 +18,7 @@
       "@benji-toolkit/from-reducer-react-bindings": [
         "libs/from-reducer-react-bindings/src/index.ts"
       ],
+      "@benji-toolkit/reactive-store": ["libs/reactive-store/src/index.ts"],
       "@benji-toolkit/repositories": ["libs/repositories/src/index.ts"],
       "@benji-toolkit/rx-actor": ["libs/rx-actor/src/index.ts"],
       "@benji-toolkit/rx-http": ["libs/rx-http/src/index.ts"],

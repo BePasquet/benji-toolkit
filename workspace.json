@@ -527,6 +527,29 @@
       },
       "tags": []
     },
+    "reactive-store": {
+      "root": "libs/reactive-store",
+      "sourceRoot": "libs/reactive-store/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["libs/reactive-store/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/reactive-store"],
+          "options": {
+            "jestConfig": "libs/reactive-store/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": []
+    },
     "repositories": {
       "root": "libs/repositories",
       "sourceRoot": "libs/repositories/src",

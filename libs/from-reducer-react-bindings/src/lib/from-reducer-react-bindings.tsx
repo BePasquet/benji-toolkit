@@ -1,14 +1,16 @@
+import { ReactiveStore } from '@benji-toolkit/reactive-store';
 import { select } from 'from-reducer';
 import React, {
   createContext,
   PropsWithChildren,
   useCallback,
   useContext,
+  useEffect,
   useLayoutEffect,
   useRef,
   useState,
 } from 'react';
-import { merge, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { take, tap } from 'rxjs/operators';
 
 export function snapshot<T>(obs$: Observable<T>): T {
@@ -21,30 +23,20 @@ export function snapshot<T>(obs$: Observable<T>): T {
   return data;
 }
 
-export interface FromReducerStore<TState = any, TEvent = any> {
-  state$: Observable<TState>;
-  effects$: Observable<TEvent>;
-  dispatch: (event: TEvent) => void;
-}
-
 export interface FromReducerProviderProps<TState, TEvent> {
-  store: FromReducerStore<TState, TEvent>;
+  store: ReactiveStore<TState, TEvent>;
 }
 
-const FromReducerContext = createContext<Pick<
-  FromReducerStore,
-  'state$' | 'dispatch'
-> | null>(null);
+const FromReducerContext = createContext<ReactiveStore<any, any> | null>(null);
 
 export function FromReducerProvider<TState, TEvent>({
   store,
   children,
 }: PropsWithChildren<FromReducerProviderProps<TState, TEvent>>) {
-  useLayoutEffect(() => {
-    const subscription = merge(store.state$, store.effects$).subscribe();
-
-    return () => subscription.unsubscribe();
-  }, [store]);
+  const storeRef = useRef(store).current;
+  useEffect(() => {
+    return () => storeRef.stop();
+  }, [storeRef]);
 
   return (
     <FromReducerContext.Provider value={store}>
@@ -57,22 +49,22 @@ export function useSelector<TState, TResult>(
   selector: (state: TState) => TResult
 ) {
   const selectorRef = useRef(selector).current;
-  const { state$ } = useContext(FromReducerContext);
-  const [state, setState] = useState(selectorRef(snapshot(state$)));
+  const store = useContext(FromReducerContext);
+  const [state, setState] = useState(selectorRef(snapshot(store.state$)));
 
   useLayoutEffect(() => {
-    const subscription = state$
+    const subscription = store.state$
       .pipe(select(selectorRef), tap(setState))
       .subscribe();
 
     return () => subscription.unsubscribe();
-  }, [state$, selectorRef]);
+  }, [store, selectorRef]);
 
   return state;
 }
 
 export function useDispatch<TEvent>() {
-  const { dispatch } = useContext(FromReducerContext);
+  const store = useContext(FromReducerContext);
 
-  return useCallback((event: TEvent) => dispatch(event), [dispatch]);
+  return useCallback((event: TEvent) => store.send(event), [store]);
 }
