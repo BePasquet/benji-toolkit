@@ -1,1 +1,1 @@
-export * from './lib/reactive-actor-react-bindingsx';
+export * from './lib/reactive-actor-react-bindings';
