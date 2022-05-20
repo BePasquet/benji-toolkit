@@ -1,10 +1,10 @@
 {
   "name": "@benji-toolkit/reactive-actor-react-bindings",
-  "version": "1.0.1",
+  "version": "0.1.0",
   "description": "React bindings for from-reducer library",
   "author": "Pedro Benjamin Lescano Pasquet",
-  "repository": "https://github.com/BePasquet/benji-toolkit/tree/master/libs/from-reducer-react-bindings",
-  "homepage": "https://github.com/BePasquet/benji-toolkit/tree/master/libs/from-reducer-react-bindings",
+  "repository": "https://github.com/BePasquet/benji-toolkit/tree/master/libs/reactive-actor-react-bindings",
+  "homepage": "https://github.com/BePasquet/benji-toolkit/tree/master/libs/reactive-actor-react-bindings",
   "license": "apache",
   "keywords": [
     "observable",
