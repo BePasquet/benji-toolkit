@@ -1,7 +1,7 @@
 import {
   Action,
   combineReducers,
-  ReactiveStore,
+  ReactiveActor,
   Reducer,
 } from '@benji-toolkit/reactive-actor';
 import {
@@ -40,13 +40,13 @@ const notifyDevTools = (
   state$: Observable<GlobalState>
 ) =>
   actions$.pipe(
-    withLatestFrom(state$),
     filter(() => (window as any).__REDUX_DEVTOOLS_EXTENSION__),
+    withLatestFrom(state$),
     tap(([event, state]) => devTools.send(event, state)),
     ignoreElements()
   );
 
 const epics = [notifyDevTools, ...userEpics, ...repositoriesEpics];
 
-export const store = new ReactiveStore(reducer, initialState, epics);
-store.start();
+export const appActor = new ReactiveActor(reducer, initialState, epics);
+appActor.start();

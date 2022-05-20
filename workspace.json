@@ -546,6 +546,17 @@
             "jestConfig": "libs/reactive-actor/jest.config.js",
             "passWithNoTests": true
           }
+        },
+        "build": {
+          "executor": "@nrwl/js:tsc",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/libs/reactive-actor",
+            "tsConfig": "libs/reactive-actor/tsconfig.lib.json",
+            "packageJson": "libs/reactive-actor/package.json",
+            "main": "libs/reactive-actor/src/index.ts",
+            "assets": ["libs/reactive-actor/*.md"]
+          }
         }
       },
       "tags": []

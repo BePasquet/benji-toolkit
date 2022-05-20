@@ -1,0 +1,15 @@
+{
+  "name": "reactive-actor",
+  "version": "0.1.0",
+  "description": "Actor implementation with rxjs",
+  "author": "Pedro Benjamin Lescano Pasquet",
+  "repository": "https://github.com/BePasquet/benji-toolkit/tree/master/libs/reactive-actor",
+  "homepage": "https://github.com/BePasquet/benji-toolkit/tree/master/libs/reactive-actor",
+  "license": "apache",
+  "keywords": [
+    "observable",
+    "redux",
+    "state management",
+    "rxjs"
+  ]
+}

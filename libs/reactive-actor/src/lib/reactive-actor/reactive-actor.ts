@@ -8,7 +8,7 @@ import {
 import { retry, scan, share, startWith, tap } from 'rxjs/operators';
 import { Epic, Reducer } from '../types';
 
-export class ReactiveStore<S, T> {
+export class ReactiveActor<S, T> {
   readonly state$: Observable<S>;
 
   private readonly events$ = new Subject<T>();

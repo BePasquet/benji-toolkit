@@ -1,4 +1,4 @@
-import { ReactiveStore } from '@benji-toolkit/reactive-actor';
+import { ReactiveActor } from '@benji-toolkit/reactive-actor';
 import { select } from 'from-reducer';
 import React, {
   createContext,
@@ -24,22 +24,22 @@ export function snapshot<T>(obs$: Observable<T>): T {
 }
 
 export interface FromReducerProviderProps<TState, TEvent> {
-  store: ReactiveStore<TState, TEvent>;
+  actor: ReactiveActor<TState, TEvent>;
 }
 
-const FromReducerContext = createContext<ReactiveStore<any, any> | null>(null);
+const FromReducerContext = createContext<ReactiveActor<any, any> | null>(null);
 
 export function FromReducerProvider<TState, TEvent>({
-  store,
+  actor,
   children,
 }: PropsWithChildren<FromReducerProviderProps<TState, TEvent>>) {
-  const storeRef = useRef(store).current;
+  const storeRef = useRef(actor).current;
   useEffect(() => {
     return () => storeRef.stop();
   }, [storeRef]);
 
   return (
-    <FromReducerContext.Provider value={store}>
+    <FromReducerContext.Provider value={actor}>
       {children}
     </FromReducerContext.Provider>
   );
@@ -49,22 +49,22 @@ export function useSelector<TState, TResult>(
   selector: (state: TState) => TResult
 ) {
   const selectorRef = useRef(selector).current;
-  const store = useContext(FromReducerContext);
-  const [state, setState] = useState(selectorRef(snapshot(store.state$)));
+  const actor = useContext(FromReducerContext);
+  const [state, setState] = useState(selectorRef(snapshot(actor.state$)));
 
   useLayoutEffect(() => {
-    const subscription = store.state$
+    const subscription = actor.state$
       .pipe(select(selectorRef), tap(setState))
       .subscribe();
 
     return () => subscription.unsubscribe();
-  }, [store, selectorRef]);
+  }, [actor, selectorRef]);
 
   return state;
 }
 
 export function useDispatch<TEvent>() {
-  const store = useContext(FromReducerContext);
+  const actor = useContext(FromReducerContext);
 
-  return useCallback((event: TEvent) => store.send(event), [store]);
+  return useCallback((event: TEvent) => actor.send(event), [actor]);
 }

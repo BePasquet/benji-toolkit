@@ -1,10 +1,10 @@
 import { FromReducerProvider } from '@benji-toolkit/from-reducer-react-bindings';
 import React from 'react';
-import { store } from './store';
+import { appActor } from './app-actor';
 import { Users } from './users/users.component';
 
 export const App = () => (
-  <FromReducerProvider store={store}>
+  <FromReducerProvider actor={appActor}>
     <Users />
   </FromReducerProvider>
 );
