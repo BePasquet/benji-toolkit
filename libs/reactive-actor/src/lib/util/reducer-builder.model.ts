@@ -12,18 +12,23 @@ export class ReducerBuilder<S> {
 
   /**
    * Adds a case to the reducer to match a particular type
-   * @param typeOrHasType a string or an object / function containing a type property
+   * @param typeOrHasType a string or object / function containing a type property
    * @param reducer a reducer function with the form of `(state: S, action: Action) => S`
    * @returns the current reducer builder instance (allows chaining)
    */
   addCase<A extends ReturnType<typeof createAction>>(
-    typeOrHasType: A | string,
+    typeOrHasType: A | A[] | string | string[],
     reducer: Reducer<S, ReturnType<A>>
   ) {
-    const type =
-      typeof typeOrHasType === 'string' ? typeOrHasType : typeOrHasType.type;
+    const actions = Array.isArray(typeOrHasType)
+      ? typeOrHasType
+      : [typeOrHasType];
 
-    this.state.set(type, reducer);
+    for (const action of actions) {
+      const key = typeof action === 'string' ? action : action.type;
+      this.state.set(key, reducer);
+    }
+
     return this;
   }
 
