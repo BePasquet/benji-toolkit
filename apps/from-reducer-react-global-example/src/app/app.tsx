@@ -1,12 +1,12 @@
-import { FromReducerProvider } from '@benji-toolkit/from-reducer-react-bindings';
+import { ReactiveActorProvider } from '@benji-toolkit/reactive-actor-react-bindings';
 import React from 'react';
 import { appActor } from './app-actor';
 import { Users } from './users/users.component';
 
 export const App = () => (
-  <FromReducerProvider actor={appActor}>
+  <ReactiveActorProvider actor={appActor}>
     <Users />
-  </FromReducerProvider>
+  </ReactiveActorProvider>
 );
 
 export default App;

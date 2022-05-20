@@ -23,25 +23,27 @@ export function snapshot<T>(obs$: Observable<T>): T {
   return data;
 }
 
-export interface FromReducerProviderProps<TState, TEvent> {
+export interface ReactiveActorProviderProps<TState, TEvent> {
   actor: ReactiveActor<TState, TEvent>;
 }
 
-const FromReducerContext = createContext<ReactiveActor<any, any> | null>(null);
+const ReactiveActorContext = createContext<ReactiveActor<any, any> | null>(
+  null
+);
 
-export function FromReducerProvider<TState, TEvent>({
+export function ReactiveActorProvider<TState, TEvent>({
   actor,
   children,
-}: PropsWithChildren<FromReducerProviderProps<TState, TEvent>>) {
+}: PropsWithChildren<ReactiveActorProviderProps<TState, TEvent>>) {
   const storeRef = useRef(actor).current;
   useEffect(() => {
     return () => storeRef.stop();
   }, [storeRef]);
 
   return (
-    <FromReducerContext.Provider value={actor}>
+    <ReactiveActorContext.Provider value={actor}>
       {children}
-    </FromReducerContext.Provider>
+    </ReactiveActorContext.Provider>
   );
 }
 
@@ -49,7 +51,7 @@ export function useSelector<TState, TResult>(
   selector: (state: TState) => TResult
 ) {
   const selectorRef = useRef(selector).current;
-  const actor = useContext(FromReducerContext);
+  const actor = useContext(ReactiveActorContext);
   const [state, setState] = useState(selectorRef(snapshot(actor.state$)));
 
   useLayoutEffect(() => {
@@ -64,7 +66,7 @@ export function useSelector<TState, TResult>(
 }
 
 export function useDispatch<TEvent>() {
-  const actor = useContext(FromReducerContext);
+  const actor = useContext(ReactiveActorContext);
 
   return useCallback((event: TEvent) => actor.send(event), [actor]);
 }

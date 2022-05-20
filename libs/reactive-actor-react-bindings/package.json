@@ -1,5 +1,5 @@
 {
-  "name": "from-reducer-react-bindings",
+  "name": "@benji-toolkit/reactive-actor-react-bindings",
   "version": "1.0.1",
   "description": "React bindings for from-reducer library",
   "author": "Pedro Benjamin Lescano Pasquet",

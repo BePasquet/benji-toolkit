@@ -344,31 +344,6 @@
       "tags": [],
       "implicitDependencies": ["from-reducer-angular-no-change-detection-zone"]
     },
-    "from-reducer-react-bindings": {
-      "root": "libs/from-reducer-react-bindings",
-      "sourceRoot": "libs/from-reducer-react-bindings/src",
-      "projectType": "library",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/from-reducer-react-bindings/**/*.{ts,tsx,js,jsx}"
-            ]
-          },
-          "outputs": ["{options.outputFile}"]
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/from-reducer-react-bindings"],
-          "options": {
-            "jestConfig": "libs/from-reducer-react-bindings/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      },
-      "tags": []
-    },
     "from-reducer-react-global-example": {
       "root": "apps/from-reducer-react-global-example",
       "sourceRoot": "apps/from-reducer-react-global-example/src",
@@ -556,6 +531,31 @@
             "packageJson": "libs/reactive-actor/package.json",
             "main": "libs/reactive-actor/src/index.ts",
             "assets": ["libs/reactive-actor/*.md"]
+          }
+        }
+      },
+      "tags": []
+    },
+    "reactive-actor-react-bindings": {
+      "root": "libs/reactive-actor-react-bindings",
+      "sourceRoot": "libs/reactive-actor-react-bindings/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/reactive-actor-react-bindings/**/*.{ts,tsx,js,jsx}"
+            ]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/reactive-actor-react-bindings"],
+          "options": {
+            "jestConfig": "libs/reactive-actor-react-bindings/jest.config.js",
+            "passWithNoTests": true
           }
         }
       },

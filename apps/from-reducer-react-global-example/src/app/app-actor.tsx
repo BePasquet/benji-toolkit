@@ -40,7 +40,7 @@ const notifyDevTools = (
   state$: Observable<GlobalState>
 ) =>
   actions$.pipe(
-    filter(() => (window as any).__REDUX_DEVTOOLS_EXTENSION__),
+    filter(() => !!devTools),
     withLatestFrom(state$),
     tap(([event, state]) => devTools.send(event, state)),
     ignoreElements()
@@ -48,5 +48,5 @@ const notifyDevTools = (
 
 const epics = [notifyDevTools, ...userEpics, ...repositoriesEpics];
 
-export const appActor = new ReactiveActor(reducer, initialState, epics);
+export const appActor = new ReactiveActor({ reducer, initialState, epics });
 appActor.start();

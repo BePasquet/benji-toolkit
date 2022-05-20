@@ -8,12 +8,18 @@ import {
 import { retry, scan, share, startWith, tap } from 'rxjs/operators';
 import { Epic, Reducer } from '../types';
 
-export class ReactiveActor<S, T> {
-  readonly state$: Observable<S>;
+export interface ReactiveActorParams<TState, TEvent> {
+  reducer: Reducer<TState, TEvent>;
+  initialState: TState;
+  epics: Epic<TEvent, TState>[];
+}
 
-  private readonly events$ = new Subject<T>();
+export class ReactiveActor<TState, TEvent> {
+  readonly state$: Observable<TState>;
 
-  private readonly epics$: Observable<T>;
+  private readonly events$ = new Subject<TEvent>();
+
+  private readonly epics$: Observable<TEvent>;
 
   private readonly effects$: Observable<any>;
 
@@ -23,7 +29,11 @@ export class ReactiveActor<S, T> {
    * @param reducer a reducer function that will be call every time an event happen
    * @param initialState an initial state for the reducer
    */
-  constructor(reducer: Reducer<S, T>, initialState: S, epics: Epic<T, S>[]) {
+  constructor({
+    reducer,
+    initialState,
+    epics,
+  }: ReactiveActorParams<TState, TEvent>) {
     this.state$ = this.events$.pipe(
       startWith({ type: '__INIT__' }),
       scan(reducer, initialState),
@@ -48,7 +58,7 @@ export class ReactiveActor<S, T> {
     this.subscriptions.unsubscribe();
   }
 
-  send(event: T): void {
+  send(event: TEvent): void {
     this.events$.next(event);
   }
 }
