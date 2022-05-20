@@ -1,4 +1,4 @@
-import { ReactiveStore } from '@benji-toolkit/reactive-store';
+import { ReactiveStore } from '@benji-toolkit/reactive-actor';
 import { select } from 'from-reducer';
 import React, {
   createContext,

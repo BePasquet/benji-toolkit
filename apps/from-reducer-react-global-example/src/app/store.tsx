@@ -3,7 +3,7 @@ import {
   combineReducers,
   ReactiveStore,
   Reducer,
-} from '@benji-toolkit/reactive-store';
+} from '@benji-toolkit/reactive-actor';
 import {
   repositoriesEpics,
   repositoriesInitialState,

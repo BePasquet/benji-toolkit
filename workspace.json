@@ -527,23 +527,23 @@
       },
       "tags": []
     },
-    "reactive-store": {
-      "root": "libs/reactive-store",
-      "sourceRoot": "libs/reactive-store/src",
+    "reactive-actor": {
+      "root": "libs/reactive-actor",
+      "sourceRoot": "libs/reactive-actor/src",
       "projectType": "library",
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "outputs": ["{options.outputFile}"],
           "options": {
-            "lintFilePatterns": ["libs/reactive-store/**/*.ts"]
+            "lintFilePatterns": ["libs/reactive-actor/**/*.ts"]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/reactive-store"],
+          "outputs": ["coverage/libs/reactive-actor"],
           "options": {
-            "jestConfig": "libs/reactive-store/jest.config.js",
+            "jestConfig": "libs/reactive-actor/jest.config.js",
             "passWithNoTests": true
           }
         }
