@@ -536,40 +536,50 @@
       },
       "tags": []
     },
-    "reactive-actor-react-bindings": {
-      "root": "libs/reactive-actor-react-bindings",
-      "sourceRoot": "libs/reactive-actor-react-bindings/src",
+    "reactive-actor-bindings": {
+      "root": "libs/reactive-actor-bindings",
+      "sourceRoot": "libs/reactive-actor-bindings/src",
       "projectType": "library",
+      "tags": [],
       "targets": {
+        "build": {
+          "executor": "@nrwl/web:rollup",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/libs/reactive-actor-bindings",
+            "tsConfig": "libs/reactive-actor-bindings/tsconfig.lib.json",
+            "project": "libs/reactive-actor-bindings/package.json",
+            "entryFile": "libs/reactive-actor-bindings/src/index.ts",
+            "external": ["react/jsx-runtime"],
+            "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
+            "compiler": "babel",
+            "assets": [
+              {
+                "glob": "libs/reactive-actor-bindings/README.md",
+                "input": ".",
+                "output": "."
+              }
+            ]
+          }
+        },
         "lint": {
           "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
           "options": {
             "lintFilePatterns": [
-              "libs/reactive-actor-react-bindings/**/*.{ts,tsx,js,jsx}"
+              "libs/reactive-actor-bindings/**/*.{ts,tsx,js,jsx}"
             ]
-          },
-          "outputs": ["{options.outputFile}"]
+          }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/reactive-actor-react-bindings"],
+          "outputs": ["coverage/libs/reactive-actor-bindings"],
           "options": {
-            "jestConfig": "libs/reactive-actor-react-bindings/jest.config.js",
+            "jestConfig": "libs/reactive-actor-bindings/jest.config.js",
             "passWithNoTests": true
           }
-        },
-        "build": {
-          "executor": "@nrwl/js:tsc",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/libs/reactive-actor-react-bindings",
-            "tsConfig": "libs/reactive-actor-react-bindings/tsconfig.lib.json",
-            "packageJson": "libs/reactive-actor-react-bindings/package.json",
-            "main": "libs/reactive-actor-react-bindings/src/index.ts",
-            "assets": ["libs/reactive-actor-react-bindings/*.md"]
-          }
-      },
-      "tags": []
+        }
+      }
     },
     "repositories": {
       "root": "libs/repositories",

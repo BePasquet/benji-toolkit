@@ -20,6 +20,7 @@ export function snapshot<T>(obs$: Observable<T>): T {
     data = snap;
   });
 
+  // @ts-ignore
   return data;
 }
 
@@ -27,8 +28,10 @@ export interface ReactiveActorProviderProps<TState, TEvent> {
   actor: ReactiveActor<TState, TEvent>;
 }
 
-const ReactiveActorContext = createContext<ReactiveActor<any, any> | null>(
-  null
+const contextInitialState = null as unknown;
+
+const ReactiveActorContext = createContext<ReactiveActor<any, any>>(
+  contextInitialState as ReactiveActor<any, any>
 );
 
 export function ReactiveActorProvider<TState, TEvent>({

@@ -1,7 +1,7 @@
 import {
   useDispatch,
   useSelector,
-} from '@benji-toolkit/reactive-actor-react-bindings';
+} from '@benji-toolkit/reactive-actor-bindings';
 import { getRepositories } from '@benji-toolkit/repositories';
 import { getUsers } from '@benji-toolkit/users';
 import React, { useEffect } from 'react';
