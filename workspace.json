@@ -557,7 +557,17 @@
             "jestConfig": "libs/reactive-actor-react-bindings/jest.config.js",
             "passWithNoTests": true
           }
-        }
+        },
+        "build": {
+          "executor": "@nrwl/js:tsc",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/libs/reactive-actor-react-bindings",
+            "tsConfig": "libs/reactive-actor-react-bindings/tsconfig.lib.json",
+            "packageJson": "libs/reactive-actor-react-bindings/package.json",
+            "main": "libs/reactive-actor-react-bindings/src/index.ts",
+            "assets": ["libs/reactive-actor-react-bindings/*.md"]
+          }
       },
       "tags": []
     },

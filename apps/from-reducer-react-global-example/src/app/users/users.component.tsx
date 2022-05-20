@@ -9,7 +9,6 @@ import React, { useEffect } from 'react';
 export const Users = () => {
   const dispatch = useDispatch();
   const state = useSelector((x) => x);
-  console.log(state);
 
   useEffect(() => {
     dispatch(getUsers());
