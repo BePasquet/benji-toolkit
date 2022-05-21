@@ -1,4 +1,4 @@
-import { Action } from 'from-reducer';
+import { Action } from '@benji-toolkit/reactive-actor';
 import { Observable, of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import {

@@ -1,5 +1,4 @@
-import { Action, Reducer } from '../types';
-import { createAction } from './create-action';
+import { Action, ActionCreator, Reducer } from '../types';
 
 /**
  * Model to create reducers
@@ -16,9 +15,9 @@ export class ReducerBuilder<S> {
    * @param reducer a reducer function with the form of `(state: S, action: Action) => S`
    * @returns the current reducer builder instance (allows chaining)
    */
-  addCase<A extends ReturnType<typeof createAction>>(
-    typeOrHasType: A | A[] | string | string[],
-    reducer: Reducer<S, ReturnType<A>>
+  addCase<T>(
+    typeOrHasType: ActionCreator<T> | ActionCreator<T>[] | string | string[],
+    reducer: Reducer<S, ReturnType<ActionCreator<T>>>
   ) {
     const actions = Array.isArray(typeOrHasType)
       ? typeOrHasType
