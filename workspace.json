@@ -2,6 +2,7 @@
   "version": 2,
   "projects": {
     "from-reducer": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "root": "libs/from-reducer",
       "sourceRoot": "libs/from-reducer/src",
       "projectType": "library",
@@ -9,33 +10,44 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/from-reducer/**/*.ts"]
+            "lintFilePatterns": [
+              "libs/from-reducer/**/*.ts"
+            ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/from-reducer"],
+          "outputs": [
+            "coverage/libs/from-reducer"
+          ],
           "options": {
-            "jestConfig": "libs/from-reducer/jest.config.js",
+            "jestConfig": "libs/from-reducer/jest.config.ts",
             "passWithNoTests": true
           }
         },
         "build": {
           "executor": "@nrwl/js:tsc",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/libs/from-reducer",
             "tsConfig": "libs/from-reducer/tsconfig.lib.json",
             "packageJson": "libs/from-reducer/package.json",
             "main": "libs/from-reducer/src/index.ts",
-            "assets": ["libs/from-reducer/*.md"]
+            "assets": [
+              "libs/from-reducer/*.md"
+            ]
           }
         }
       },
       "tags": []
     },
     "from-reducer-angular-global-example": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "projectType": "application",
       "root": "apps/from-reducer-angular-global-example",
       "sourceRoot": "apps/from-reducer-angular-global-example/src",
@@ -114,13 +126,17 @@
               "apps/from-reducer-angular-global-example/src/**/*.html"
             ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/from-reducer-angular-global-example"],
+          "outputs": [
+            "coverage/apps/from-reducer-angular-global-example"
+          ],
           "options": {
-            "jestConfig": "apps/from-reducer-angular-global-example/jest.config.js",
+            "jestConfig": "apps/from-reducer-angular-global-example/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -128,6 +144,7 @@
       "tags": []
     },
     "from-reducer-angular-local-example": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "projectType": "application",
       "root": "apps/from-reducer-angular-local-example",
       "sourceRoot": "apps/from-reducer-angular-local-example/src",
@@ -206,13 +223,17 @@
               "apps/from-reducer-angular-local-example/src/**/*.html"
             ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/from-reducer-angular-local-example"],
+          "outputs": [
+            "coverage/apps/from-reducer-angular-local-example"
+          ],
           "options": {
-            "jestConfig": "apps/from-reducer-angular-local-example/jest.config.js",
+            "jestConfig": "apps/from-reducer-angular-local-example/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -220,6 +241,7 @@
       "tags": []
     },
     "from-reducer-angular-no-change-detection-zone": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "projectType": "application",
       "root": "apps/from-reducer-angular-no-change-detection-zone",
       "sourceRoot": "apps/from-reducer-angular-no-change-detection-zone/src",
@@ -298,7 +320,9 @@
               "apps/from-reducer-angular-no-change-detection-zone/src/**/*.html"
             ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
@@ -306,7 +330,7 @@
             "coverage/apps/from-reducer-angular-no-change-detection-zone"
           ],
           "options": {
-            "jestConfig": "apps/from-reducer-angular-no-change-detection-zone/jest.config.js",
+            "jestConfig": "apps/from-reducer-angular-no-change-detection-zone/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -314,6 +338,7 @@
       "tags": []
     },
     "from-reducer-angular-no-change-detection-zone-e2e": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "root": "apps/from-reducer-angular-no-change-detection-zone-e2e",
       "sourceRoot": "apps/from-reducer-angular-no-change-detection-zone-e2e/src",
       "projectType": "application",
@@ -338,20 +363,27 @@
               "apps/from-reducer-angular-no-change-detection-zone-e2e/**/*.{js,ts}"
             ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         }
       },
       "tags": [],
-      "implicitDependencies": ["from-reducer-angular-no-change-detection-zone"]
+      "implicitDependencies": [
+        "from-reducer-angular-no-change-detection-zone"
+      ]
     },
     "from-reducer-react-global-example": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "root": "apps/from-reducer-react-global-example",
       "sourceRoot": "apps/from-reducer-react-global-example/src",
       "projectType": "application",
       "targets": {
         "build": {
           "executor": "@nrwl/web:webpack",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/from-reducer-react-global-example",
             "index": "apps/from-reducer-react-global-example/src/index.html",
@@ -390,8 +422,15 @@
                   "maximumError": "5mb"
                 }
               ]
+            },
+            "development": {
+              "extractLicenses": false,
+              "optimization": false,
+              "sourceMap": true,
+              "vendorChunk": true
             }
-          }
+          },
+          "defaultConfiguration": "production"
         },
         "serve": {
           "executor": "@nrwl/web:dev-server",
@@ -401,8 +440,12 @@
           "configurations": {
             "production": {
               "buildTarget": "from-reducer-react-global-example:build:production"
+            },
+            "development": {
+              "buildTarget": "from-reducer-react-global-example:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
@@ -411,13 +454,17 @@
               "apps/from-reducer-react-global-example/**/*.{ts,tsx,js,jsx}"
             ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/from-reducer-react-global-example"],
+          "outputs": [
+            "coverage/apps/from-reducer-react-global-example"
+          ],
           "options": {
-            "jestConfig": "apps/from-reducer-react-global-example/jest.config.js",
+            "jestConfig": "apps/from-reducer-react-global-example/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -425,13 +472,16 @@
       "tags": []
     },
     "from-reducer-react-local-example": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "root": "apps/from-reducer-react-local-example",
       "sourceRoot": "apps/from-reducer-react-local-example/src",
       "projectType": "application",
       "targets": {
         "build": {
           "executor": "@nrwl/web:webpack",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/from-reducer-react-local-example",
             "index": "apps/from-reducer-react-local-example/src/index.html",
@@ -442,7 +492,9 @@
               "apps/from-reducer-react-local-example/src/favicon.ico",
               "apps/from-reducer-react-local-example/src/assets"
             ],
-            "styles": ["apps/from-reducer-react-local-example/src/styles.scss"],
+            "styles": [
+              "apps/from-reducer-react-local-example/src/styles.scss"
+            ],
             "scripts": [],
             "webpackConfig": "@nrwl/react/plugins/webpack"
           },
@@ -468,8 +520,15 @@
                   "maximumError": "5mb"
                 }
               ]
+            },
+            "development": {
+              "extractLicenses": false,
+              "optimization": false,
+              "sourceMap": true,
+              "vendorChunk": true
             }
-          }
+          },
+          "defaultConfiguration": "production"
         },
         "serve": {
           "executor": "@nrwl/web:dev-server",
@@ -479,8 +538,12 @@
           "configurations": {
             "production": {
               "buildTarget": "from-reducer-react-local-example:build:production"
+            },
+            "development": {
+              "buildTarget": "from-reducer-react-local-example:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
@@ -489,13 +552,17 @@
               "apps/from-reducer-react-local-example/**/*.{ts,tsx,js,jsx}"
             ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/from-reducer-react-local-example"],
+          "outputs": [
+            "coverage/apps/from-reducer-react-local-example"
+          ],
           "options": {
-            "jestConfig": "apps/from-reducer-react-local-example/jest.config.js",
+            "jestConfig": "apps/from-reducer-react-local-example/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -503,40 +570,52 @@
       "tags": []
     },
     "reactive-actor": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "root": "libs/reactive-actor",
       "sourceRoot": "libs/reactive-actor/src",
       "projectType": "library",
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
-            "lintFilePatterns": ["libs/reactive-actor/**/*.ts"]
+            "lintFilePatterns": [
+              "libs/reactive-actor/**/*.ts"
+            ]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/reactive-actor"],
+          "outputs": [
+            "coverage/libs/reactive-actor"
+          ],
           "options": {
-            "jestConfig": "libs/reactive-actor/jest.config.js",
+            "jestConfig": "libs/reactive-actor/jest.config.ts",
             "passWithNoTests": true
           }
         },
         "build": {
           "executor": "@nrwl/js:tsc",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/libs/reactive-actor",
             "tsConfig": "libs/reactive-actor/tsconfig.lib.json",
             "packageJson": "libs/reactive-actor/package.json",
             "main": "libs/reactive-actor/src/index.ts",
-            "assets": ["libs/reactive-actor/*.md"]
+            "assets": [
+              "libs/reactive-actor/*.md"
+            ]
           }
         }
       },
       "tags": []
     },
     "reactive-actor-bindings": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "root": "libs/reactive-actor-bindings",
       "sourceRoot": "libs/reactive-actor-bindings/src",
       "projectType": "library",
@@ -544,13 +623,17 @@
       "targets": {
         "build": {
           "executor": "@nrwl/web:rollup",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/libs/reactive-actor-bindings",
             "tsConfig": "libs/reactive-actor-bindings/tsconfig.lib.json",
             "project": "libs/reactive-actor-bindings/package.json",
             "entryFile": "libs/reactive-actor-bindings/src/index.ts",
-            "external": ["react/jsx-runtime"],
+            "external": [
+              "react/jsx-runtime"
+            ],
             "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
             "compiler": "babel",
             "assets": [
@@ -564,7 +647,9 @@
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
             "lintFilePatterns": [
               "libs/reactive-actor-bindings/**/*.{ts,tsx,js,jsx}"
@@ -573,15 +658,18 @@
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/reactive-actor-bindings"],
+          "outputs": [
+            "coverage/libs/reactive-actor-bindings"
+          ],
           "options": {
-            "jestConfig": "libs/reactive-actor-bindings/jest.config.js",
+            "jestConfig": "libs/reactive-actor-bindings/jest.config.ts",
             "passWithNoTests": true
           }
         }
       }
     },
     "repositories": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "root": "libs/repositories",
       "sourceRoot": "libs/repositories/src",
       "projectType": "library",
@@ -589,15 +677,21 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/repositories/**/*.ts"]
+            "lintFilePatterns": [
+              "libs/repositories/**/*.ts"
+            ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/repositories"],
+          "outputs": [
+            "coverage/libs/repositories"
+          ],
           "options": {
-            "jestConfig": "libs/repositories/jest.config.js",
+            "jestConfig": "libs/repositories/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -605,6 +699,7 @@
       "tags": []
     },
     "rx-actor": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "root": "libs/rx-actor",
       "sourceRoot": "libs/rx-actor/src",
       "projectType": "library",
@@ -612,15 +707,21 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/rx-actor/**/*.ts"]
+            "lintFilePatterns": [
+              "libs/rx-actor/**/*.ts"
+            ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/rx-actor"],
+          "outputs": [
+            "coverage/libs/rx-actor"
+          ],
           "options": {
-            "jestConfig": "libs/rx-actor/jest.config.js",
+            "jestConfig": "libs/rx-actor/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -628,6 +729,7 @@
       "tags": []
     },
     "rx-http": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "root": "libs/rx-http",
       "sourceRoot": "libs/rx-http/src",
       "projectType": "library",
@@ -635,15 +737,21 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/rx-http/**/*.ts"]
+            "lintFilePatterns": [
+              "libs/rx-http/**/*.ts"
+            ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/rx-http"],
+          "outputs": [
+            "coverage/libs/rx-http"
+          ],
           "options": {
-            "jestConfig": "libs/rx-http/jest.config.js",
+            "jestConfig": "libs/rx-http/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -651,6 +759,7 @@
       "tags": []
     },
     "users": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "root": "libs/users",
       "sourceRoot": "libs/users/src",
       "projectType": "library",
@@ -658,20 +767,27 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/users/**/*.ts"]
+            "lintFilePatterns": [
+              "libs/users/**/*.ts"
+            ]
           },
-          "outputs": ["{options.outputFile}"]
+          "outputs": [
+            "{options.outputFile}"
+          ]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/users"],
+          "outputs": [
+            "coverage/libs/users"
+          ],
           "options": {
-            "jestConfig": "libs/users/jest.config.js",
+            "jestConfig": "libs/users/jest.config.ts",
             "passWithNoTests": true
           }
         }
       },
       "tags": []
     }
-  }
+  },
+  "$schema": "./node_modules/nx/schemas/workspace-schema.json"
 }

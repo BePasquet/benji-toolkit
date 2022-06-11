@@ -1,5 +1,6 @@
-module.exports = {
-  displayName: 'rx-http',
+/* eslint-disable */
+export default {
+  displayName: 'repositories',
   preset: '../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -10,5 +11,5 @@ module.exports = {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../coverage/libs/rx-http',
+  coverageDirectory: '../../coverage/libs/repositories',
 };

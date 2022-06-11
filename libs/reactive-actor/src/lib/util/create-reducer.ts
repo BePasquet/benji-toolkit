@@ -7,7 +7,7 @@ import { ReducerBuilder } from './reducer-builder.model';
  * @returns a reducer function
  * @example
  *
- * import { createAction, createReducer } from 'from-reducer';
+ * import { createEvent, createReducer } from 'from-reducer';
  *
  * export interface LayoutState {
  *   loading: boolean;
@@ -19,9 +19,9 @@ import { ReducerBuilder } from './reducer-builder.model';
  *   error: '',
  * };
  *
- * export const startLoader = createAction('START_LOADER');
+ * export const startLoader = createEvent('START_LOADER');
  *
- * export const stopLoader = createAction('STOP_LOADER');
+ * export const stopLoader = createEvent('STOP_LOADER');
  *
  * export const layoutReducer = createReducer(layoutInitialState, (builder) =>
  *   builder

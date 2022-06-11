@@ -1,20 +1,27 @@
-import { ActionCreator } from '../types/action-creator.type';
+export interface EventCreatorReturnType<T> {
+  (payload?: T): {
+    type: string;
+    payload: T;
+  };
+  type: string;
+}
+
 /**
  * Utility function to generate action creators with specific type
  * @param type action identifier
  * @returns an action creator with the form of `(payload: T) => { type: string; payload: T }`
  * NOTE: type will be attached to action creator to give access to it from function as property
  * @example
- * import { createAction } from "from-reducer";
+ * import { createEvent } from "reactive-actor";
  *
  * // without payload
- * export const startLoader = createAction('START_LOADER');
+ * export const startLoader = createEvent('START_LOADER');
  *
  * // with payload
- * export const getUser = createAction<{ name: string }>('GET_USER');
+ * export const getUser = createEvent<{ name: string }>('GET_USER');
  *
  */
-export function createAction<T>(type: string): ActionCreator<T> {
+export function createEvent<T>(type: string): EventCreatorReturnType<T> {
   const actionCreator = (payload: T = null) => ({ type, payload });
   // type added to function as property to allow read it as static property
   actionCreator.type = type;

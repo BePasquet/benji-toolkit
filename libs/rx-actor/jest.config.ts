@@ -1,4 +1,5 @@
-module.exports = {
+/* eslint-disable */
+export default {
   displayName: 'rx-actor',
   preset: '../../jest.preset.js',
   globals: {

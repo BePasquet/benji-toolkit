@@ -1,5 +1,6 @@
-module.exports = {
-  displayName: 'from-reducer-angular-global-example',
+/* eslint-disable */
+export default {
+  displayName: 'from-reducer-angular-no-change-detection-zone',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {
@@ -8,7 +9,8 @@ module.exports = {
       stringifyContentPathRegex: '\\.(html|svg)$',
     },
   },
-  coverageDirectory: '../../coverage/apps/from-reducer-angular-global-example',
+  coverageDirectory:
+    '../../coverage/apps/from-reducer-angular-no-change-detection-zone',
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',

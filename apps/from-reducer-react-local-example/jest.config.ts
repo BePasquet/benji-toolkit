@@ -1,4 +1,5 @@
-module.exports = {
+/* eslint-disable */
+export default {
   displayName: 'from-reducer-react-local-example',
   preset: '../../jest.preset.js',
   transform: {

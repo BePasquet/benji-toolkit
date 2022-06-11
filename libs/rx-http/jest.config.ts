@@ -1,5 +1,6 @@
-module.exports = {
-  displayName: 'from-reducer',
+/* eslint-disable */
+export default {
+  displayName: 'rx-http',
   preset: '../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -10,6 +11,5 @@ module.exports = {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../coverage/libs/from-reducer',
-  testEnvironment: 'node',
+  coverageDirectory: '../../coverage/libs/rx-http',
 };

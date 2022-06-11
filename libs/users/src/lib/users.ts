@@ -1,7 +1,8 @@
 import {
   Action,
-  createAction,
+  createEvent,
   createReducer,
+  ofType,
 } from '@benji-toolkit/reactive-actor';
 import { Observable, of, pipe } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
@@ -28,13 +29,13 @@ export interface UsersPartialState {
 }
 
 // Actions
-export const getUsers = createAction('[Users] Get Users');
+export const getUsers = createEvent('[Users] Get Users');
 
-export const getUsersSuccess = createAction<GitHubUser[]>(
+export const getUsersSuccess = createEvent<GitHubUser[]>(
   '[Users] Get Users Success'
 );
 
-export const getUsersFail = createAction<string>('[Users] Get Users Fail');
+export const getUsersFail = createEvent<string>('[Users] Get Users Fail');
 
 export type UserActions = ReturnType<
   typeof getUsers | typeof getUsersSuccess | typeof getUsersFail
@@ -71,7 +72,7 @@ export const usersReducer = createReducer(usersInitialState, (builder) =>
 // Epics
 const getUsersEpic = (actions$: Observable<Action>) =>
   actions$.pipe(
-    filter(({ type }) => type === getUsers.type),
+    ofType(getUsers),
     switchMap(() =>
       ajax<GitHubUser[]>(`https://api.github.com/users?per_page=5`).pipe(
         map(({ response }) => getUsersSuccess(response)),

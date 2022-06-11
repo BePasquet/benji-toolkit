@@ -27,9 +27,6 @@
       }
     ]
   },
-  "cli": {
-    "defaultCollection": "@nrwl/react"
-  },
   "generators": {
     "@nrwl/react": {
       "application": {
@@ -59,5 +56,6 @@
       "style": "scss"
     }
   },
-  "defaultProject": "from-reducer-react-global-example"
+  "defaultProject": "from-reducer-react-global-example",
+  "$schema": "./node_modules/nx/schemas/nx-schema.json"
 }

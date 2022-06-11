@@ -5,16 +5,15 @@ import {
   OperatorFunction,
   scan,
   share,
-  startWith,
   Subject,
   takeUntil,
   tap,
 } from 'rxjs';
 import { ofType } from '../operators';
 import { Reducer } from '../types';
-import { createAction } from '../util';
+import { createEvent } from '../util';
 
-export const stop = createAction('REACTIVE_ACTOR_STOP');
+export const stop = createEvent('REACTIVE_ACTOR_STOP');
 
 /**
  * Message are implemented with a type
@@ -122,7 +121,6 @@ export function eventReducer<TState, TMessage>(
 ) {
   return (source$: Observable<TMessage>) =>
     source$.pipe(
-      startWith({ type: '__INIT_' }),
       scan(reducer, initialState),
       share({ connector: () => new BehaviorSubject(initialState) }),
       distinctUntilChanged()

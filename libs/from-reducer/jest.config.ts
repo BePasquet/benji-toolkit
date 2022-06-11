@@ -1,5 +1,6 @@
-module.exports = {
-  displayName: 'repositories',
+/* eslint-disable */
+export default {
+  displayName: 'from-reducer',
   preset: '../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -10,5 +11,6 @@ module.exports = {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../coverage/libs/repositories',
+  coverageDirectory: '../../coverage/libs/from-reducer',
+  testEnvironment: 'node',
 };

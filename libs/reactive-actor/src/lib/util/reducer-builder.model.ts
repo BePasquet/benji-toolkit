@@ -1,4 +1,5 @@
 import { Action, ActionCreator, Reducer } from '../types';
+import { EventCreatorReturnType } from './create-event';
 
 /**
  * Model to create reducers
@@ -17,7 +18,7 @@ export class ReducerBuilder<S> {
    */
   addCase<T>(
     typeOrHasType: ActionCreator<T> | ActionCreator<T>[] | string | string[],
-    reducer: Reducer<S, ReturnType<ActionCreator<T>>>
+    reducer: Reducer<S, ReturnType<EventCreatorReturnType<T>>>
   ) {
     const actions = Array.isArray(typeOrHasType)
       ? typeOrHasType
