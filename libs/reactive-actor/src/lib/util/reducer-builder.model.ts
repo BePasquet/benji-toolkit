@@ -1,5 +1,5 @@
-import { Action, ActionCreator, Reducer } from '../types';
-import { EventCreatorReturnType } from './create-event';
+import { EventCreator } from '../interfaces.ts/event-creator.interface';
+import { Action, Reducer } from '../types';
 
 /**
  * Model to create reducers
@@ -17,8 +17,8 @@ export class ReducerBuilder<S> {
    * @returns the current reducer builder instance (allows chaining)
    */
   addCase<T>(
-    typeOrHasType: ActionCreator<T> | ActionCreator<T>[] | string | string[],
-    reducer: Reducer<S, ReturnType<EventCreatorReturnType<T>>>
+    typeOrHasType: EventCreator<T> | EventCreator<T>[] | string | string[],
+    reducer: Reducer<S, ReturnType<EventCreator<T>>>
   ) {
     const actions = Array.isArray(typeOrHasType)
       ? typeOrHasType

@@ -1,10 +1,4 @@
-export interface EventCreatorReturnType<T> {
-  (payload?: T): {
-    type: string;
-    payload: T;
-  };
-  type: string;
-}
+import { EventCreator } from '../interfaces.ts/event-creator.interface';
 
 /**
  * Utility function to generate action creators with specific type
@@ -21,8 +15,8 @@ export interface EventCreatorReturnType<T> {
  * export const getUser = createEvent<{ name: string }>('GET_USER');
  *
  */
-export function createEvent<T>(type: string): EventCreatorReturnType<T> {
-  const actionCreator = (payload: T = null) => ({ type, payload });
+export function createEvent<T>(type: string): EventCreator<T> {
+  const actionCreator = (payload: T) => ({ type, payload });
   // type added to function as property to allow read it as static property
   actionCreator.type = type;
   return actionCreator;
