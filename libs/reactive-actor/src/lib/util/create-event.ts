@@ -1,4 +1,4 @@
-import { EventCreator } from '../interfaces.ts/event-creator.interface';
+import { ActorRef, EventCreator } from '../interfaces';
 
 /**
  * Utility function to generate action creators with specific type
@@ -16,7 +16,11 @@ import { EventCreator } from '../interfaces.ts/event-creator.interface';
  *
  */
 export function createEvent<T>(type: string): EventCreator<T> {
-  const actionCreator = (payload: T) => ({ type, payload });
+  const actionCreator = (payload: T, sender: ActorRef) => ({
+    type,
+    payload,
+    sender,
+  });
   // type added to function as property to allow read it as static property
   actionCreator.type = type;
   return actionCreator;

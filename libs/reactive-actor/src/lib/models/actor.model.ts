@@ -6,26 +6,12 @@ import {
   scan,
   share,
   Subject,
-  takeUntil,
-  tap,
 } from 'rxjs';
-import { ofType } from '../operators';
+import { Event, SendConfig } from '../interfaces';
 import { Reducer } from '../types';
 import { createEvent } from '../util';
 
 export const stop = createEvent('REACTIVE_ACTOR_STOP');
-
-/**
- * Message are implemented with a type
- * to understand what message is
- */
-export interface Event {
-  type: string;
-}
-
-export interface AnswerConfig {
-  to?: string | string[];
-}
 
 /**
  * Reference:
@@ -54,27 +40,12 @@ export class Actor<TMessage extends Event = Event> {
 
   constructor(public address: string) {}
 
-  send(message: TMessage): void {
+  send(message: TMessage & SendConfig): void {
     this.messages$.next(message);
   }
 
   protected spawn(actor: Actor): void {
     this.children.set(actor.address, actor);
-  }
-
-  protected answer(message$: Observable<TMessage & AnswerConfig>): void {
-    const answer$ = message$.pipe(
-      tap(({ to, ...message }) =>
-        !to
-          ? this.send(message as TMessage)
-          : typeof to === 'string'
-          ? this.children.get(to)?.send(message)
-          : to.forEach((address) => this.children.get(address)?.send(message))
-      ),
-      takeUntil(this.messages$.pipe(ofType(stop)))
-    );
-
-    answer$.subscribe();
   }
 }
 

@@ -1,5 +1,5 @@
 import { filter, Observable, OperatorFunction } from 'rxjs';
-import { EventCreator } from '../interfaces.ts/event-creator.interface';
+import { EventCreator } from '../interfaces';
 import { Action } from '../types';
 
 export function ofType<T>(

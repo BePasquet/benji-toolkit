@@ -1,4 +1,4 @@
-import { EventCreator } from '../interfaces.ts/event-creator.interface';
+import { EventCreator } from '../interfaces';
 import { Action, Reducer } from '../types';
 
 /**
