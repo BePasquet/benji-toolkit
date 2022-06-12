@@ -1,13 +1,17 @@
 import {
   BehaviorSubject,
   distinctUntilChanged,
+  merge,
   Observable,
   OperatorFunction,
   scan,
   share,
   Subject,
+  takeUntil,
+  tap,
 } from 'rxjs';
-import { Event, SendConfig } from '../interfaces';
+import { AnswerConfig, Event, SendConfig } from '../interfaces';
+import { ofType } from '../operators/of-type.operator';
 import { Reducer } from '../types';
 import { createEvent } from '../util';
 
@@ -34,18 +38,33 @@ export const stop = createEvent('REACTIVE_ACTOR_STOP');
  *   - Designates what to do with the next message it receives
  */
 export class Actor<TMessage extends Event = Event> {
-  protected readonly messages$ = new Subject<TMessage>();
+  readonly #messages$ = new Subject<TMessage>();
 
   protected readonly children = new Map<string, Actor>();
 
   constructor(public address: string) {}
 
   send(message: TMessage & SendConfig): void {
-    this.messages$.next(message);
+    this.#messages$.next(message);
   }
 
   protected spawn(actor: Actor): void {
     this.children.set(actor.address, actor);
+  }
+
+  protected answer(...messages: Observable<Event & AnswerConfig>[]): void {
+    const answers$ = merge(...messages).pipe(
+      tap(({ recipient, ...message }) =>
+        recipient ? recipient.send(message) : this.send(message as TMessage)
+      ),
+      takeUntil(this.messages$.pipe(ofType(stop)))
+    );
+
+    answers$.subscribe();
+  }
+
+  protected get messages$() {
+    return this.#messages$.asObservable();
   }
 }
 
