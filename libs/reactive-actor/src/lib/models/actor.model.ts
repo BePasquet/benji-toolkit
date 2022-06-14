@@ -40,16 +40,10 @@ export const stop = createEvent('REACTIVE_ACTOR_STOP');
 export class Actor<TMessage extends Event = Event> {
   readonly #messages$ = new Subject<TMessage>();
 
-  protected readonly children = new Map<string, Actor>();
-
   constructor(public address: string) {}
 
   send(message: TMessage & SendConfig): void {
     this.#messages$.next(message);
-  }
-
-  protected spawn(actor: Actor): void {
-    this.children.set(actor.address, actor);
   }
 
   protected answer(...messages: Observable<Event & AnswerConfig>[]): void {
@@ -132,34 +126,4 @@ export function eventStateMachine<
   initialState: TState
 ): OperatorFunction<TMessage, TState> {
   return eventReducer(stateMachineReducer(stateMachine), initialState);
-}
-
-/**
- * An actor with state for more info see ``Actor``
- */
-export class StateFulActor<
-  TMessage extends Event,
-  TState extends StateMachineState
-> extends Actor<TMessage> {
-  /**
-   * Stream of state (broadcast messages)
-   */
-  readonly state$: Observable<TState>;
-
-  /**
-   * @param address actor address
-   * @param stateMachine state machine structure that will be used to create reducer function that will output next state
-   * @param initialState state machine initial state
-   */
-  constructor(
-    address: string,
-    stateMachine: EventStateMachineStructure<TState, TMessage>,
-    initialState: TState
-  ) {
-    super(address);
-
-    this.state$ = this.messages$.pipe(
-      eventStateMachine(stateMachine, initialState)
-    );
-  }
 }
