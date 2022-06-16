@@ -2,12 +2,8 @@ import { ofType } from 'from-reducer';
 import { map } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
 import { addRecipient } from '../operators';
-import { createEvent } from '../util';
+import { pauseEvent, replayEvent, startEvent } from '../util/test/mock.data';
 import { Actor, stop } from './actor.model';
-
-const startEvent = createEvent('START');
-const pauseEvent = createEvent('PAUSE');
-const replayEvent = createEvent('REPLAY');
 
 describe('Actor Model', () => {
   let testScheduler: TestScheduler;
