@@ -7,7 +7,7 @@ import { ReducerBuilder } from './reducer-builder.model';
  * @returns a reducer function
  * @example
  *
- * import { createEvent, createReducer } from 'from-reducer';
+ * import { createEvent, createReducer } from 'reactive-actor';
  *
  * export interface LayoutState {
  *   loading: boolean;

@@ -1,7 +1,6 @@
-import { ofType } from 'from-reducer';
 import { map } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
-import { addRecipient } from '../operators';
+import { addRecipient, ofType } from '../operators';
 import { pauseEvent, replayEvent, startEvent } from '../util/test/mock.data';
 import { Actor, stop } from './actor.model';
 

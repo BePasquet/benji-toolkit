@@ -8,13 +8,13 @@ import { Reducer } from '../types';
  * @returns single reducer function, this may be useful when we want to pass an event as argument to multiple reducers
  *
  * @example
- * import { Action } from 'from-reducer';
+ * import { Event } from 'reactive-actor';
  *
  * interface UsersState {
  *   auth: boolean;
  * }
  *
- * const userReducer = (state: UsersState, action: Action) => {
+ * const userReducer = (state: UsersState, action: Event) => {
  *   switch (action.type) {
  *     case 'AUTHENTICATE': {
  *       return { auth: true };
@@ -30,7 +30,7 @@ import { Reducer } from '../types';
  *   show: boolean;
  * }
  *
- * const productsReducer = (state: ProductsState, action: Action) => {
+ * const productsReducer = (state: ProductsState, action: Event) => {
  *   switch (action.type) {
  *     case 'TOGGLE_PRODUCTS': {
  *       return { ...state, show: !state.show };
