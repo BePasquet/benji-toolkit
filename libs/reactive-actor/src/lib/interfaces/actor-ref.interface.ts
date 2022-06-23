@@ -1,5 +1,5 @@
-import { Event } from './event.interface';
+import { Actor } from '../models';
+import { ActorEvent } from '../types/actor-event.type';
 
-export interface ActorRef<T extends Event = Event> {
-  send: (message: T) => void;
-}
+
+export type ActorRef<T extends ActorEvent> = Pick<Actor<T>, 'send'>
