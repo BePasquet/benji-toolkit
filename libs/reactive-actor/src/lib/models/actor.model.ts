@@ -10,9 +10,10 @@ import {
   takeUntil,
   tap,
 } from 'rxjs';
-import { AnswerConfig, Event, SendConfig } from '../interfaces';
+import { AnswerConfig, Event } from '../interfaces';
 import { ofType } from '../operators/of-type.operator';
 import { Reducer } from '../types';
+import { ActorEvent } from '../types/actor-event.type';
 import { createEvent } from '../util';
 
 export const stop = createEvent('REACTIVE_ACTOR_STOP');
@@ -37,13 +38,13 @@ export const stop = createEvent('REACTIVE_ACTOR_STOP');
  *   - Send messages (to other actors and itself)
  *   - Designates what to do with the next message it receives
  */
-export class Actor<TMessage extends Event = Event> {
-  readonly #messages$ = new Subject<TMessage>();
+export class Actor<TMessage extends ActorEvent = Event> {
+  private readonly message$ = new Subject<TMessage>();
 
   constructor(public address: string) {}
 
-  send(message: TMessage & SendConfig): void {
-    this.#messages$.next(message);
+  send(message: TMessage): void {
+    this.message$.next(message);
   }
 
   protected answer(...messages: Observable<Event & AnswerConfig>[]): void {
@@ -58,7 +59,7 @@ export class Actor<TMessage extends Event = Event> {
   }
 
   protected get messages$() {
-    return this.#messages$.asObservable();
+    return this.message$.asObservable();
   }
 }
 

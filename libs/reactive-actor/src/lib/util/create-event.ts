@@ -1,4 +1,5 @@
-import { ActorRef, EventCreator } from '../interfaces';
+import { ActorRef, Event, EventCreator } from '../interfaces';
+import { ActorEvent } from '../types/actor-event.type';
 
 /**
  * Utility function to generate action creators with specific type
@@ -15,8 +16,10 @@ import { ActorRef, EventCreator } from '../interfaces';
  * export const getUser = createEvent<{ name: string }>('GET_USER');
  *
  */
-export function createEvent<T>(type: string): EventCreator<T> {
-  const actionCreator = (payload: T, sender: ActorRef) => ({
+export function createEvent<T, SM extends ActorEvent = Event>(
+  type: string
+): EventCreator<T, SM> {
+  const actionCreator = (payload: T, sender: ActorRef<SM>) => ({
     type,
     payload,
     sender,
