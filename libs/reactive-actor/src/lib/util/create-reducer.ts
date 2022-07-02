@@ -1,4 +1,5 @@
-import { Action, BuilderFunction, Reducer } from '../types';
+import { Event } from '../interfaces';
+import { BuilderFunction, Reducer } from '../types';
 import { ReducerBuilder } from './reducer-builder.model';
 /**
  * Utility function to create reducers
@@ -30,7 +31,7 @@ import { ReducerBuilder } from './reducer-builder.model';
  * );
  *
  */
-export function createReducer<S, A extends Action = Action>(
+export function createReducer<S, A extends Event = Event>(
   initialState: S,
   builderFunction: BuilderFunction<S>
 ): Reducer<S, A> {

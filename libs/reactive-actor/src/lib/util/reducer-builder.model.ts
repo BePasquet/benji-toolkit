@@ -1,5 +1,5 @@
-import { EventCreator } from '../interfaces';
-import { Action, Reducer } from '../types';
+import { Event, EventCreator } from '../interfaces';
+import { Reducer } from '../types';
 
 /**
  * Model to create reducers
@@ -8,7 +8,7 @@ export class ReducerBuilder<S> {
   /**
    * Keeps track of reducers
    */
-  private readonly state = new Map<string, Reducer<S, Action>>();
+  private readonly state = new Map<string, Reducer<S, Event>>();
 
   /**
    * Adds a case to the reducer to match a particular type
