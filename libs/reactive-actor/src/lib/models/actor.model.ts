@@ -84,7 +84,7 @@ export type StateMachineState = string | number;
  * @param stateMachine a state machine defined as a dictionary
  * @returns reducer function that process the next state based on current state and an event
  */
-export function stateMachineReducer<
+export function createStateMachineReducer<
   TState extends StateMachineState,
   TInput extends Event
 >(
@@ -128,5 +128,5 @@ export function eventStateMachine<
   stateMachine: EventStateMachineStructure<TState, TMessage>,
   initialState: TState
 ): OperatorFunction<TMessage, TState> {
-  return eventReducer(stateMachineReducer(stateMachine), initialState);
+  return eventReducer(createStateMachineReducer(stateMachine), initialState);
 }
