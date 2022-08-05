@@ -41,6 +41,8 @@ export const stop = createEvent('REACTIVE_ACTOR_STOP');
 export class Actor<TMessage extends ActorEvent = Event> {
   private readonly message$ = new Subject<TMessage>();
 
+  readonly stop$ = this.message$.pipe(ofType(stop));
+
   constructor(public address: string) {}
 
   send(message: TMessage): void {
@@ -70,7 +72,7 @@ export class Actor<TMessage extends ActorEvent = Event> {
 export type EventStateMachineStructure<
   TState extends StateMachineState,
   TInput extends Event
-> = Partial<Record<TState, Partial<Record<TInput['type'], TState>>>>;
+> = Partial<Record<TState, Partial<Record<TInput['type'] | string, TState>>>>;
 
 /**
  * Type synonym for state machine keys

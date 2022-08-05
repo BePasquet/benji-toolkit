@@ -19,7 +19,7 @@ import { ActorEvent } from '../types/actor-event.type';
 export function createEvent<T, SM extends ActorEvent = Event>(
   type: string
 ): EventCreator<T, SM> {
-  const actionCreator = (payload: T, sender: ActorRef<SM>) => ({
+  const actionCreator = (payload: T, sender?: ActorRef<SM>) => ({
     type,
     payload,
     sender,

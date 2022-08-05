@@ -61,7 +61,7 @@ export function combineReducers<
     rs.reduce(
       (s, [key, reducer]) => ({
         ...s,
-        [key]: reducer(s[key], event),
+        [key]: reducer(s[key as K], event),
       }),
       state
     );

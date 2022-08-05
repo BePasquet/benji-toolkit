@@ -1,11 +1,10 @@
 import { filter, Observable, OperatorFunction } from 'rxjs';
-import { EventCreator } from '../interfaces';
-import { Action } from '../types';
+import { Event, EventCreator } from '../interfaces';
 
 export function ofType<T>(
   actionCreator: EventCreator<T>
-): OperatorFunction<Action, ReturnType<EventCreator<T>>> {
-  return (source$: Observable<Action>) =>
+): OperatorFunction<Event, ReturnType<EventCreator<T>>> {
+  return (source$: Observable<Event>) =>
     source$.pipe(
       filter(({ type }) => type === actionCreator.type)
     ) as Observable<ReturnType<EventCreator<T>>>;

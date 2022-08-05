@@ -1,4 +1,5 @@
-import { Action, BuilderFunction, Reducer } from '../types';
+import { EventCreator } from '../interfaces';
+import { BuilderFunction, Reducer } from '../types';
 import { ReducerBuilder } from './reducer-builder.model';
 /**
  * Utility function to create reducers
@@ -30,10 +31,10 @@ import { ReducerBuilder } from './reducer-builder.model';
  * );
  *
  */
-export function createReducer<S, A extends Action = Action>(
-  initialState: S,
-  builderFunction: BuilderFunction<S>
-): Reducer<S, A> {
+export function createReducer<
+  S,
+  A extends ReturnType<EventCreator> = ReturnType<EventCreator>
+>(initialState: S, builderFunction: BuilderFunction<S>): Reducer<S, A> {
   const { reducers } = builderFunction(new ReducerBuilder<S>());
 
   return (state: S = initialState, action: A) => {
