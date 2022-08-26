@@ -8,46 +8,43 @@ import { Reducer } from '../types';
  * @returns single reducer function, this may be useful when we want to pass an event as argument to multiple reducers
  *
  * @example
- * import { Event } from 'reactive-actor';
+ * import { createEvent, createReducer } from 'reactive-actor';
  *
  * interface UsersState {
  *   auth: boolean;
  * }
  *
- * const userReducer = (state: UsersState, action: Event) => {
- *   switch (action.type) {
- *     case 'AUTHENTICATE': {
- *       return { auth: true };
- *     }
- *
- *     default: {
- *       return state;
- *     }
- *   }
+ * const userInitialState: UsersState = {
+ *   auth: false,
  * };
  *
- * interface ProductsState {
+ * const authenticate = createEvent('[User] Authenticate');
+ *
+ * const userReducer = createReducer(userInitialState, (builder) =>
+ *   builder.addCase(authenticate, (state) => ({ ...state, auth: true }))
+ * );
+ *
+ * interface RepositoriesState {
  *   show: boolean;
  * }
  *
- * const productsReducer = (state: ProductsState, action: Event) => {
- *   switch (action.type) {
- *     case 'TOGGLE_PRODUCTS': {
- *       return { ...state, show: !state.show };
- *     }
- *
- *     default: {
- *       return state;
- *     }
- *   }
+ * const repositoriesInitialState: RepositoriesState = {
+ *   show: false,
  * };
  *
- * const reducers = {
+ * const toggleRepositories = createEvent('[Repositories] Toggle Repositories');
+ *
+ * const repositoriesReducer = createReducer(repositoriesInitialState, (builder) =>
+ *   builder.addCase(toggleRepositories, (state) => ({
+ *     ...state,
+ *     show: !state.show,
+ *   }))
+ * );
+ *
+ * const reducer = combineReducers({
  *   users: userReducer,
- *   products: productsReducer,
- * };
- *
- * const reducer = combineReducers(reducers);
+ *   repositories: repositoriesReducer,
+ * });
  *
  */
 export function combineReducers<
