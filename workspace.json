@@ -1,41 +1,6 @@
 {
   "version": 2,
   "projects": {
-    "from-reducer": {
-      "$schema": "../../node_modules/nx/schemas/project-schema.json",
-      "root": "libs/from-reducer",
-      "sourceRoot": "libs/from-reducer/src",
-      "projectType": "library",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/from-reducer/**/*.ts"]
-          },
-          "outputs": ["{options.outputFile}"]
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/from-reducer"],
-          "options": {
-            "jestConfig": "libs/from-reducer/jest.config.ts",
-            "passWithNoTests": true
-          }
-        },
-        "build": {
-          "executor": "@nrwl/js:tsc",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/libs/from-reducer",
-            "tsConfig": "libs/from-reducer/tsconfig.lib.json",
-            "packageJson": "libs/from-reducer/package.json",
-            "main": "libs/from-reducer/src/index.ts",
-            "assets": ["libs/from-reducer/*.md"]
-          }
-        }
-      },
-      "tags": []
-    },
     "reactive-actor": {
       "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "root": "libs/reactive-actor",
@@ -70,52 +35,6 @@
         }
       },
       "tags": []
-    },
-    "reactive-actor-bindings": {
-      "$schema": "../../node_modules/nx/schemas/project-schema.json",
-      "root": "libs/reactive-actor-bindings",
-      "sourceRoot": "libs/reactive-actor-bindings/src",
-      "projectType": "library",
-      "tags": [],
-      "targets": {
-        "build": {
-          "executor": "@nrwl/web:rollup",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/libs/reactive-actor-bindings",
-            "tsConfig": "libs/reactive-actor-bindings/tsconfig.lib.json",
-            "project": "libs/reactive-actor-bindings/package.json",
-            "entryFile": "libs/reactive-actor-bindings/src/index.ts",
-            "external": ["react/jsx-runtime"],
-            "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
-            "compiler": "babel",
-            "assets": [
-              {
-                "glob": "libs/reactive-actor-bindings/README.md",
-                "input": ".",
-                "output": "."
-              }
-            ]
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
-          "options": {
-            "lintFilePatterns": [
-              "libs/reactive-actor-bindings/**/*.{ts,tsx,js,jsx}"
-            ]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/reactive-actor-bindings"],
-          "options": {
-            "jestConfig": "libs/reactive-actor-bindings/jest.config.ts",
-            "passWithNoTests": true
-          }
-        }
-      }
     },
     "reactive-actor-docs": {
       "root": "apps/reactive-actor-docs",

@@ -55,8 +55,8 @@ import {
   eventReducer,
   EventStateMachineStructure,
   stop,
+  ofType
 } from '@benji-toolkit/reactive-actor';
-import { ofType } from 'from-reducer';
 import { map, takeUntil } from 'rxjs';
 
 // Greet event creator

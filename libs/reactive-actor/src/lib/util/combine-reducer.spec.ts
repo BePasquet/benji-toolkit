@@ -1,4 +1,4 @@
-import { combineReducers } from 'from-reducer';
+import { combineReducers } from './combine-reducers';
 import { identity } from './identity';
 import { startEvent } from './test/mock.data';
 

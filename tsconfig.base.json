@@ -16,9 +16,6 @@
     "baseUrl": ".",
     "paths": {
       "@benji-toolkit/reactive-actor": ["libs/reactive-actor/src/index.ts"],
-      "@benji-toolkit/reactive-actor-bindings": [
-        "libs/reactive-actor-bindings/src/index.ts"
-      ],
       "@benji-toolkit/repositories": ["libs/repositories/src/index.ts"],
       "@benji-toolkit/rx-http": ["libs/rx-http/src/index.ts"],
       "@benji-toolkit/users": ["libs/users/src/index.ts"],
