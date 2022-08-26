@@ -48,7 +48,6 @@
       "style": "scss"
     }
   },
-  "defaultProject": "from-reducer-react-global-example",
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "targetDefaults": {
     "build": {
