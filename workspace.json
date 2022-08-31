@@ -107,6 +107,9 @@
         }
       },
       "tags": []
+    },
+    "reactive-actor-docs": {
+      "root": "apps/reactive-actor-docs"
     }
   },
   "$schema": "./node_modules/nx/schemas/workspace-schema.json"
