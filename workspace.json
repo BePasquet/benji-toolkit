@@ -36,26 +36,6 @@
       },
       "tags": []
     },
-    "reactive-actor-docs": {
-      "root": "apps/reactive-actor-docs",
-      "projectType": "application",
-      "sourceRoot": "apps/reactive-actor-docs/src",
-      "targets": {
-        "build": {
-          "executor": "@nx-plus/docusaurus:browser",
-          "options": {
-            "outputPath": "dist/apps/reactive-actor-docs"
-          }
-        },
-        "serve": {
-          "executor": "@nx-plus/docusaurus:dev-server",
-          "options": {
-            "port": 3000
-          }
-        }
-      },
-      "tags": []
-    },
     "repositories": {
       "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "root": "libs/repositories",
