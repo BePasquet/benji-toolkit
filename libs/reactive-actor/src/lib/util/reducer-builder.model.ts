@@ -1,4 +1,4 @@
-import { EventCreator } from '../interfaces';
+import { EventCreator, SyntheticEvent } from '../interfaces';
 import { Reducer } from '../types';
 
 /**
@@ -8,10 +8,7 @@ export class ReducerBuilder<S> {
   /**
    * Keeps track of reducers
    */
-  private readonly state = new Map<
-    string,
-    Reducer<S, ReturnType<EventCreator<any>>>
-  >();
+  private readonly state = new Map<string, Reducer<S, SyntheticEvent<any>>>();
 
   /**
    * Adds a case to the reducer to match a particular type
@@ -21,14 +18,14 @@ export class ReducerBuilder<S> {
    */
   addCase<T>(
     typeOrHasType: EventCreator<T> | EventCreator<T>[] | string | string[],
-    reducer: Reducer<S, ReturnType<EventCreator<T>>>
+    reducer: Reducer<S, SyntheticEvent<T>>
   ) {
-    const actions = Array.isArray(typeOrHasType)
+    const events = Array.isArray(typeOrHasType)
       ? typeOrHasType
       : [typeOrHasType];
 
-    for (const action of actions) {
-      const key = typeof action === 'string' ? action : action.type;
+    for (const event of events) {
+      const key = typeof event === 'string' ? event : event.type;
       this.state.set(key, reducer);
     }
 
@@ -38,7 +35,7 @@ export class ReducerBuilder<S> {
   /**
    * Immutable reducers instance
    */
-  get reducers() {
+  get reducers(): Map<string, Reducer<S, SyntheticEvent<any>>> {
     return new Map(this.state);
   }
 }

@@ -1,4 +1,4 @@
-import { EventCreator } from '../interfaces';
+import { SyntheticEvent } from '../interfaces';
 import { BuilderFunction, Reducer } from '../types';
 import { ReducerBuilder } from './reducer-builder.model';
 /**
@@ -32,14 +32,17 @@ import { ReducerBuilder } from './reducer-builder.model';
  *
  */
 export function createReducer<
-  S,
-  A extends ReturnType<EventCreator> = ReturnType<EventCreator>
->(initialState: S, builderFunction: BuilderFunction<S>): Reducer<S, A> {
-  const { reducers } = builderFunction(new ReducerBuilder<S>());
+  TState,
+  TEvent extends SyntheticEvent = SyntheticEvent
+>(
+  initialState: TState,
+  builderFunction: BuilderFunction<TState>
+): Reducer<TState, TEvent> {
+  const { reducers } = builderFunction(new ReducerBuilder<TState>());
 
-  return (state: S = initialState, action: A) => {
-    const reducer = reducers.get(action.type);
-    const newState = reducer ? reducer(state, action) : state;
+  return (state: TState = initialState, event: TEvent) => {
+    const reducer = reducers.get(event.type);
+    const newState = reducer ? reducer(state, event) : state;
     return newState;
   };
 }
