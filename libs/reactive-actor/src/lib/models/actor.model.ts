@@ -54,7 +54,7 @@ export class Actor<TMessage extends ActorEvent = Event> {
       tap(({ recipient, ...message }) =>
         recipient ? recipient.send(message) : this.send(message as TMessage)
       ),
-      takeUntil(this.messages$.pipe(ofType(stop)))
+      takeUntil(this.stop$)
     );
 
     answers$.subscribe();
