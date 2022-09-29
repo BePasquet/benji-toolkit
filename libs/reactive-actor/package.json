@@ -1,6 +1,6 @@
 {
   "name": "reactive-actor",
-  "version": "0.4.3",
+  "version": "0.4.5",
   "description": "Actor model implementation with rxjs",
   "author": "Pedro Benjamin Lescano Pasquet",
   "repository": "https://github.com/BePasquet/benji-toolkit/tree/master/libs/reactive-actor",
