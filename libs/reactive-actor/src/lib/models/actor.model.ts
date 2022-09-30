@@ -38,7 +38,7 @@ export const stop = createEvent('REACTIVE_ACTOR_STOP');
  *   - Send messages (to other actors and itself)
  *   - Designates what to do with the next message it receives
  */
-export class Actor<TMessage extends ActorEvent = Event> {
+export class Actor<TMessage extends ActorEvent = ActorEvent> {
   private readonly message$ = new Subject<TMessage>();
 
   readonly stop$ = this.message$.pipe(ofType(stop));

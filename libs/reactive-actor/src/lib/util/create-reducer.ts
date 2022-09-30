@@ -1,5 +1,5 @@
-import { SyntheticEvent } from '../interfaces';
 import { BuilderFunction, Reducer } from '../types';
+import { ActorEvent } from '../types/actor-event.type';
 import { ReducerBuilder } from './reducer-builder.model';
 /**
  * Utility function to create reducers
@@ -31,10 +31,7 @@ import { ReducerBuilder } from './reducer-builder.model';
  * );
  *
  */
-export function createReducer<
-  TState,
-  TEvent extends SyntheticEvent = SyntheticEvent
->(
+export function createReducer<TState, TEvent extends ActorEvent = ActorEvent>(
   initialState: TState,
   builderFunction: BuilderFunction<TState>
 ): Reducer<TState, TEvent> {

@@ -1,3 +1,4 @@
-import { Event, SendConfig } from "../interfaces"
+import { Event, SendConfig } from '../interfaces';
 
-export type ActorEvent<T extends Event = Event> = T & SendConfig
+export type ActorEvent<T = unknown, SE extends Event = Event> = Event<T> &
+  SendConfig<SE>;

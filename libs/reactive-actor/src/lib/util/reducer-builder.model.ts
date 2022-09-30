@@ -1,5 +1,6 @@
-import { EventCreator, SyntheticEvent } from '../interfaces';
+import { EventCreator } from '../interfaces';
 import { Reducer } from '../types';
+import { ActorEvent } from '../types/actor-event.type';
 
 /**
  * Model to create reducers
@@ -8,7 +9,7 @@ export class ReducerBuilder<S> {
   /**
    * Keeps track of reducers
    */
-  private readonly state = new Map<string, Reducer<S, SyntheticEvent<any>>>();
+  private readonly state = new Map<string, Reducer<S, ActorEvent<any>>>();
 
   /**
    * Adds a case to the reducer to match a particular type
@@ -18,7 +19,7 @@ export class ReducerBuilder<S> {
    */
   addCase<T>(
     typeOrHasType: EventCreator<T> | EventCreator<T>[] | string | string[],
-    reducer: Reducer<S, SyntheticEvent<T>>
+    reducer: Reducer<S, ActorEvent<T>>
   ) {
     const events = Array.isArray(typeOrHasType)
       ? typeOrHasType
@@ -35,7 +36,7 @@ export class ReducerBuilder<S> {
   /**
    * Immutable reducers instance
    */
-  get reducers(): Map<string, Reducer<S, SyntheticEvent<any>>> {
+  get reducers(): Map<string, Reducer<S, ActorEvent<any>>> {
     return new Map(this.state);
   }
 }

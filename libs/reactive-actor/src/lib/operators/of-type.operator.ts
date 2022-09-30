@@ -1,5 +1,6 @@
 import { filter, Observable, OperatorFunction } from 'rxjs';
-import { Event, EventCreator, SyntheticEvent } from '../interfaces';
+import { Event, EventCreator } from '../interfaces';
+import { ActorEvent } from '../types/actor-event.type';
 
 /**
  * Filter a stream of events by a event creator type
@@ -26,9 +27,9 @@ import { Event, EventCreator, SyntheticEvent } from '../interfaces';
  */
 export function ofType<T>(
   eventCreator: EventCreator<T>
-): OperatorFunction<Event, SyntheticEvent<T>> {
+): OperatorFunction<Event, ActorEvent<T>> {
   return (source$: Observable<Event>) =>
     source$.pipe(
       filter(({ type }) => type === eventCreator.type)
-    ) as Observable<SyntheticEvent<T>>;
+    ) as Observable<ActorEvent<T>>;
 }

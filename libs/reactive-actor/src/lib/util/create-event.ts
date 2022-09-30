@@ -1,4 +1,4 @@
-import { ActorRef, Event, EventCreator } from '../interfaces';
+import { ActorRef, EventCreator } from '../interfaces';
 import { ActorEvent } from '../types/actor-event.type';
 
 /**
@@ -16,7 +16,7 @@ import { ActorEvent } from '../types/actor-event.type';
  * export const getUser = createEvent<{ name: string }>('GET_USER');
  *
  */
-export function createEvent<T, SM extends ActorEvent = Event>(
+export function createEvent<T, SM extends ActorEvent = ActorEvent>(
   type: string
 ): EventCreator<T, SM> {
   const eventCreator = (payload: T, sender?: ActorRef<SM>) => ({
