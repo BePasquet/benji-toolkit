@@ -80,7 +80,7 @@ export class UsersActor extends Actor<UsersActorEvents> {
     )
   );
 
-  // Definess an effect that doesn't send a new message
+  // Defines an effect that doesn't send a new message
   private readonly getUsersFail$ = this.messages$.pipe(
     ofType(getUsersFail),
     tap(({ payload }) => console.log(payload)),

@@ -1,6 +1,5 @@
 import {
   BehaviorSubject,
-  distinctUntilChanged,
   merge,
   Observable,
   OperatorFunction,
@@ -42,7 +41,7 @@ export class Actor<TMessage extends ActorEvent = ActorEvent> {
   private readonly message$ = new Subject<TMessage>();
 
   /**
-   * Stream of stop messages (might be useful to know when the actor stops)
+   * Stream of stop events (might be useful to know when the actor stops)
    */
   readonly stop$ = this.message$.pipe(ofType(stop));
 
@@ -60,7 +59,48 @@ export class Actor<TMessage extends ActorEvent = ActorEvent> {
    * Subscribes to an observable of events when there is an emission will send the event to a
    * recipient (actor reference) when specified and to itself when not.
    * completes when stop message is send to the actor.
-   * @param messages an observable of events
+   * @param messages an observable of messages
+   * @example
+   *
+   * import { Actor, createEvent } from 'reactive-actor';
+   *
+   * export const getUsers = createEvent('[Users] Get Users');
+   *
+   * export const getUsersSuccess = createEvent<GitHubUser[]>(
+   *   '[Users] Get Users Success'
+   * );
+   *
+   * export const getUsersFail = createEvent<string>('[Users] Get Users Fail');
+   *
+   *
+   * export type UsersActorEvents = ReturnType<typeof getUsers>;
+   *
+   * export class UsersActor extends Actor<UsersActorEvents> {
+   *   // Reference to logger actor
+   *   private readonly logger = new Actor('logger');
+   *
+   *   // Recipient is not define thus will send the resulting event to itself
+   *   private readonly getUsers$ = this.messages$.pipe(
+   *     ofType(getUsers),
+   *     exhaustMap(() =>
+   *       ajax<GitHubUser[]>(`https://api.github.com/users?per_page=5`).pipe(
+   *         map(({ response }) => getUsersSuccess(response)),
+   *         catchError((err) => of(getUsersFail(err)))
+   *       )
+   *     )
+   *   );
+   *
+   *   // Recipient is define thus will send event (getUsersFail) to specified recipient (logger)
+   *   private readonly getUsersFail$ = this.messages$.pipe(
+   *     ofType(getUsersFail),
+   *     addRecipient(this.logger)
+   *   );
+   *
+   *   constructor() {
+   *     super('users');
+   *     this.answer(this.getUsers$, this.getUsersFail$);
+   *   }
+   * }
    */
   protected answer(...messages: Observable<Event & AnswerConfig>[]): void {
     const answers$ = merge(...messages).pipe(
@@ -74,7 +114,8 @@ export class Actor<TMessage extends ActorEvent = ActorEvent> {
   }
 
   /**
-   * Actor message stream
+   * Actor message stream, allows to define actor behavior
+   * see [example](https://www.npmjs.com/package/reactive-actor)
    */
   protected get messages$(): Observable<TMessage> {
     return this.message$.asObservable();
@@ -125,8 +166,7 @@ export function eventReducer<TState, TMessage>(
   return (source$: Observable<TMessage>) =>
     source$.pipe(
       scan(reducer, initialState),
-      share({ connector: () => new BehaviorSubject(initialState) }),
-      distinctUntilChanged()
+      share({ connector: () => new BehaviorSubject(initialState) })
     );
 }
 
