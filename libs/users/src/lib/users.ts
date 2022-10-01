@@ -16,6 +16,8 @@ export interface UsersState {
   error: string;
 }
 
+// Defines events
+
 export const getUsers = createEvent('[Users] Get Users');
 
 export const getUsersSuccess = createEvent<GitHubUser[]>(
@@ -24,11 +26,15 @@ export const getUsersSuccess = createEvent<GitHubUser[]>(
 
 export const getUsersFail = createEvent<string>('[Users] Get Users Fail');
 
+// Defines initial state
+
 export const usersInitialState: UsersState = {
   loading: false,
   data: [],
   error: '',
 };
+
+// Defines reducer
 
 export const usersReducer = createReducer(usersInitialState, (builder) =>
   builder
@@ -51,37 +57,44 @@ export const usersReducer = createReducer(usersInitialState, (builder) =>
     }))
 );
 
+// Defines events accepted by user actor
 export type UsersActorEvents = ReturnType<typeof getUsers>;
 
+// Defines actor
 export class UsersActor extends Actor<UsersActorEvents> {
   readonly state$ = this.messages$.pipe(
+    // operate over stream of messages and reduce state and event over time
     eventReducer(usersReducer, usersInitialState),
+    // completes when stop event is send to the actor
     takeUntil(this.stop$)
   );
 
+  // Defines get users effect
   private readonly getUsers$ = this.messages$.pipe(
     ofType(getUsers),
     exhaustMap(() =>
       ajax<GitHubUser[]>(`https://api.github.com/users?per_page=5`).pipe(
         map(({ response }) => getUsersSuccess(response)),
-        catchError((err) => {
-          console.log(err);
-          return of(getUsersFail(err));
-        })
+        catchError((err) => of(getUsersFail(err)))
       )
     )
   );
 
+  // Definess an effect that doesn't send a new message
   private readonly getUsersFail$ = this.messages$.pipe(
     ofType(getUsersFail),
-    tap(({ payload }) => console.error(payload)),
+    tap(({ payload }) => console.log(payload)),
+    // completes when stop event is send to the actor
     takeUntil(this.stop$)
   );
 
   constructor() {
     super('users');
+    // Subscribes to get users and send back to actor resulting event (getUsersSuccess, getUsersFail)
     this.answer(this.getUsers$);
+    // Subscribes to state stream will complete when stop message is send to the actor (see operator takeUntil(this.stop$))
     this.state$.subscribe();
+    // Subscribes to log errors on get users fail will complete when stop message is send to the actor (see operator takeUntil(this.stop$))
     this.getUsersFail$.subscribe();
   }
 }

@@ -9,14 +9,19 @@ import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 export function App() {
+  // Interoperability between actor state and react
   const [state, setState] = useState<UsersState>(usersInitialState);
+  // Actor reference
   const usersActor = useRef(new UsersActor()).current;
 
   useEffect(() => {
+    // subscribes to state state changes
     const subscription = usersActor.state$.subscribe(setState);
 
     return () => {
+      // clean local subscriptions
       subscription.unsubscribe();
+      // stops actor used to clean internal subscriptions
       usersActor.send(stop(null));
     };
   }, [usersActor]);
@@ -36,8 +41,6 @@ export function App() {
     </StyledApp>
   );
 }
-
-export default App;
 
 const StyledApp = styled.div`
   width: 100%;

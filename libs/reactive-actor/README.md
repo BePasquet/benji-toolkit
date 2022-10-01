@@ -104,7 +104,8 @@ export class PersonB extends Actor<PersonMessage> {
      the state changes will emit it to the state subscribers
   */
   readonly state$ = this.messages$.pipe(
-    eventReducer(personReducer, PersonState.Lonely)
+    eventReducer(personReducer, PersonState.Lonely),
+    takeUntil(this.stop$)
   );
 
   // Defines the what the actor will do in response to the greet event
@@ -114,8 +115,8 @@ export class PersonB extends Actor<PersonMessage> {
 
   constructor() {
     super('personB');
-    // Subscribes to the state event to avoid late subscribers (till a stop message is send to the actor)
-    this.state$.pipe(takeUntil(this.messages$.pipe(ofType(stop)))).subscribe();
+    // Subscribes to the state event to avoid late subscribers
+    this.state$.subscribe();
     // Used to subscribe to interaction when adding a recipient the event will be sent to it when not will be send to itself
     this.answer(this.greet$);
   }
@@ -134,4 +135,186 @@ personB.state$.subscribe(console.log);
 personB.send(greet('Hi how are you', personA));
 
 
+```
+
+<br /><br />
+
+### A more realistic example
+
+In this example we will model an actor that encapsulate logic related to users and uses the redux pattern to manage state.
+
+```
+import {
+  Actor,
+  createEvent,
+  createReducer,
+  eventReducer,
+  ofType,
+} from 'reactive-actor';
+import { of } from 'rxjs';
+import { ajax } from 'rxjs/ajax';
+import { catchError, exhaustMap, map, takeUntil, tap } from 'rxjs/operators';
+
+export interface GitHubUser {
+  login: string;
+  id: number;
+  node_id: string;
+  avatar_url: string;
+  gravatar_id: string;
+  url: string;
+  html_url: string;
+  followers_url: string;
+  following_url: string;
+  gists_url: string;
+  starred_url: string;
+  subscriptions_url: string;
+  organizations_url: string;
+  repos_url: string;
+  events_url: string;
+  received_events_url: string;
+  type: string;
+  site_admin: boolean;
+}
+
+export interface UsersState {
+  data: GitHubUser[];
+  loading: boolean;
+  error: string;
+}
+
+// Defines events
+
+export const getUsers = createEvent('[Users] Get Users');
+
+export const getUsersSuccess = createEvent<GitHubUser[]>(
+  '[Users] Get Users Success'
+);
+
+export const getUsersFail = createEvent<string>('[Users] Get Users Fail');
+
+// Defines initial state
+
+export const usersInitialState: UsersState = {
+  loading: false,
+  data: [],
+  error: '',
+};
+
+// Defines reducer
+
+export const usersReducer = createReducer(usersInitialState, (builder) =>
+  builder
+    .addCase(getUsers, (state) => ({
+      ...state,
+      loading: true,
+      data: [],
+      error: '',
+    }))
+    .addCase(getUsersSuccess, (state, { payload }) => ({
+      ...state,
+      loading: false,
+      data: [...payload],
+      error: '',
+    }))
+    .addCase(getUsersFail, (state, { payload }) => ({
+      ...state,
+      loading: false,
+      error: payload,
+    }))
+);
+
+// Defines events accepted by user actor
+export type UsersActorEvents = ReturnType<typeof getUsers>;
+
+// Defines actor
+export class UsersActor extends Actor<UsersActorEvents> {
+  readonly state$ = this.messages$.pipe(
+    // operate over stream of messages and reduce state and event over time
+    eventReducer(usersReducer, usersInitialState),
+    // completes when stop event is send to the actor
+    takeUntil(this.stop$)
+  );
+
+  // Defines get users effect
+  private readonly getUsers$ = this.messages$.pipe(
+    ofType(getUsers),
+    exhaustMap(() =>
+      ajax<GitHubUser[]>(`https://api.github.com/users?per_page=5`).pipe(
+        map(({ response }) => getUsersSuccess(response)),
+        catchError((err) => of(getUsersFail(err)))
+      )
+    )
+  );
+
+  // Defines an effect that doesn't send a new message
+  private readonly getUsersFail$ = this.messages$.pipe(
+    ofType(getUsersFail),
+    tap(({ payload }) => console.log(payload)),
+    // completes when stop event is send to the actor
+    takeUntil(this.stop$)
+  );
+
+  constructor() {
+    super('users');
+    // Subscribes to get users and send back to actor resulting event (getUsersSuccess, getUsersFail)
+    this.answer(this.getUsers$);
+    // Subscribes to state stream will complete when stop message is send to the actor (see operator takeUntil(this.stop$))
+    this.state$.subscribe();
+    // Subscribes to log errors on get users fail will complete when stop message is send to the actor (see operator takeUntil(this.stop$))
+    this.getUsersFail$.subscribe();
+  }
+}
+
+```
+
+<br /><br />
+
+### React example
+
+Let's see how we can interact with the users actor within react, get and show github users.
+
+```
+import { stop } from 'reactive-actor';
+<!-- path from repository same as defined above -->
+import {
+  getUsers,
+  UsersActor,
+  usersInitialState,
+  UsersState,
+} from '@benji-toolkit/users';
+import { useEffect, useRef, useState } from 'react';
+
+export function App() {
+  // Interoperability between actor state and react
+  const [state, setState] = useState<UsersState>(usersInitialState);
+  // Actor reference
+  const usersActor = useRef(new UsersActor()).current;
+
+  useEffect(() => {
+    // subscribes to state state changes
+    const subscription = usersActor.state$.subscribe(setState);
+
+    return () => {
+      // clean local subscriptions
+      subscription.unsubscribe();
+      // stops actor used to clean internal subscriptions
+      usersActor.send(stop(null));
+    };
+  }, [usersActor]);
+
+  const fetchUsers = () => usersActor.send(getUsers(null));
+
+  return (
+    <div>
+      <h1>Reactive Actor React Example</h1>
+      <div>
+        <button onClick={fetchUsers}>Fetch users</button>
+      </div>
+
+      <code>
+        <pre>{JSON.stringify(state, null, 2)}</pre>
+      </code>
+    </div>
+  );
+}
 ```

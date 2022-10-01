@@ -41,14 +41,27 @@ export const stop = createEvent('REACTIVE_ACTOR_STOP');
 export class Actor<TMessage extends ActorEvent = ActorEvent> {
   private readonly message$ = new Subject<TMessage>();
 
+  /**
+   * Stream of stop messages (might be useful to know when the actor stops)
+   */
   readonly stop$ = this.message$.pipe(ofType(stop));
 
   constructor(public address: string) {}
 
+  /**
+   * Method to send messages to the actor
+   * @param message we want to send to the actor
+   */
   send(message: TMessage): void {
     this.message$.next(message);
   }
 
+  /**
+   * Subscribes to an observable of events when there is an emission will send the event to a
+   * recipient (actor reference) when specified and to itself when not.
+   * completes when stop message is send to the actor.
+   * @param messages an observable of events
+   */
   protected answer(...messages: Observable<Event & AnswerConfig>[]): void {
     const answers$ = merge(...messages).pipe(
       tap(({ recipient, ...message }) =>
@@ -60,7 +73,10 @@ export class Actor<TMessage extends ActorEvent = ActorEvent> {
     answers$.subscribe();
   }
 
-  protected get messages$() {
+  /**
+   * Actor message stream
+   */
+  protected get messages$(): Observable<TMessage> {
     return this.message$.asObservable();
   }
 }
