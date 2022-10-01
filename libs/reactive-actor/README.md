@@ -4,13 +4,15 @@ Docs are a work in progress, a basic introduction has been added to give an idea
 
 ## Introduction
 
-Reactive actor is a library for developing systems based on the actor model. It's built on top of rxjs, an utility library to develop reactive systems by doing this it's api exposes rxjs observables allowing functional composition through pipes and composability through operators.
+Reactive actor is a library for developing systems based on the actor model. It's built on top of rxjs, an utility library to develop reactive systems by doing this it's api exposes rxjs observables allowing functional composition through pipes and operators.
 
 Reactive Actor combines the actor model, with reactive functional programming to allow the development of individual units of computation with a predictable way of managing events (messages) through time.
 
 ### Fundamental Concepts
 
-** Actor **: Fundamental unit of computation, needs to embody ([reference](https://www.youtube.com/watch?v=7erJ1DV_Tlo&ab_channel=jasonofthel33t))
+#### Actor:
+
+Fundamental unit of computation, needs to embody ([reference](https://www.youtube.com/watch?v=7erJ1DV_Tlo&ab_channel=jasonofthel33t))
 
 - Processing
 - Storage
@@ -26,9 +28,13 @@ Fundamental Properties:
 "One ant is no ant" - "One human is no human" - "One actor is no actor"
 Actors live within systems
 
-** Observable **: A collection of events over time ([reference](https://rxjs.dev/guide/observable))
+#### Observable:
 
-** Operators **: Functions, within rxjs context operators are functions that take an observable as input and return an observable as output ([reference](https://rxjs.dev/guide/operators))
+A collection of events over time ([reference](https://rxjs.dev/guide/observable))
+
+#### Operators:
+
+Functions, within rxjs context operators are functions that take an observable as input and return an observable as output ([reference](https://rxjs.dev/guide/operators))
 
 ### Conceptualizing Actors
 

@@ -1,22 +1,14 @@
 import {
-  Action,
+  Actor,
   createEvent,
   createReducer,
+  eventReducer,
   ofType,
 } from '@benji-toolkit/reactive-actor';
-import { Observable, of, pipe } from 'rxjs';
+import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
-import {
-  catchError,
-  filter,
-  ignoreElements,
-  map,
-  switchMap,
-  tap,
-} from 'rxjs/operators';
+import { catchError, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { GitHubUser } from './github-user.interface';
-
-export const USER_STATE_KEY = 'users';
 
 export interface UsersState {
   data: GitHubUser[];
@@ -24,11 +16,6 @@ export interface UsersState {
   error: string;
 }
 
-export interface UsersPartialState {
-  [USER_STATE_KEY]: UsersState;
-}
-
-// Actions
 export const getUsers = createEvent('[Users] Get Users');
 
 export const getUsersSuccess = createEvent<GitHubUser[]>(
@@ -37,17 +24,12 @@ export const getUsersSuccess = createEvent<GitHubUser[]>(
 
 export const getUsersFail = createEvent<string>('[Users] Get Users Fail');
 
-export type UserActions = ReturnType<
-  typeof getUsers | typeof getUsersSuccess | typeof getUsersFail
->;
-
 export const usersInitialState: UsersState = {
   loading: false,
   data: [],
   error: '',
 };
 
-// Reducer
 export const usersReducer = createReducer(usersInitialState, (builder) =>
   builder
     .addCase(getUsers, (state) => ({
@@ -69,9 +51,15 @@ export const usersReducer = createReducer(usersInitialState, (builder) =>
     }))
 );
 
-// Epics
-const getUsersEpic = (actions$: Observable<Action>) =>
-  actions$.pipe(
+export type UsersActorEvents = ReturnType<typeof getUsers>;
+
+export class UsersActor extends Actor<UsersActorEvents> {
+  readonly state$ = this.messages$.pipe(
+    eventReducer(usersReducer, usersInitialState),
+    takeUntil(this.stop$)
+  );
+
+  private readonly getUsers$ = this.messages$.pipe(
     ofType(getUsers),
     switchMap(() =>
       ajax<GitHubUser[]>(`https://api.github.com/users?per_page=5`).pipe(
@@ -81,24 +69,16 @@ const getUsersEpic = (actions$: Observable<Action>) =>
     )
   );
 
-const getUserFailEpic = (actions$: Observable<Action>) =>
-  actions$.pipe(
-    filter(({ type }) => type === getUsersFail.type),
+  private readonly getUsersFail$ = this.messages$.pipe(
+    ofType(getUsersFail),
     tap(({ payload }) => console.error(payload)),
-    ignoreElements()
+    takeUntil(this.stop$)
   );
 
-export const userEpics = [getUsersEpic, getUserFailEpic];
-
-export const selectUsersState = (state: UsersPartialState) =>
-  state[USER_STATE_KEY];
-
-// Selectors
-export const selectUsers = pipe(selectUsersState, ({ data }) => data);
-
-export const selectUsersLoading = pipe(
-  selectUsersState,
-  ({ loading }) => loading
-);
-
-export const selectUsersError = pipe(selectUsersState, ({ error }) => error);
+  constructor() {
+    super('users');
+    this.answer(this.getUsers$);
+    this.state$.subscribe();
+    this.getUsersFail$.subscribe();
+  }
+}
