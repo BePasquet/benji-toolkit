@@ -6,7 +6,7 @@ npm i reactive-actor rxjs
 
 # Overview
 
-Docs are a work in progress, a basic introduction has been added to give an idea of how the package works.
+[Docs](https://bepasquet.github.io/benji-toolkit) are a work in progress, a basic introduction has been added to give an idea of how the package works.
 
 ## Introduction
 
