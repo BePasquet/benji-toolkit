@@ -1,0 +1,10 @@
+{
+  "name": "reactive-actor",
+  "out": "docs",
+  "exclude": ["**/*.spec.ts", "tools/**/*"],
+  "excludeExternals": true,
+  "excludePrivate": true,
+  "readme": "README.md",
+  "entryPoints": ["src/index.ts"],
+  "tsconfig": "tsconfig.json"
+}
