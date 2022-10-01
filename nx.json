@@ -53,5 +53,6 @@
     "build": {
       "dependsOn": ["^build"]
     }
-  }
+  },
+  "defaultProject": "reactive-actor-react-example"
 }

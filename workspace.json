@@ -73,6 +73,123 @@
     "reactive-actor-docs": {
       "root": "apps/reactive-actor-docs"
     },
+    "reactive-actor-react-example": {
+      "root": "apps/reactive-actor-react-example",
+      "sourceRoot": "apps/reactive-actor-react-example/src",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/webpack:webpack",
+          "outputs": ["{options.outputPath}"],
+          "defaultConfiguration": "production",
+          "options": {
+            "compiler": "babel",
+            "outputPath": "dist/apps/reactive-actor-react-example",
+            "index": "apps/reactive-actor-react-example/src/index.html",
+            "baseHref": "/",
+            "main": "apps/reactive-actor-react-example/src/main.tsx",
+            "polyfills": "apps/reactive-actor-react-example/src/polyfills.ts",
+            "tsConfig": "apps/reactive-actor-react-example/tsconfig.app.json",
+            "assets": [
+              "apps/reactive-actor-react-example/src/favicon.ico",
+              "apps/reactive-actor-react-example/src/assets"
+            ],
+            "styles": [],
+            "scripts": [],
+            "webpackConfig": "@nrwl/react/plugins/webpack"
+          },
+          "configurations": {
+            "development": {
+              "extractLicenses": false,
+              "optimization": false,
+              "sourceMap": true,
+              "vendorChunk": true
+            },
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/reactive-actor-react-example/src/environments/environment.ts",
+                  "with": "apps/reactive-actor-react-example/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/webpack:dev-server",
+          "defaultConfiguration": "development",
+          "options": {
+            "buildTarget": "reactive-actor-react-example:build",
+            "hmr": true
+          },
+          "configurations": {
+            "development": {
+              "buildTarget": "reactive-actor-react-example:build:development"
+            },
+            "production": {
+              "buildTarget": "reactive-actor-react-example:build:production",
+              "hmr": false
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": [
+              "apps/reactive-actor-react-example/**/*.{ts,tsx,js,jsx}"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/reactive-actor-react-example"],
+          "options": {
+            "jestConfig": "apps/reactive-actor-react-example/jest.config.ts",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": []
+    },
+    "reactive-actor-react-example-e2e": {
+      "root": "apps/reactive-actor-react-example-e2e",
+      "sourceRoot": "apps/reactive-actor-react-example-e2e/src",
+      "projectType": "application",
+      "targets": {
+        "e2e": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/reactive-actor-react-example-e2e/cypress.json",
+            "devServerTarget": "reactive-actor-react-example:serve:development",
+            "testingType": "e2e",
+            "tsConfig": "apps/reactive-actor-react-example-e2e/tsconfig.json"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "reactive-actor-react-example:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": [
+              "apps/reactive-actor-react-example-e2e/**/*.{js,ts}"
+            ]
+          }
+        }
+      },
+      "tags": [],
+      "implicitDependencies": ["reactive-actor-react-example"]
+    },
     "rx-http": {
       "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "root": "libs/rx-http",

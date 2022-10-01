@@ -7,7 +7,7 @@ import {
 } from '@benji-toolkit/reactive-actor';
 import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
-import { catchError, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { catchError, exhaustMap, map, takeUntil, tap } from 'rxjs/operators';
 import { GitHubUser } from './github-user.interface';
 
 export interface UsersState {
@@ -61,10 +61,13 @@ export class UsersActor extends Actor<UsersActorEvents> {
 
   private readonly getUsers$ = this.messages$.pipe(
     ofType(getUsers),
-    switchMap(() =>
+    exhaustMap(() =>
       ajax<GitHubUser[]>(`https://api.github.com/users?per_page=5`).pipe(
         map(({ response }) => getUsersSuccess(response)),
-        catchError((err) => of(getUsersFail(err)))
+        catchError((err) => {
+          console.log(err);
+          return of(getUsersFail(err));
+        })
       )
     )
   );
