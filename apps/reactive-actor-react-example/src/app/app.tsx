@@ -15,7 +15,7 @@ export function App() {
   const usersActor = useRef(new UsersActor()).current;
 
   useEffect(() => {
-    // subscribes to state state changes
+    // subscribes to state changes
     const subscription = usersActor.state$.subscribe(setState);
 
     return () => {

@@ -4,6 +4,8 @@
 npm i reactive-actor rxjs
 ```
 
+<br />
+
 # Overview
 
 [Docs](https://bepasquet.github.io/benji-toolkit) are a work in progress, a basic introduction has been added to give an idea of how the package works.
@@ -68,7 +70,7 @@ import {
   EventStateMachineStructure,
   stop,
   ofType
-} from '@benji-toolkit/reactive-actor';
+} from 'reactive-actor';
 import { map, takeUntil } from 'rxjs';
 
 // Greet event creator
@@ -281,13 +283,13 @@ Let's see how we can interact with the users actor within react, get and show gi
 
 ```
 import { stop } from 'reactive-actor';
-<!-- path from repository same as defined above -->
+// Defined above
 import {
   getUsers,
   UsersActor,
   usersInitialState,
   UsersState,
-} from '@benji-toolkit/users';
+} from './users';
 import { useEffect, useRef, useState } from 'react';
 
 export function App() {
@@ -297,7 +299,7 @@ export function App() {
   const usersActor = useRef(new UsersActor()).current;
 
   useEffect(() => {
-    // subscribes to state state changes
+    // subscribes to state changes
     const subscription = usersActor.state$.subscribe(setState);
 
     return () => {
