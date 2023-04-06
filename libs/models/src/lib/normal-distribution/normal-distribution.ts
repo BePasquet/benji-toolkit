@@ -1,25 +1,4 @@
-export function mean(numbers: number[]): number {
-  const dividend = numbers.reduce((acu, num) => acu + num, 0);
-  const divisor = numbers.length;
-  const result = dividend / divisor;
-
-  return result;
-}
-
-export function variance(numbers: number[], mean: number): number {
-  const dividend = numbers.reduce((acu, x) => acu + Math.pow(x - mean, 2), 0);
-  const divisor = numbers.length - 1;
-  const result = dividend / divisor;
-
-  return result;
-}
-
-export function standardDeviation(numbers: number[], mean: number): number {
-  const v = variance(numbers, mean);
-  const result = Math.sqrt(v);
-
-  return result;
-}
+import { mean, standardDeviation } from '../math/math';
 
 export interface NormalDistributionPDFParams {
   value: number;
@@ -41,7 +20,7 @@ export function normalDistributionPDF({
 
 export function ndPredict(events: number[], value: number): number {
   const m = mean(events);
-  const sd = standardDeviation(events, m);
+  const sd = standardDeviation({ set: events });
   const result = normalDistributionPDF({ value, mean: m, sd });
 
   return result;
@@ -54,7 +33,7 @@ export interface NormalDistribution {
 
 export function normalDistribution(events: number[]): NormalDistribution {
   const m = mean(events);
-  const sd = standardDeviation(events, m);
+  const sd = standardDeviation({ set: events });
 
   const points = Array(3)
     .fill(null)
