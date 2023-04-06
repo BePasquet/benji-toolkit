@@ -1,7 +1,6 @@
 export function mean(set: number[]): number {
-  const sum = set.reduce((acu, num) => acu + num, 0);
-  const count = set.length;
-  const result = sum / count;
+  const sum = set.reduce((state, element) => state + element, 0);
+  const result = sum / set.length;
 
   return result;
 }
@@ -11,17 +10,22 @@ export function median(set: number[]): number {
     return 0;
   }
 
-  const sortedXs = [...set].sort((a, b) => a - b);
-  const isEven = sortedXs.length % 2 === 0;
+  const sortedSet = [...set].sort((a, b) => a - b);
+  const isEven = sortedSet.length % 2 === 0;
 
   // floor is to compute the correct index based on zero index arrays
-  const half = Math.floor(sortedXs.length / 2);
+  const half = Math.floor(sortedSet.length / 2);
 
   const median = isEven
-    ? mean([sortedXs[half - 1], sortedXs[half]])
-    : sortedXs[half];
+    ? mean([sortedSet[half - 1], sortedSet[half]])
+    : sortedSet[half];
 
   return median;
+}
+
+export interface OutlierData {
+  index: number;
+  value: number;
 }
 
 export interface MedianData {
@@ -31,7 +35,7 @@ export interface MedianData {
   q3: number;
   median: number;
   iqr: number;
-  outliers: number[];
+  outliers: OutlierData[];
 }
 
 export function medianData(set: number[]): MedianData | null {
@@ -39,30 +43,30 @@ export function medianData(set: number[]): MedianData | null {
     return null;
   }
 
-  const sortedXs = set.sort((a, b) => a - b);
+  const sortedSet = set.sort((a, b) => a - b);
 
-  const length = sortedXs.length;
+  const length = sortedSet.length;
 
-  const min = sortedXs[0];
-  const max = sortedXs[length - 1];
+  const min = sortedSet[0];
+  const max = sortedSet[length - 1];
 
   // floor is to compute the correct index based on zero index arrays
   const half = Math.floor(length / 2);
 
-  const q1 = median(sortedXs.slice(0, half));
-  const m = median(sortedXs);
-  const q3 = median(sortedXs.slice(half));
+  const q1 = median(sortedSet.slice(0, half));
+  const m = median(sortedSet);
+  const q3 = median(sortedSet.slice(half));
   // interquartile range
   const iqr = q3 - q1;
   const bottomOutlierThreshold = q1 - iqr * 1.5;
   const topOutlierThreshold = q3 + iqr * 1.5;
 
-  const outliers = sortedXs.reduce(
-    (state, value, index) =>
-      value < bottomOutlierThreshold || value > topOutlierThreshold
-        ? [...state, index]
+  const outliers = sortedSet.reduce(
+    (state, element, index) =>
+      element < bottomOutlierThreshold || element > topOutlierThreshold
+        ? [...state, { index, value: element }]
         : state,
-    [] as number[]
+    [] as OutlierData[]
   );
 
   return {
@@ -86,10 +90,11 @@ export interface VarianceParams {
 export function variance({ set, type = 'population' }: VarianceParams): number {
   const aMean = mean(set);
 
-  const sum = set.reduce((result, element) => {
+  const sum = set.reduce((state, element) => {
     const deviation = element - aMean;
     const squaredDeviation = Math.pow(deviation, 2);
-    return result + squaredDeviation;
+
+    return state + squaredDeviation;
   }, 0);
 
   const count = type === 'population' ? set.length : set.length - 1;
