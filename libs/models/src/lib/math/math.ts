@@ -112,3 +112,32 @@ export function standardDeviation({
 
   return result;
 }
+
+export function meanAbsoluteDeviation(set: number[]): number {
+  const aMean = mean(set);
+
+  const sum = set.reduce(
+    (state, element) => state + Math.abs(element - aMean),
+    0
+  );
+
+  const result = sum / set.length;
+
+  return result;
+}
+
+export function range(set: number[]): number {
+  const min = Math.min(...set);
+  const max = Math.max(...set);
+  const result = max - min;
+
+  return result;
+}
+
+export function midRange(set: number[]): number {
+  const min = Math.min(...set);
+  const max = Math.max(...set);
+  const result = mean([min, max]);
+
+  return result;
+}
