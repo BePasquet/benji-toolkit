@@ -146,3 +146,50 @@ export function midRange(set: number[]): number {
 
   return result;
 }
+
+export interface PercentileParams {
+  set: number[];
+  element: number;
+  type?: 'bellow' | 'included';
+}
+
+export function percentile({
+  element,
+  set,
+  type = 'bellow',
+}: PercentileParams): number | null {
+  if (!set.length) {
+    return null;
+  }
+
+  const index = set.indexOf(element);
+
+  // Element doesn't exist
+  if (index < 0) {
+    return null;
+  }
+
+  // Increments zero indexation
+  const offset = type === 'included' ? 1 : 0;
+
+  const result = (index + offset) / set.length;
+
+  return result;
+}
+
+export interface ZScoreParams {
+  element: number;
+  mean: number;
+  standardDeviation: number;
+}
+
+export function zScore(params: ZScoreParams): number | null {
+  // Can't divide by zero
+  if (params.standardDeviation <= 0) {
+    return null;
+  }
+
+  const result = (params.element - params.mean) / params.standardDeviation;
+
+  return result;
+}
