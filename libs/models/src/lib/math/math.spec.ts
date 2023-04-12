@@ -1,4 +1,4 @@
-import { median } from './math';
+import { createLSR, median } from './math';
 
 const oddXs = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const evenXs = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -50,5 +50,24 @@ describe('median', () => {
     const expected = 0;
 
     expect(result).toBe(expected);
+  });
+});
+
+describe('createLSR', () => {
+  it('Should create a function that can predict base on a linear model base on least squared regression function', () => {
+    const set: [number, number][] = [
+      [1, 1],
+      [2, 2],
+      [2, 3],
+      [3, 6],
+    ];
+
+    const lsr = createLSR(set);
+
+    const prediction = lsr(4);
+
+    const expected = 7.999999999999999;
+
+    expect(prediction).toBe(expected);
   });
 });

@@ -1,3 +1,5 @@
+import { UnaryFunction } from 'rxjs';
+
 export function mean(set: number[]): number {
   const sum = set.reduce((state, element) => state + element, 0);
   const result = sum / set.length;
@@ -194,16 +196,21 @@ export function zScore(params: ZScoreParams): number | null {
   return result;
 }
 
-export function correlationCoefficient(set: [number, number][]): number {
-  const xs = set.map(([x]) => x);
-  const ys = set.map(([, y]) => y);
+export interface CorrelationCoefficientParams {
+  set: [number, number][];
+  xMean: number;
+  yMean: number;
+  sx: number;
+  sy: number;
+}
 
-  const xMean = mean(xs);
-  const yMean = mean(ys);
-
-  const sx = standardDeviation({ set: xs, type: 'sample' });
-  const sy = standardDeviation({ set: ys, type: 'sample' });
-
+export function correlationCoefficient({
+  set,
+  xMean,
+  yMean,
+  sx,
+  sy,
+}: CorrelationCoefficientParams): number {
   const sum = set.reduce((state, [x, y]) => {
     const xScore =
       zScore({ element: x, mean: xMean, standardDeviation: sx }) ?? 0;
@@ -215,7 +222,29 @@ export function correlationCoefficient(set: [number, number][]): number {
     return state + score;
   }, 0);
 
-  const result = sum / set.length - 1;
+  const count = set.length - 1;
+
+  const result = sum / count;
 
   return result;
+}
+
+export function createLSR(
+  set: [number, number][]
+): UnaryFunction<number, number> {
+  const xs = set.map(([x]) => x);
+  const ys = set.map(([, y]) => y);
+
+  const xMean = mean(xs);
+  const yMean = mean(ys);
+
+  const sx = standardDeviation({ set: xs, type: 'sample' });
+  const sy = standardDeviation({ set: ys, type: 'sample' });
+
+  const r = correlationCoefficient({ set, xMean, yMean, sx, sy });
+
+  const m = r * (sy / sx);
+  const b = yMean - m * xMean;
+
+  return (x: number) => m * x + b;
 }
