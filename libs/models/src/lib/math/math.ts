@@ -193,3 +193,29 @@ export function zScore(params: ZScoreParams): number | null {
 
   return result;
 }
+
+export function correlationCoefficient(set: [number, number][]): number {
+  const xs = set.map(([x]) => x);
+  const ys = set.map(([, y]) => y);
+
+  const xMean = mean(xs);
+  const yMean = mean(ys);
+
+  const sx = standardDeviation({ set: xs, type: 'sample' });
+  const sy = standardDeviation({ set: ys, type: 'sample' });
+
+  const sum = set.reduce((state, [x, y]) => {
+    const xScore =
+      zScore({ element: x, mean: xMean, standardDeviation: sx }) ?? 0;
+    const yScore =
+      zScore({ element: y, mean: yMean, standardDeviation: sy }) ?? 0;
+
+    const score = xScore * yScore;
+
+    return state + score;
+  }, 0);
+
+  const result = sum / set.length - 1;
+
+  return result;
+}
