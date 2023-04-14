@@ -62,12 +62,12 @@ describe('createLSR', () => {
       [3, 6],
     ];
 
-    const lsr = createLSR(set);
+    const { model, rSquared } = createLSR(set);
 
-    const prediction = lsr(4);
+    const prediction = model(4);
 
-    const expected = 7.999999999999999;
-
-    expect(prediction).toBe(expected);
+    // This are just used as snapshot of a known result
+    expect(prediction).toBe(7.999999999999999);
+    expect(rSquared).toBe(0.8928571428571428);
   });
 });

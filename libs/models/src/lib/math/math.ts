@@ -229,9 +229,12 @@ export function correlationCoefficient({
   return result;
 }
 
-export function createLSR(
-  set: [number, number][]
-): UnaryFunction<number, number> {
+export interface CreateLSRResult {
+  model: UnaryFunction<number, number>;
+  rSquared: number;
+}
+
+export function createLSR(set: [number, number][]): CreateLSRResult {
   const xs = set.map(([x]) => x);
   const ys = set.map(([, y]) => y);
 
@@ -246,5 +249,9 @@ export function createLSR(
   const m = r * (sy / sx);
   const b = yMean - m * xMean;
 
-  return (x: number) => m * x + b;
+  const rSquared = Math.pow(r, 2);
+
+  const model = (x: number) => m * x + b;
+
+  return { model, rSquared };
 }
