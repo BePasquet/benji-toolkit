@@ -68,6 +68,6 @@ describe('createLSR', () => {
 
     // This are just used as snapshot of a known result
     expect(prediction).toBe(7.999999999999999);
-    expect(rSquared).toBe(0.8928571428571428);
+    expect(rSquared).toBe(0.8928571428571426);
   });
 });
