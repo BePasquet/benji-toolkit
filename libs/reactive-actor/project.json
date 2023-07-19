@@ -1,0 +1,35 @@
+{
+  "name": "reactive-actor",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/reactive-actor/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/reactive-actor/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/reactive-actor"],
+      "options": {
+        "jestConfig": "libs/reactive-actor/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/reactive-actor",
+        "tsConfig": "libs/reactive-actor/tsconfig.lib.json",
+        "packageJson": "libs/reactive-actor/package.json",
+        "main": "libs/reactive-actor/src/index.ts",
+        "assets": ["libs/reactive-actor/*.md"]
+      }
+    }
+  },
+  "tags": []
+}

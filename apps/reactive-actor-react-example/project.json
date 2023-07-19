@@ -1,0 +1,86 @@
+{
+  "name": "reactive-actor-react-example",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/reactive-actor-react-example/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/apps/reactive-actor-react-example",
+        "index": "apps/reactive-actor-react-example/src/index.html",
+        "baseHref": "/",
+        "main": "apps/reactive-actor-react-example/src/main.tsx",
+        "polyfills": "apps/reactive-actor-react-example/src/polyfills.ts",
+        "tsConfig": "apps/reactive-actor-react-example/tsconfig.app.json",
+        "assets": [
+          "apps/reactive-actor-react-example/src/favicon.ico",
+          "apps/reactive-actor-react-example/src/assets"
+        ],
+        "styles": [],
+        "scripts": [],
+        "webpackConfig": "@nx/react/plugins/webpack"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/reactive-actor-react-example/src/environments/environment.ts",
+              "with": "apps/reactive-actor-react-example/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/webpack:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "reactive-actor-react-example:build",
+        "hmr": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "reactive-actor-react-example:build:development"
+        },
+        "production": {
+          "buildTarget": "reactive-actor-react-example:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "apps/reactive-actor-react-example/**/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/reactive-actor-react-example"],
+      "options": {
+        "jestConfig": "apps/reactive-actor-react-example/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}
