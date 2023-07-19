@@ -15,7 +15,7 @@ export interface Sequence<T> extends Iterable<T> {
    * @param index position of element in the sequence
    * @returns the element when exists null otherwise
    */
-  get(index: number): T | null;
+  getAt(index: number): T | null;
 
   /**
    * Replace element at the specified index in the sequence
