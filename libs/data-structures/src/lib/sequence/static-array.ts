@@ -3,7 +3,7 @@ import { Sequence } from './sequence.interface';
 /**
  * Static array implementation of a sequence
  */
-export class ArraySequence implements Sequence<number> {
+export class StaticArray implements Sequence<number> {
   private data = new Int8Array(0);
 
   /**
