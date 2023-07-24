@@ -1,6 +1,6 @@
-import { SequenceConstructor } from './sequence-constructor.interface';
+import { SequenceConstructor } from '../interfaces/sequence-constructor.interface';
 
-export function runSequenceTest(sequence: SequenceConstructor) {
+export function runSequenceTest(sequence: SequenceConstructor<number>) {
   describe(sequence.name, () => {
     describe('build', () => {
       it('Should build a sequence of items from an iterable', () => {
@@ -111,6 +111,7 @@ export function runSequenceTest(sequence: SequenceConstructor) {
         expect(sequenceInstance.getAt(2)).toBe(2);
         expect(sequenceInstance.getAt(3)).toBe(3);
         expect(sequenceInstance.getAt(4)).toBe(4);
+        expect(sequenceInstance.length).toBe(iterable.length + 1);
       });
 
       it('Should not change the sequence when the index on the sequence does not exist', () => {
@@ -137,6 +138,7 @@ export function runSequenceTest(sequence: SequenceConstructor) {
         expect(sequenceInstance.getAt(0)).toBe(1);
         expect(sequenceInstance.getAt(1)).toBe(3);
         expect(sequenceInstance.getAt(2)).toBe(4);
+        expect(sequenceInstance.length).toBe(iterable.length - 1);
         expect(element).toBe(2);
       });
 
@@ -173,6 +175,7 @@ export function runSequenceTest(sequence: SequenceConstructor) {
         expect(sequenceInstance.getAt(2)).toBe(2);
         expect(sequenceInstance.getAt(3)).toBe(3);
         expect(sequenceInstance.getAt(4)).toBe(4);
+        expect(sequenceInstance.length).toBe(iterable.length + 1);
       });
     });
 
@@ -186,6 +189,7 @@ export function runSequenceTest(sequence: SequenceConstructor) {
         expect(sequenceInstance.getAt(0)).toBe(2);
         expect(sequenceInstance.getAt(1)).toBe(3);
         expect(sequenceInstance.getAt(2)).toBe(4);
+        expect(sequenceInstance.length).toBe(iterable.length - 1);
         expect(element).toBe(1);
       });
 
@@ -209,6 +213,7 @@ export function runSequenceTest(sequence: SequenceConstructor) {
         expect(sequenceInstance.getAt(2)).toBe(3);
         expect(sequenceInstance.getAt(3)).toBe(4);
         expect(sequenceInstance.getAt(4)).toBe(10);
+        expect(sequenceInstance.length).toBe(iterable.length + 1);
       });
     });
 
@@ -222,6 +227,7 @@ export function runSequenceTest(sequence: SequenceConstructor) {
         expect(sequenceInstance.getAt(0)).toBe(1);
         expect(sequenceInstance.getAt(1)).toBe(2);
         expect(sequenceInstance.getAt(2)).toBe(3);
+        expect(sequenceInstance.length).toBe(iterable.length - 1);
         expect(element).toBe(4);
       });
     });

@@ -1,4 +1,4 @@
-import { Sequence } from './sequence.interface';
+import { Sequence } from '../interfaces/sequence.interface';
 
 /**
  * Static array implementation of a sequence
@@ -44,7 +44,7 @@ export class StaticArray implements Sequence<number> {
    * to find the starting position of the element `address + w-bit * index`
    */
   getAt(index: number): number | null {
-    if (this.isIndexInRange(index)) {
+    if (!this.isIndexInRange(index)) {
       return null;
     }
 
@@ -58,7 +58,7 @@ export class StaticArray implements Sequence<number> {
    * to find the starting position of the element `address + w-bit * index` to overwrite it
    */
   setAt(index: number, value: number): void {
-    if (this.isIndexInRange(index)) {
+    if (!this.isIndexInRange(index)) {
       return;
     }
 
@@ -70,7 +70,7 @@ export class StaticArray implements Sequence<number> {
    * to add an element we need to resize by allocating a bigger space in memory and copying elements over
    */
   insertAt(index: number, element: number): void {
-    if (this.isIndexInRange(index)) {
+    if (!this.isIndexInRange(index)) {
       return;
     }
 
@@ -98,7 +98,7 @@ export class StaticArray implements Sequence<number> {
    * in memory in the worst case will delete the first element and need to shift n - 1 elements by one position
    */
   deleteAt(index: number): number | null {
-    if (this.isIndexInRange(index)) {
+    if (!this.isIndexInRange(index)) {
       return null;
     }
 
@@ -192,6 +192,6 @@ export class StaticArray implements Sequence<number> {
    * @returns whether is within the array bounds
    */
   private isIndexInRange(index: number): boolean {
-    return index >= this.size || index < 0;
+    return index >= 0 && index < this.size;
   }
 }

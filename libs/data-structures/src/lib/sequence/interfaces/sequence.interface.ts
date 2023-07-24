@@ -1,4 +1,4 @@
-export interface Sequence<T> extends Iterable<T> {
+export interface Sequence<T> extends Iterable<T | null> {
   /**
    * Given an iterable builds a sequence from elements in it
    * @param elements to build sequence from
@@ -30,7 +30,7 @@ export interface Sequence<T> extends Iterable<T> {
    * @param index position where we want to insert the element
    * @param element to insert at index
    */
-  insertAt(index: number, element: number): void;
+  insertAt(index: number, element: T): void;
 
   /**
    * Removes element at the specified index
