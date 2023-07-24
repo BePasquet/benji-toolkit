@@ -1,1 +1,1 @@
-export * from './set.interface';
+export * from './interfaces/set.interface';

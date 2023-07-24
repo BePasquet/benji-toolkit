@@ -1,4 +1,4 @@
-export interface Sequence<T> extends Iterable<T | null> {
+export interface Sequence<T> extends Iterable<T> {
   /**
    * Given an iterable builds a sequence from elements in it
    * @param elements to build sequence from

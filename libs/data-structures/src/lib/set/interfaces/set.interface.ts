@@ -1,4 +1,7 @@
-export interface Set<T> extends Iterable<T> {
+import { SetElement } from './set-element.interface';
+
+export interface Set<T extends Pick<SetElement<unknown>, 'key'>>
+  extends Iterable<T> {
   /**
    * Given an iterable builds a set from elements in it
    * @param elements to build sequence from
@@ -15,7 +18,7 @@ export interface Set<T> extends Iterable<T> {
    * @param key of the element we want to find
    * @returns element when there is a match null otherwise
    */
-  find(key: number): T | null;
+  find(key: number | string): T | null;
 
   /**
    * Adds element to set, if an element with the same key exist will replace it
@@ -28,7 +31,7 @@ export interface Set<T> extends Iterable<T> {
    * @param key of the element we want to delete
    * @returns deleted element with specified key exist null otherwise
    */
-  delete(key: number): T | null;
+  delete(key: string | number): T | null;
 
   /**
    * Finds the element with the smallest key

@@ -87,7 +87,7 @@ export class LinkedList<T> implements Sequence<T> {
       return;
     }
 
-    this.insert(index, element);
+    this.add(index, element);
   }
 
   /**
@@ -100,7 +100,7 @@ export class LinkedList<T> implements Sequence<T> {
       return null;
     }
 
-    return this.delete(index);
+    return this.remove(index);
   }
 
   /**
@@ -116,7 +116,7 @@ export class LinkedList<T> implements Sequence<T> {
    * Time complexity O(1)
    */
   deleteFirst(): T | null {
-    return this.delete(0);
+    return this.remove(0);
   }
 
   /**
@@ -124,7 +124,7 @@ export class LinkedList<T> implements Sequence<T> {
    * Time complexity O(n), needs to traverse the list
    */
   insertLast(element: T): void {
-    this.insert(this.size, element);
+    this.add(this.size, element);
   }
 
   /**
@@ -132,21 +132,28 @@ export class LinkedList<T> implements Sequence<T> {
    * Time complexity O(n), needs to traverse the list
    */
   deleteLast(): T | null {
-    return this.delete(this.size - 1);
+    return this.remove(this.size - 1);
   }
 
   get length(): number {
     return this.size;
   }
 
-  [Symbol.iterator](): Iterator<T | null> {
+  [Symbol.iterator](): Iterator<T> {
     let current: LinkedListNode<T> | null = this.head;
 
     return {
       next: () => {
+        if (!current) {
+          return {
+            value: null,
+            done: true,
+          };
+        }
+
         const result = {
-          value: current?.value ?? null,
-          done: !!current,
+          value: current.value,
+          done: false,
         };
 
         current = current?.next ?? null;
@@ -188,7 +195,7 @@ export class LinkedList<T> implements Sequence<T> {
    * @param index we want to insert element
    * @param element we want to insert at index
    */
-  private insert(index: number, element: T): void {
+  private add(index: number, element: T): void {
     const newNode = new LinkedListNode(element);
 
     this.size++;
@@ -212,7 +219,7 @@ export class LinkedList<T> implements Sequence<T> {
    * Deletes an element at a particular index
    * @param index at where we want to delete the element
    */
-  private delete(index: number): T | null {
+  private remove(index: number): T | null {
     this.size--;
 
     if (index === 0) {
