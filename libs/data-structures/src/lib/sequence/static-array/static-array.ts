@@ -4,6 +4,9 @@ import { Sequence } from '../interfaces/sequence.interface';
  * Static array implementation of a sequence
  */
 export class StaticArray implements Sequence<number> {
+  /**
+   * Internal representation of the array
+   */
   protected data = new Int8Array(0);
 
   /**
@@ -64,6 +67,7 @@ export class StaticArray implements Sequence<number> {
 
     this.data[index] = value;
   }
+
   /**
    * @inheritdoc
    * Time complexity O(n), An array allocate memory contiguously with a predetermined size,

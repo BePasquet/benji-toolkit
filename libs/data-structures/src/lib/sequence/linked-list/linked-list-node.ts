@@ -1,3 +1,12 @@
 export class LinkedListNode<T> {
-  constructor(public value: T, public next: LinkedListNode<T> | null = null) {}
+  constructor(
+    /**
+     * node value
+     */
+    public value: T,
+    /**
+     * Reference to the next element in the list
+     */
+    public next: LinkedListNode<T> | null = null
+  ) {}
 }
