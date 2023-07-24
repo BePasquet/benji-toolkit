@@ -4,13 +4,13 @@ import { Sequence } from '../interfaces/sequence.interface';
  * Static array implementation of a sequence
  */
 export class StaticArray implements Sequence<number> {
-  private data = new Int8Array(0);
+  protected data = new Int8Array(0);
 
   /**
    * Internal representation of the number of elements stored,
    * for public access use length
    */
-  private size = 0;
+  protected size = 0;
 
   /**
    * @inheritdoc
