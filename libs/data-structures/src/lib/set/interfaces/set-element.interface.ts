@@ -1,1 +1,1 @@
-export type SetElement<T = unknown> = T & { key: string | number };
+export type SetElement<T = unknown> = T & { key: number };
