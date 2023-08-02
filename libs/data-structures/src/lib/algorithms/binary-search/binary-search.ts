@@ -1,5 +1,5 @@
-import { Sequence } from '../sequence';
-import { SetElement } from '../set/interfaces/set-element.interface';
+import { Sequence } from '../../sequence';
+import { SetElement } from '../../set';
 
 export interface BinarySearchParams<T> {
   set: Sequence<SetElement<T>>;

@@ -10,6 +10,7 @@
     "src/**/*.test.ts",
     "src/**/*.spec.ts",
     "src/**/*.d.ts",
-    "src/lib/sequence/test-util/create-sequence-test.ts"
+    "src/lib/sequence/test-util/create-sequence-test.ts",
+    "src/lib/algorithms/sorting/test-util/create-sort-test.ts"
   ]
 }

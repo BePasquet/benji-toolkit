@@ -1,5 +1,5 @@
-import { LinkedList } from '../sequence/linked-list/linked-list';
-import { SetElement } from '../set/interfaces/set-element.interface';
+import { LinkedList } from '../../sequence/linked-list/linked-list';
+import { SetElement } from '../../set/interfaces/set-element.interface';
 import { binarySearch } from './binary-search';
 
 describe('Binary Search', () => {
