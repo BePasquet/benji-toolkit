@@ -19,7 +19,7 @@ export class LinkedList<T> implements Sequence<T> {
    * Internal representation of the number of elements stored,
    * for public access use length
    */
-  private size = 0;
+  protected size = 0;
 
   /**
    * @inheritdoc

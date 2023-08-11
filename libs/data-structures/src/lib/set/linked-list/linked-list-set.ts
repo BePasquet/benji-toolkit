@@ -70,6 +70,8 @@ export class LinkedListSet<T extends SetElement>
 
   insert(element: T): void {
     if (!this.head) {
+      this.head = new LinkedListNode(element);
+      this.size++;
       return;
     }
 
@@ -88,6 +90,7 @@ export class LinkedListSet<T extends SetElement>
 
     if (prev) {
       prev.next = new LinkedListNode<T>(element);
+      this.size++;
     }
   }
 
@@ -109,6 +112,7 @@ export class LinkedListSet<T extends SetElement>
         const value = current.value;
         current.next = null;
         prev.next = next;
+        this.size--;
         return value;
       }
 
