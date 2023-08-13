@@ -27,9 +27,9 @@ describe('HashTable', () => {
 
   it('Should find an element when it exist', () => {
     const table = new HashTable();
-    const elements = Array(10)
+    const elements = Array(1000)
       .fill(null)
-      .map((_, i) => ({ key: i + 1 }));
+      .map((_, i) => ({ key: i }));
 
     elements.forEach((element) => table.insert(element));
     const element = table.find(9);

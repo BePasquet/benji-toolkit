@@ -3,13 +3,14 @@ import { LinkedListSet } from '../set/linked-list/linked-list-set';
 
 export class HashTable<T = unknown> {
   private prime = Math.pow(2, 31) - 1;
-  private randomInt = Math.floor(Math.random() * (this.prime - 1)) || 1;
+  private a = 1;
+  private b = 10;
   private data: LinkedListSet<SetElement<T>>[] = [];
   private size = 0;
 
   insert(element: SetElement<T>): void {
     this.size++;
-    const hash = this.hash(element.key, this.data.length + 1);
+    const hash = this.hash(element.key, this.size);
     const chain = this.data[hash];
 
     if (chain) {
@@ -47,8 +48,7 @@ export class HashTable<T = unknown> {
   }
 
   private hash(key: SetElement['key'], length: number): number {
-    // TODO THERE IS A PROBLEM with the hash function it is not finding same index for given key
-    const hash = ((this.randomInt * key) % this.prime) % length;
+    const hash = ((this.a * key + this.b) % this.prime) % length;
     return hash;
   }
 }
