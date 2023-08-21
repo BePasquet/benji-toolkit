@@ -43,19 +43,19 @@ export interface MergeSortParams {
   end: number;
 }
 
-export function mergeSortR({ xs, start, end }: MergeSortParams): void {
+export function mergeSortP({ xs, start, end }: MergeSortParams): void {
   if (start >= end) {
     return;
   }
 
   const mid = Math.floor((start + end) / 2);
 
-  mergeSortR({ xs, start, end: mid });
-  mergeSortR({ xs, start: mid + 1, end });
+  mergeSortP({ xs, start, end: mid });
+  mergeSortP({ xs, start: mid + 1, end });
 
   merge({ xs, start, end, mid });
 }
 
 export function mergeSort(xs: number[]): void {
-  return mergeSortR({ xs, start: 0, end: xs.length - 1 });
+  return mergeSortP({ xs, start: 0, end: xs.length - 1 });
 }

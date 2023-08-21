@@ -1,10 +1,10 @@
-import { LinkedList, LinkedListNode, Sequence } from '../../sequence';
+import { LinkedList, LinkedListNode } from '../../sequence';
 import { SetElement } from '../interfaces/set-element.interface';
 import { Set } from '../interfaces/set.interface';
 
 export class LinkedListSet<T extends SetElement>
   extends LinkedList<T>
-  implements Sequence<T>, Set<T>
+  implements Set<T>, Set<T>
 {
   find(key: number | string): T | null {
     for (const element of this) {
