@@ -1,3 +1,4 @@
+import { AxiosInstance } from 'axios';
 import { map } from 'rxjs';
 import {
   AuthenticationActor,
@@ -6,15 +7,24 @@ import {
   verifyAuth,
 } from './actors/authentication.actor';
 import { AuthenticationService } from './services/authentication.service';
+import { Storage } from './services/storage.service';
 
 export class AuthenticationClient {
+  private readonly authenticationService = new AuthenticationService(
+    this.storageService,
+    this.httpClient
+  );
+
+  private readonly authentication = new AuthenticationActor(
+    this.authenticationService
+  );
+
   readonly state$ = this.authentication.state$;
 
   private interceptorsSubscriptions: VoidFunction[] = [];
-
   constructor(
-    private readonly authentication: AuthenticationActor,
-    private readonly authenticationService: AuthenticationService
+    private readonly httpClient: AxiosInstance,
+    private readonly storageService: Storage
   ) {}
 
   verifyAuth(): void {
