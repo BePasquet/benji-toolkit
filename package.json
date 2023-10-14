@@ -36,6 +36,7 @@
     "@angular/platform-browser": "16.1.5",
     "@angular/platform-browser-dynamic": "16.1.5",
     "@angular/router": "16.1.5",
+    "axios": "^1.5.1",
     "clsx": "^1.1.1",
     "core-js": "^3.6.5",
     "document-register-element": "1.13.1",
