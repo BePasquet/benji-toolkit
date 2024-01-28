@@ -1,7 +1,5 @@
-export async function getBjjTechniques() {
-  return Promise.resolve({});
-}
+import { TechniqueGraph, bjjTechniquesGraph } from './bjj-data';
 
-export function parseTechniquesForClient(techniques: any) {
-  return techniques;
+export async function getBjjTechniques(): Promise<TechniqueGraph> {
+  return Promise.resolve(bjjTechniquesGraph);
 }

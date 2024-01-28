@@ -1,30 +1,58 @@
+import { GraphNode } from '@benji-toolkit/data-structures';
 import { createEvent, createReducer } from '@benji-toolkit/reactive-actor';
 import axios from 'axios';
-import { useCallback, useEffect, useReducer } from 'react';
+import { useCallback, useEffect, useMemo, useReducer } from 'react';
 import styled from 'styled-components';
 import { environment } from '../environments/environment';
 import { Results } from './results';
 import { TechniqueVisualizer } from './technique-visualizer';
+import {
+  BaseState,
+  D3GraphData,
+  D3GraphNode,
+  Technique,
+  TechniqueGraph,
+} from './types';
 
 export const bjjApi = axios.create({
   baseURL: environment.API_URI,
 });
 
-export interface BaseState<T> {
-  data: T;
-  loading: boolean;
-  error: string;
-}
-
-export async function getBjjTechniques() {
-  const { data } = await bjjApi.get('/techniques');
+export async function getBjjTechniques(): Promise<TechniqueGraph> {
+  const { data } = await bjjApi.get<Record<string, GraphNode<Technique>>>(
+    '/techniques'
+  );
 
   return data;
 }
 
+export function graphDataParser(
+  data: TechniqueGraph
+): D3GraphData<D3GraphNode> {
+  const techniques = Object.values(data);
+  const nodes = techniques.map(({ name, value }) => ({
+    id: name,
+    data: value as Technique,
+  }));
+
+  const links = techniques.flatMap((node) =>
+    node.adjacent.map((adjacent) => ({
+      source: node.name,
+      target: adjacent.name,
+    }))
+  );
+
+  const graphData = {
+    nodes,
+    links,
+  };
+
+  return graphData;
+}
+
 export const getTechniques = createEvent('[Techniques] Get Techniques');
 
-export const getTechniquesSuccess = createEvent<any>(
+export const getTechniquesSuccess = createEvent<TechniqueGraph>(
   '[Techniques] Get Techniques Success'
 );
 
@@ -32,7 +60,7 @@ export const getTechniquesFail = createEvent<string>(
   '[Techniques] Get Techniques Fail'
 );
 
-export const techniquesInitialState: BaseState<{} | null> = {
+export const techniquesInitialState: BaseState<TechniqueGraph | null> = {
   data: null,
   loading: false,
   error: '',
@@ -67,6 +95,11 @@ export function BJJTechniques() {
     techniquesInitialState
   );
 
+  const graphData = useMemo(
+    () => (data ? graphDataParser(data) : null),
+    [data]
+  );
+
   const getTechniquesInit = useCallback(async () => {
     dispatch(getTechniques(null));
     try {
@@ -88,7 +121,7 @@ export function BJJTechniques() {
       <Title>Bjj techniques</Title>
 
       <Results loading={loading} error={error}>
-        {data && <TechniqueVisualizer data={data} />}
+        {graphData && <TechniqueVisualizer data={graphData} />}
       </Results>
     </div>
   );

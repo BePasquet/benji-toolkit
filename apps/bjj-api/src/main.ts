@@ -1,18 +1,23 @@
 import { json } from 'body-parser';
 import cors from 'cors';
 import express from 'express';
-import { getBjjTechniques, parseTechniquesForClient } from './bjj.service';
+import { getBjjTechniques } from './bjj.service';
 
 const app = express();
 
 app.use(cors({ origin: '*' }));
 app.use(json());
 
-app.get('/techniques', async (req, res) => {
-  const techniques = await getBjjTechniques();
-  const result = parseTechniquesForClient(techniques);
+app.get('/techniques', async (_, res) => {
+  try {
+    const techniques = await getBjjTechniques();
 
-  res.json(result);
+    res.json(techniques.serialized);
+  } catch (e) {
+    res
+      .status(500)
+      .json({ message: 'Sorry there was an error please try again later' });
+  }
 });
 
 const port = process.env.PORT || 3333;
