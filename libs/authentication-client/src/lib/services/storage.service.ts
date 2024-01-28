@@ -10,7 +10,7 @@ export class Storage {
     options: GetItemOptions = { json: true }
   ): Observable<T | null> {
     const data = localStorage.getItem(key);
-    const result: T | null = options.json ? JSON.parse(data) : data;
+    const result: T | null = options.json && data ? JSON.parse(data) : data;
     return of(result);
   }
 

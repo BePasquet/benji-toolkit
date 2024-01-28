@@ -6,9 +6,11 @@ import {
   ofType,
 } from '@benji-toolkit/reactive-actor';
 import {
+  catchError,
   distinctUntilChanged,
   exhaustMap,
   map,
+  of,
   switchMap,
   takeUntil,
   throwError,
@@ -17,7 +19,7 @@ import { AuthenticationResponse } from '../interfaces/authentication-response';
 import { Credentials } from '../interfaces/credentials.interface';
 import { User } from '../interfaces/user.interface';
 import { AuthenticationService } from '../services/authentication.service';
-import { catchErrorToEvent, objectComparator } from '../utils/utils';
+import { objectComparator } from '../utils/utils';
 
 export const TOKEN_NOT_FOUND_ERROR = 'TOKEN_NOT_FOUND';
 
@@ -167,11 +169,11 @@ export class AuthenticationActor extends Actor {
         exhaustMap((token) =>
           token
             ? this.authenticationService
-                .getUser()
+                .getUser(token)
                 .pipe(map((user) => verifyAuthSuccess({ user, token })))
             : throwError(() => TOKEN_NOT_FOUND_ERROR)
         ),
-        catchErrorToEvent(verifyAuthFail)
+        catchError((err) => of(verifyAuthFail(err)))
       )
     )
   );
@@ -181,7 +183,7 @@ export class AuthenticationActor extends Actor {
     switchMap(() =>
       this.authenticationService.getUser().pipe(
         map((user) => getUserSuccess(user)),
-        catchErrorToEvent(getUserFail)
+        catchError((err) => of(getUserFail(err)))
       )
     )
   );
@@ -191,7 +193,7 @@ export class AuthenticationActor extends Actor {
     exhaustMap(({ payload }) =>
       this.authenticationService.login(payload).pipe(
         map((response) => loginSuccess(response)),
-        catchErrorToEvent(loginFail)
+        catchError((err) => of(loginFail(err)))
       )
     )
   );
@@ -206,7 +208,7 @@ export class AuthenticationActor extends Actor {
     switchMap(({ payload }) =>
       this.authenticationService.saveAuthToken(payload).pipe(
         map(() => saveAuthTokenSuccess(null)),
-        catchErrorToEvent(saveAuthTokenFail)
+        catchError((err) => of(saveAuthTokenFail(err)))
       )
     )
   );
@@ -216,13 +218,14 @@ export class AuthenticationActor extends Actor {
     exhaustMap(() =>
       this.authenticationService.logout().pipe(
         map(() => logoutSuccess(null)),
-        catchErrorToEvent(logoutFail)
+        catchError((err) => of(logoutFail(err)))
       )
     )
   );
 
   constructor(private readonly authenticationService: AuthenticationService) {
     super(AUTHENTICATION_ACTOR_REF);
+    this.messages$.subscribe(console.log);
 
     this.answer(
       this.verifyAuth$,

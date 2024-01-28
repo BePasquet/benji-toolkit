@@ -1,9 +1,9 @@
 import { stop } from '@benji-toolkit/reactive-actor';
 import {
-  getUsers,
   UsersActor,
-  usersInitialState,
   UsersState,
+  getUsers,
+  usersInitialState,
 } from '@benji-toolkit/users';
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';

@@ -6,6 +6,7 @@ import {
   logout,
   verifyAuth,
 } from './actors/authentication.actor';
+import { Credentials } from './interfaces/credentials.interface';
 import { AuthenticationService } from './services/authentication.service';
 import { Storage } from './services/storage.service';
 
@@ -22,6 +23,7 @@ export class AuthenticationClient {
   readonly state$ = this.authentication.state$;
 
   private interceptorsSubscriptions: VoidFunction[] = [];
+
   constructor(
     private readonly httpClient: AxiosInstance,
     private readonly storageService: Storage
@@ -31,8 +33,8 @@ export class AuthenticationClient {
     this.authentication.send(verifyAuth(null));
   }
 
-  login(): void {
-    this.authentication.send(login(null));
+  login(credentials: Credentials): void {
+    this.authentication.send(login(credentials));
   }
 
   logout(): void {

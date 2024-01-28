@@ -17,6 +17,7 @@ export class AuthenticationService {
   addAuthInterceptor(token$: Observable<string>): VoidFunction {
     const id = this.httpClient.interceptors.request.use((req) => {
       const token = readLatestSync(token$);
+      console.log(token);
 
       if (token) {
         req.headers.set('Authorization', `Bearer ${token}`);
@@ -28,7 +29,7 @@ export class AuthenticationService {
     return () => this.httpClient.interceptors.request.eject(id);
   }
 
-  getToken(): Observable<string> {
+  getToken(): Observable<string | null> {
     return this.storage.getItem<string>(AUTHENTICATION_STORAGE_KEY);
   }
 
@@ -36,13 +37,17 @@ export class AuthenticationService {
     return this.storage.setItem(AUTHENTICATION_STORAGE_KEY, token);
   }
 
-  getUser(): Observable<User> {
-    return defer(() => this.httpClient.get<User>(`/user`)).pipe(mapToData());
+  getUser(token = ''): Observable<User> {
+    return defer(() =>
+      this.httpClient.get<User>(`/user/me`, {
+        headers: { Authorization: token },
+      })
+    ).pipe(mapToData());
   }
 
   login(credentials: Credentials): Observable<AuthenticationResponse> {
     return defer(() =>
-      this.httpClient.post<AuthenticationResponse>(`/login`, credentials)
+      this.httpClient.post<AuthenticationResponse>(`/user/login`, credentials)
     ).pipe(mapToData());
   }
 

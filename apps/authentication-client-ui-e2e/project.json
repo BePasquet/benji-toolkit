@@ -1,0 +1,34 @@
+{
+  "name": "authentication-client-ui-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/authentication-client-ui-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nx/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/authentication-client-ui-e2e/cypress.json",
+        "devServerTarget": "authentication-client-ui:serve:development",
+        "testingType": "e2e",
+        "tsConfig": "apps/authentication-client-ui-e2e/tsconfig.json"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "authentication-client-ui:serve:production"
+        },
+        "ci": {
+          "devServerTarget": "authentication-client-ui:serve-static"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/authentication-client-ui-e2e/**/*.{js,ts}"]
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": ["authentication-client-ui"]
+}

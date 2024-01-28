@@ -31,7 +31,7 @@ export function objectComparator<T extends object>(a: T, b: T): boolean {
     return false;
   }
 
-  return as.every((key) => a[key] === b[key]);
+  return as.every((key) => (a as any)[key] === (b as any)[key]);
 }
 
 export function ofMultipleTypes<T extends Event>(...events: EventCreator[]) {
@@ -45,5 +45,10 @@ export function mapToData<D, T extends { data: D }>() {
 
 export function catchErrorToEvent<T = unknown>(event: EventCreator) {
   return (source$: Observable<T>) =>
-    source$.pipe(catchError((err) => of(event(err))));
+    source$.pipe(
+      catchError((err) => {
+        console.log(err);
+        return of(event(err));
+      })
+    );
 }
