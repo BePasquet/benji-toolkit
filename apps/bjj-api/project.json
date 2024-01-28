@@ -1,0 +1,53 @@
+{
+  "name": "bjj-api",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/bjj-api/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/bjj-api",
+        "main": "apps/bjj-api/src/main.ts",
+        "tsConfig": "apps/bjj-api/tsconfig.app.json",
+        "assets": ["apps/bjj-api/src/assets"],
+        "webpackConfig": "apps/bjj-api/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "bjj-api:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "bjj-api:build:development"
+        },
+        "production": {
+          "buildTarget": "bjj-api:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/bjj-api/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}
