@@ -1,12 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './app.module.scss';
-
-import NxWelcome from './nx-welcome';
+import { BJJTechniques } from './bjj-techniques';
 
 export function App() {
   return (
     <div>
-      <NxWelcome title="bjj-client" />
+      <BJJTechniques />
     </div>
   );
 }
