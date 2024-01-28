@@ -128,5 +128,6 @@ export function BJJTechniques() {
 }
 
 const Title = styled.div`
+  margin-bottom: 20px;
   text-align: center;
 `;

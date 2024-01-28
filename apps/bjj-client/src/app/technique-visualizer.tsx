@@ -1,4 +1,5 @@
 import { Graph } from 'react-d3-graph';
+import styled from 'styled-components';
 import { TECHNIQUE_GRAPH_CONFIG } from './technique-graph.config';
 import { D3GraphData, D3GraphNode } from './types';
 
@@ -16,12 +17,25 @@ export function TechniqueVisualizer({ data }: TechniqueVisualizerParams) {
   };
 
   return (
-    <Graph
-      id="graph-id" // id is mandatory
-      data={data}
-      config={TECHNIQUE_GRAPH_CONFIG}
-      onClickNode={onClickNode}
-      onClickLink={onClickLink}
-    />
+    <GraphContainer>
+      <Graph
+        id="graph-id"
+        data={data}
+        config={{
+          ...TECHNIQUE_GRAPH_CONFIG,
+          width: window.innerWidth,
+          height: window.innerHeight,
+        }}
+        onClickNode={onClickNode}
+        onClickLink={onClickLink}
+      />
+    </GraphContainer>
   );
 }
+
+const GraphContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
