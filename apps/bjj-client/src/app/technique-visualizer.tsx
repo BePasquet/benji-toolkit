@@ -5,17 +5,13 @@ import { D3GraphData, D3GraphNode } from './types';
 
 export interface TechniqueVisualizerParams {
   data: D3GraphData<D3GraphNode>;
+  onNodeClick: (id: string) => void;
 }
 
-export function TechniqueVisualizer({ data }: TechniqueVisualizerParams) {
-  const onClickNode = (nodeId: string) => {
-    window.alert(`Clicked node ${nodeId}`);
-  };
-
-  const onClickLink = (source: string, target: string) => {
-    window.alert(`Clicked link between ${source} and ${target}`);
-  };
-
+export function TechniqueVisualizer({
+  data,
+  onNodeClick,
+}: TechniqueVisualizerParams) {
   return (
     <GraphContainer>
       <Graph
@@ -26,8 +22,7 @@ export function TechniqueVisualizer({ data }: TechniqueVisualizerParams) {
           width: window.innerWidth,
           height: window.innerHeight,
         }}
-        onClickNode={onClickNode}
-        onClickLink={onClickLink}
+        onClickNode={onNodeClick}
       />
     </GraphContainer>
   );

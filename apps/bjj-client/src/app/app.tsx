@@ -1,10 +1,13 @@
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { BJJTechniques } from './bjj-techniques';
+
+const theme = createTheme({});
 
 export function App() {
   return (
-    <div>
+    <ThemeProvider theme={theme}>
       <BJJTechniques />
-    </div>
+    </ThemeProvider>
   );
 }
 

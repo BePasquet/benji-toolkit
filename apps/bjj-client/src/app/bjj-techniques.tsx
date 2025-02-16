@@ -1,10 +1,12 @@
 import { GraphNode } from '@benji-toolkit/data-structures';
 import { createEvent, createReducer } from '@benji-toolkit/reactive-actor';
 import axios from 'axios';
-import { useCallback, useEffect, useMemo, useReducer } from 'react';
+import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import styled from 'styled-components';
 import { environment } from '../environments/environment';
 import { Results } from './results';
+import { BaseModal } from './shared/BaseModal';
+import { TechniqueDetail } from './technique-detail';
 import { TechniqueVisualizer } from './technique-visualizer';
 import {
   BaseState,
@@ -95,6 +97,9 @@ export function BJJTechniques() {
     techniquesInitialState
   );
 
+  const [selectedNodeId, setSelectedNodeId] = useState('');
+  const selectedTechnique = data?.[selectedNodeId]?.value ?? null;
+
   const graphData = useMemo(
     () => (data ? graphDataParser(data) : null),
     [data]
@@ -116,14 +121,28 @@ export function BJJTechniques() {
     getTechniquesInit();
   }, [getTechniquesInit]);
 
+  const selectNode = (id: string) => {
+    setSelectedNodeId(id);
+  };
+
+  const closeTechniqueModal = () => {
+    setSelectedNodeId('');
+  };
+
   return (
-    <div>
+    <>
       <Title>Bjj techniques</Title>
 
+      <BaseModal open={!!selectedTechnique} onClose={closeTechniqueModal}>
+        <TechniqueDetail technique={selectedTechnique as Technique} />
+      </BaseModal>
+
       <Results loading={loading} error={error}>
-        {graphData && <TechniqueVisualizer data={graphData} />}
+        {graphData && (
+          <TechniqueVisualizer data={graphData} onNodeClick={selectNode} />
+        )}
       </Results>
-    </div>
+    </>
   );
 }
 
