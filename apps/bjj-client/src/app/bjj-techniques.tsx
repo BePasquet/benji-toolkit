@@ -133,7 +133,7 @@ export function BJJTechniques() {
   return (
     <>
       <Title>Bjj techniques</Title>
-      <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
+      <div style={{ position: 'absolute', top: 15, right: 10 }}>
         <Payment />
       </div>
       <BaseModal open={!!selectedTechnique} onClose={closeTechniqueModal}>

@@ -1,14 +1,25 @@
+import { Paper } from '@mui/material';
+
 export function Payment() {
   return (
     <div>
-      {/* eslint-disable-next-line */}
-      <a href="https://www.buymeacoffee.com/addictivebjj" target="_blank">
-        <img
-          src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png"
-          alt="Buy Me A Coffee"
-          style={{ width: '150px' }}
-        />
-      </a>
+      <Paper elevation={2}>
+        {/* eslint-disable-next-line */}
+        <a
+          href="https://www.buymeacoffee.com/addictivebjj"
+          target="_blank"
+          style={{
+            padding: '8px',
+            backgroundColor: '#000',
+            color: '#fff',
+            textDecoration: 'none',
+            borderRadius: '4px',
+          }}
+        >
+          Donate
+        </a>
+      </Paper>
+
       <script
         type="text/javascript"
         src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
