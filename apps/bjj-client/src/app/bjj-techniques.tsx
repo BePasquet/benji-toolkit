@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import styled from 'styled-components';
 import { environment } from '../environments/environment';
+import { Payment } from './payment';
 import { Results } from './results';
 import { BaseModal } from './shared/BaseModal';
 import { TechniqueDetail } from './technique-detail';
@@ -132,7 +133,9 @@ export function BJJTechniques() {
   return (
     <>
       <Title>Bjj techniques</Title>
-
+      <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
+        <Payment />
+      </div>
       <BaseModal open={!!selectedTechnique} onClose={closeTechniqueModal}>
         <TechniqueDetail technique={selectedTechnique as Technique} />
       </BaseModal>
